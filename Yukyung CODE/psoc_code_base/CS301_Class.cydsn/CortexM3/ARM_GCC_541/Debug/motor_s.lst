@@ -1,0 +1,1417 @@
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"motor_s.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.clamp100,"ax",%progbits
+  20              		.align	2
+  21              		.global	clamp100
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	clamp100, %function
+  25              	clamp100:
+  26              	.LFB63:
+  27              		.file 1 "motor_s.c"
+   1:motor_s.c     **** #include "motor_s.h"
+   2:motor_s.c     **** 
+   3:motor_s.c     **** /* RIGHT_TRIM_PERCENT가 다른 헤더/파일에 있으면 그 값을 사용.
+   4:motor_s.c     ****  * 없으면 0(트림 없음)으로 처리.
+   5:motor_s.c     ****  */
+   6:motor_s.c     **** #ifndef RIGHT_TRIM_PERCENT
+   7:motor_s.c     **** #define RIGHT_TRIM_PERCENT   0
+   8:motor_s.c     **** #endif
+   9:motor_s.c     **** 
+  10:motor_s.c     **** int clamp100(int x){
+  28              		.loc 1 10 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 8
+  31              		@ frame_needed = 1, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  33 0000 80B4     		push	{r7}
+  34              		.cfi_def_cfa_offset 4
+  35              		.cfi_offset 7, -4
+  36 0002 83B0     		sub	sp, sp, #12
+  37              		.cfi_def_cfa_offset 16
+  38 0004 00AF     		add	r7, sp, #0
+  39              		.cfi_def_cfa_register 7
+  40 0006 7860     		str	r0, [r7, #4]
+  11:motor_s.c     ****     if (x > 100) return 100;
+  41              		.loc 1 11 0
+  42 0008 7B68     		ldr	r3, [r7, #4]
+  43 000a 642B     		cmp	r3, #100
+  44 000c 01DD     		ble	.L2
+  45              		.loc 1 11 0 is_stmt 0 discriminator 1
+  46 000e 6423     		movs	r3, #100
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 2
+
+
+  47 0010 07E0     		b	.L3
+  48              	.L2:
+  12:motor_s.c     ****     if (x < -100) return -100;
+  49              		.loc 1 12 0 is_stmt 1
+  50 0012 7B68     		ldr	r3, [r7, #4]
+  51 0014 13F1640F 		cmn	r3, #100
+  52 0018 02DA     		bge	.L4
+  53              		.loc 1 12 0 is_stmt 0 discriminator 1
+  54 001a 6FF06303 		mvn	r3, #99
+  55 001e 00E0     		b	.L3
+  56              	.L4:
+  13:motor_s.c     ****     return x;
+  57              		.loc 1 13 0 is_stmt 1
+  58 0020 7B68     		ldr	r3, [r7, #4]
+  59              	.L3:
+  14:motor_s.c     **** }
+  60              		.loc 1 14 0
+  61 0022 1846     		mov	r0, r3
+  62 0024 0C37     		adds	r7, r7, #12
+  63              		.cfi_def_cfa_offset 4
+  64 0026 BD46     		mov	sp, r7
+  65              		.cfi_def_cfa_register 13
+  66              		@ sp needed
+  67 0028 80BC     		pop	{r7}
+  68              		.cfi_restore 7
+  69              		.cfi_def_cfa_offset 0
+  70 002a 7047     		bx	lr
+  71              		.cfi_endproc
+  72              	.LFE63:
+  73              		.size	clamp100, .-clamp100
+  74              		.section	.text.duty_to_compare,"ax",%progbits
+  75              		.align	2
+  76              		.global	duty_to_compare
+  77              		.thumb
+  78              		.thumb_func
+  79              		.type	duty_to_compare, %function
+  80              	duty_to_compare:
+  81              	.LFB64:
+  15:motor_s.c     **** 
+  16:motor_s.c     **** uint16 duty_to_compare(int s){
+  82              		.loc 1 16 0
+  83              		.cfi_startproc
+  84              		@ args = 0, pretend = 0, frame = 8
+  85              		@ frame_needed = 1, uses_anonymous_args = 0
+  86              		@ link register save eliminated.
+  87 0000 80B4     		push	{r7}
+  88              		.cfi_def_cfa_offset 4
+  89              		.cfi_offset 7, -4
+  90 0002 83B0     		sub	sp, sp, #12
+  91              		.cfi_def_cfa_offset 16
+  92 0004 00AF     		add	r7, sp, #0
+  93              		.cfi_def_cfa_register 7
+  94 0006 7860     		str	r0, [r7, #4]
+  17:motor_s.c     ****     if (s < -100) s = -100;
+  95              		.loc 1 17 0
+  96 0008 7B68     		ldr	r3, [r7, #4]
+  97 000a 13F1640F 		cmn	r3, #100
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 3
+
+
+  98 000e 02DA     		bge	.L6
+  99              		.loc 1 17 0 is_stmt 0 discriminator 1
+ 100 0010 6FF06303 		mvn	r3, #99
+ 101 0014 7B60     		str	r3, [r7, #4]
+ 102              	.L6:
+  18:motor_s.c     ****     if (s >  100) s =  100;
+ 103              		.loc 1 18 0 is_stmt 1
+ 104 0016 7B68     		ldr	r3, [r7, #4]
+ 105 0018 642B     		cmp	r3, #100
+ 106 001a 01DD     		ble	.L7
+ 107              		.loc 1 18 0 is_stmt 0 discriminator 1
+ 108 001c 6423     		movs	r3, #100
+ 109 001e 7B60     		str	r3, [r7, #4]
+ 110              	.L7:
+  19:motor_s.c     ****     /* PWM Period의 중앙을 0%로 보고, ±로 오프셋 */
+  20:motor_s.c     ****     return (uint16)((PWM_PERIOD/2) + ((int32)PWM_PERIOD * s)/200);
+ 111              		.loc 1 20 0 is_stmt 1
+ 112 0020 7B68     		ldr	r3, [r7, #4]
+ 113 0022 C822     		movs	r2, #200
+ 114 0024 02FB03F3 		mul	r3, r2, r3
+ 115 0028 064A     		ldr	r2, .L9
+ 116 002a 82FB0312 		smull	r1, r2, r2, r3
+ 117 002e 9211     		asrs	r2, r2, #6
+ 118 0030 DB17     		asrs	r3, r3, #31
+ 119 0032 D31A     		subs	r3, r2, r3
+ 120 0034 9BB2     		uxth	r3, r3
+ 121 0036 6433     		adds	r3, r3, #100
+ 122 0038 9BB2     		uxth	r3, r3
+  21:motor_s.c     **** }
+ 123              		.loc 1 21 0
+ 124 003a 1846     		mov	r0, r3
+ 125 003c 0C37     		adds	r7, r7, #12
+ 126              		.cfi_def_cfa_offset 4
+ 127 003e BD46     		mov	sp, r7
+ 128              		.cfi_def_cfa_register 13
+ 129              		@ sp needed
+ 130 0040 80BC     		pop	{r7}
+ 131              		.cfi_restore 7
+ 132              		.cfi_def_cfa_offset 0
+ 133 0042 7047     		bx	lr
+ 134              	.L10:
+ 135              		.align	2
+ 136              	.L9:
+ 137 0044 1F85EB51 		.word	1374389535
+ 138              		.cfi_endproc
+ 139              	.LFE64:
+ 140              		.size	duty_to_compare, .-duty_to_compare
+ 141              		.section	.text.motor_enable,"ax",%progbits
+ 142              		.align	2
+ 143              		.global	motor_enable
+ 144              		.thumb
+ 145              		.thumb_func
+ 146              		.type	motor_enable, %function
+ 147              	motor_enable:
+ 148              	.LFB65:
+  22:motor_s.c     **** 
+  23:motor_s.c     **** void motor_enable(uint8 m1_disable, uint8 m2_disable){
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 4
+
+
+ 149              		.loc 1 23 0
+ 150              		.cfi_startproc
+ 151              		@ args = 0, pretend = 0, frame = 16
+ 152              		@ frame_needed = 1, uses_anonymous_args = 0
+ 153 0000 80B5     		push	{r7, lr}
+ 154              		.cfi_def_cfa_offset 8
+ 155              		.cfi_offset 7, -8
+ 156              		.cfi_offset 14, -4
+ 157 0002 84B0     		sub	sp, sp, #16
+ 158              		.cfi_def_cfa_offset 24
+ 159 0004 00AF     		add	r7, sp, #0
+ 160              		.cfi_def_cfa_register 7
+ 161 0006 0346     		mov	r3, r0
+ 162 0008 0A46     		mov	r2, r1
+ 163 000a FB71     		strb	r3, [r7, #7]
+ 164 000c 1346     		mov	r3, r2
+ 165 000e BB71     		strb	r3, [r7, #6]
+  24:motor_s.c     ****     uint8 v = 0;
+ 166              		.loc 1 24 0
+ 167 0010 0023     		movs	r3, #0
+ 168 0012 FB73     		strb	r3, [r7, #15]
+  25:motor_s.c     ****     CyDelay(10);
+ 169              		.loc 1 25 0
+ 170 0014 0A20     		movs	r0, #10
+ 171 0016 FFF7FEFF 		bl	CyDelay
+  26:motor_s.c     ****     if (m1_disable) v |= 0x01;  /* bit0 -> M1_D1 (HIGH=disable) */
+ 172              		.loc 1 26 0
+ 173 001a FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 174 001c 002B     		cmp	r3, #0
+ 175 001e 03D0     		beq	.L12
+ 176              		.loc 1 26 0 is_stmt 0 discriminator 1
+ 177 0020 FB7B     		ldrb	r3, [r7, #15]
+ 178 0022 43F00103 		orr	r3, r3, #1
+ 179 0026 FB73     		strb	r3, [r7, #15]
+ 180              	.L12:
+  27:motor_s.c     ****     if (m2_disable) v |= 0x02;  /* bit1 -> M2_D1 (HIGH=disable) */
+ 181              		.loc 1 27 0 is_stmt 1
+ 182 0028 BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 183 002a 002B     		cmp	r3, #0
+ 184 002c 03D0     		beq	.L13
+ 185              		.loc 1 27 0 is_stmt 0 discriminator 1
+ 186 002e FB7B     		ldrb	r3, [r7, #15]
+ 187 0030 43F00203 		orr	r3, r3, #2
+ 188 0034 FB73     		strb	r3, [r7, #15]
+ 189              	.L13:
+  28:motor_s.c     ****     CONTROL_Write(v);
+ 190              		.loc 1 28 0 is_stmt 1
+ 191 0036 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 192 0038 1846     		mov	r0, r3
+ 193 003a FFF7FEFF 		bl	CONTROL_Write
+  29:motor_s.c     **** }
+ 194              		.loc 1 29 0
+ 195 003e 00BF     		nop
+ 196 0040 1037     		adds	r7, r7, #16
+ 197              		.cfi_def_cfa_offset 8
+ 198 0042 BD46     		mov	sp, r7
+ 199              		.cfi_def_cfa_register 13
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 5
+
+
+ 200              		@ sp needed
+ 201 0044 80BD     		pop	{r7, pc}
+ 202              		.cfi_endproc
+ 203              	.LFE65:
+ 204              		.size	motor_enable, .-motor_enable
+ 205 0046 00BF     		.section	.text.apply_right_trim,"ax",%progbits
+ 206              		.align	2
+ 207              		.global	apply_right_trim
+ 208              		.thumb
+ 209              		.thumb_func
+ 210              		.type	apply_right_trim, %function
+ 211              	apply_right_trim:
+ 212              	.LFB66:
+  30:motor_s.c     **** 
+  31:motor_s.c     **** int apply_right_trim(int duty){
+ 213              		.loc 1 31 0
+ 214              		.cfi_startproc
+ 215              		@ args = 0, pretend = 0, frame = 16
+ 216              		@ frame_needed = 1, uses_anonymous_args = 0
+ 217              		@ link register save eliminated.
+ 218 0000 80B4     		push	{r7}
+ 219              		.cfi_def_cfa_offset 4
+ 220              		.cfi_offset 7, -4
+ 221 0002 85B0     		sub	sp, sp, #20
+ 222              		.cfi_def_cfa_offset 24
+ 223 0004 00AF     		add	r7, sp, #0
+ 224              		.cfi_def_cfa_register 7
+ 225 0006 7860     		str	r0, [r7, #4]
+  32:motor_s.c     ****     /* RIGHT_TRIM_PERCENT: 음수면 오른쪽 강화(네 기존 로직 유지) */
+  33:motor_s.c     ****     int32_t scaled = ((int32_t)duty * (100 - RIGHT_TRIM_PERCENT)) / 100;
+ 226              		.loc 1 33 0
+ 227 0008 7B68     		ldr	r3, [r7, #4]
+ 228 000a 6422     		movs	r2, #100
+ 229 000c 02FB03F3 		mul	r3, r2, r3
+ 230 0010 064A     		ldr	r2, .L16
+ 231 0012 82FB0312 		smull	r1, r2, r2, r3
+ 232 0016 5211     		asrs	r2, r2, #5
+ 233 0018 DB17     		asrs	r3, r3, #31
+ 234 001a D31A     		subs	r3, r2, r3
+ 235 001c FB60     		str	r3, [r7, #12]
+  34:motor_s.c     ****     return (int)scaled;
+ 236              		.loc 1 34 0
+ 237 001e FB68     		ldr	r3, [r7, #12]
+  35:motor_s.c     **** }
+ 238              		.loc 1 35 0
+ 239 0020 1846     		mov	r0, r3
+ 240 0022 1437     		adds	r7, r7, #20
+ 241              		.cfi_def_cfa_offset 4
+ 242 0024 BD46     		mov	sp, r7
+ 243              		.cfi_def_cfa_register 13
+ 244              		@ sp needed
+ 245 0026 80BC     		pop	{r7}
+ 246              		.cfi_restore 7
+ 247              		.cfi_def_cfa_offset 0
+ 248 0028 7047     		bx	lr
+ 249              	.L17:
+ 250 002a 00BF     		.align	2
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 6
+
+
+ 251              	.L16:
+ 252 002c 1F85EB51 		.word	1374389535
+ 253              		.cfi_endproc
+ 254              	.LFE66:
+ 255              		.size	apply_right_trim, .-apply_right_trim
+ 256              		.section	.text.set_motors_symmetric,"ax",%progbits
+ 257              		.align	2
+ 258              		.global	set_motors_symmetric
+ 259              		.thumb
+ 260              		.thumb_func
+ 261              		.type	set_motors_symmetric, %function
+ 262              	set_motors_symmetric:
+ 263              	.LFB67:
+  36:motor_s.c     **** 
+  37:motor_s.c     **** void set_motors_symmetric(int duty){
+ 264              		.loc 1 37 0
+ 265              		.cfi_startproc
+ 266              		@ args = 0, pretend = 0, frame = 8
+ 267              		@ frame_needed = 1, uses_anonymous_args = 0
+ 268 0000 80B5     		push	{r7, lr}
+ 269              		.cfi_def_cfa_offset 8
+ 270              		.cfi_offset 7, -8
+ 271              		.cfi_offset 14, -4
+ 272 0002 82B0     		sub	sp, sp, #8
+ 273              		.cfi_def_cfa_offset 16
+ 274 0004 00AF     		add	r7, sp, #0
+ 275              		.cfi_def_cfa_register 7
+ 276 0006 7860     		str	r0, [r7, #4]
+  38:motor_s.c     ****     duty = clamp100(duty);
+ 277              		.loc 1 38 0
+ 278 0008 7868     		ldr	r0, [r7, #4]
+ 279 000a FFF7FEFF 		bl	clamp100
+ 280 000e 7860     		str	r0, [r7, #4]
+  39:motor_s.c     ****     PWM_1_WriteCompare(duty_to_compare(RIGHT_MOTOR_SIGN * duty));
+ 281              		.loc 1 39 0
+ 282 0010 7B68     		ldr	r3, [r7, #4]
+ 283 0012 5B42     		negs	r3, r3
+ 284 0014 1846     		mov	r0, r3
+ 285 0016 FFF7FEFF 		bl	duty_to_compare
+ 286 001a 0346     		mov	r3, r0
+ 287 001c DBB2     		uxtb	r3, r3
+ 288 001e 1846     		mov	r0, r3
+ 289 0020 FFF7FEFF 		bl	PWM_1_WriteCompare
+  40:motor_s.c     ****     PWM_2_WriteCompare(duty_to_compare(LEFT_MOTOR_SIGN  * duty));
+ 290              		.loc 1 40 0
+ 291 0024 7868     		ldr	r0, [r7, #4]
+ 292 0026 FFF7FEFF 		bl	duty_to_compare
+ 293 002a 0346     		mov	r3, r0
+ 294 002c DBB2     		uxtb	r3, r3
+ 295 002e 1846     		mov	r0, r3
+ 296 0030 FFF7FEFF 		bl	PWM_2_WriteCompare
+  41:motor_s.c     **** }
+ 297              		.loc 1 41 0
+ 298 0034 00BF     		nop
+ 299 0036 0837     		adds	r7, r7, #8
+ 300              		.cfi_def_cfa_offset 8
+ 301 0038 BD46     		mov	sp, r7
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 7
+
+
+ 302              		.cfi_def_cfa_register 13
+ 303              		@ sp needed
+ 304 003a 80BD     		pop	{r7, pc}
+ 305              		.cfi_endproc
+ 306              	.LFE67:
+ 307              		.size	set_motors_symmetric, .-set_motors_symmetric
+ 308              		.section	.text.set_motors_with_trim_and_steer,"ax",%progbits
+ 309              		.align	2
+ 310              		.global	set_motors_with_trim_and_steer
+ 311              		.thumb
+ 312              		.thumb_func
+ 313              		.type	set_motors_with_trim_and_steer, %function
+ 314              	set_motors_with_trim_and_steer:
+ 315              	.LFB68:
+  42:motor_s.c     **** 
+  43:motor_s.c     **** void set_motors_with_trim_and_steer(int duty_center, int steer){
+ 316              		.loc 1 43 0
+ 317              		.cfi_startproc
+ 318              		@ args = 0, pretend = 0, frame = 16
+ 319              		@ frame_needed = 1, uses_anonymous_args = 0
+ 320 0000 80B5     		push	{r7, lr}
+ 321              		.cfi_def_cfa_offset 8
+ 322              		.cfi_offset 7, -8
+ 323              		.cfi_offset 14, -4
+ 324 0002 84B0     		sub	sp, sp, #16
+ 325              		.cfi_def_cfa_offset 24
+ 326 0004 00AF     		add	r7, sp, #0
+ 327              		.cfi_def_cfa_register 7
+ 328 0006 7860     		str	r0, [r7, #4]
+ 329 0008 3960     		str	r1, [r7]
+  44:motor_s.c     ****     int duty_right = clamp100(duty_center + steer);
+ 330              		.loc 1 44 0
+ 331 000a 7A68     		ldr	r2, [r7, #4]
+ 332 000c 3B68     		ldr	r3, [r7]
+ 333 000e 1344     		add	r3, r3, r2
+ 334 0010 1846     		mov	r0, r3
+ 335 0012 FFF7FEFF 		bl	clamp100
+ 336 0016 F860     		str	r0, [r7, #12]
+  45:motor_s.c     ****     int duty_left  = clamp100(duty_center - steer);
+ 337              		.loc 1 45 0
+ 338 0018 7A68     		ldr	r2, [r7, #4]
+ 339 001a 3B68     		ldr	r3, [r7]
+ 340 001c D31A     		subs	r3, r2, r3
+ 341 001e 1846     		mov	r0, r3
+ 342 0020 FFF7FEFF 		bl	clamp100
+ 343 0024 B860     		str	r0, [r7, #8]
+  46:motor_s.c     **** 
+  47:motor_s.c     ****     /* 오른쪽만 트림 */
+  48:motor_s.c     ****     duty_right = clamp100(apply_right_trim(duty_right));
+ 344              		.loc 1 48 0
+ 345 0026 F868     		ldr	r0, [r7, #12]
+ 346 0028 FFF7FEFF 		bl	apply_right_trim
+ 347 002c 0346     		mov	r3, r0
+ 348 002e 1846     		mov	r0, r3
+ 349 0030 FFF7FEFF 		bl	clamp100
+ 350 0034 F860     		str	r0, [r7, #12]
+  49:motor_s.c     **** 
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 8
+
+
+  50:motor_s.c     ****     /* 전진 구간에서 최소 듀티 보장 */
+  51:motor_s.c     ****     if (duty_center > 0) {
+ 351              		.loc 1 51 0
+ 352 0036 7B68     		ldr	r3, [r7, #4]
+ 353 0038 002B     		cmp	r3, #0
+ 354 003a 0FDD     		ble	.L20
+  52:motor_s.c     ****         if (duty_right > 0 && duty_right < MIN_WHEEL_DUTY_R) duty_right = MIN_WHEEL_DUTY_R;
+ 355              		.loc 1 52 0
+ 356 003c FB68     		ldr	r3, [r7, #12]
+ 357 003e 002B     		cmp	r3, #0
+ 358 0040 04DD     		ble	.L21
+ 359              		.loc 1 52 0 is_stmt 0 discriminator 1
+ 360 0042 FB68     		ldr	r3, [r7, #12]
+ 361 0044 0E2B     		cmp	r3, #14
+ 362 0046 01DC     		bgt	.L21
+ 363              		.loc 1 52 0 discriminator 2
+ 364 0048 0F23     		movs	r3, #15
+ 365 004a FB60     		str	r3, [r7, #12]
+ 366              	.L21:
+  53:motor_s.c     ****         if (duty_left  > 0 && duty_left  < MIN_WHEEL_DUTY_L) duty_left  = MIN_WHEEL_DUTY_L;
+ 367              		.loc 1 53 0 is_stmt 1
+ 368 004c BB68     		ldr	r3, [r7, #8]
+ 369 004e 002B     		cmp	r3, #0
+ 370 0050 04DD     		ble	.L20
+ 371              		.loc 1 53 0 is_stmt 0 discriminator 1
+ 372 0052 BB68     		ldr	r3, [r7, #8]
+ 373 0054 0E2B     		cmp	r3, #14
+ 374 0056 01DC     		bgt	.L20
+ 375              		.loc 1 53 0 discriminator 2
+ 376 0058 0F23     		movs	r3, #15
+ 377 005a BB60     		str	r3, [r7, #8]
+ 378              	.L20:
+  54:motor_s.c     ****     }
+  55:motor_s.c     **** 
+  56:motor_s.c     ****     PWM_1_WriteCompare(duty_to_compare(RIGHT_MOTOR_SIGN * duty_right));
+ 379              		.loc 1 56 0 is_stmt 1
+ 380 005c FB68     		ldr	r3, [r7, #12]
+ 381 005e 5B42     		negs	r3, r3
+ 382 0060 1846     		mov	r0, r3
+ 383 0062 FFF7FEFF 		bl	duty_to_compare
+ 384 0066 0346     		mov	r3, r0
+ 385 0068 DBB2     		uxtb	r3, r3
+ 386 006a 1846     		mov	r0, r3
+ 387 006c FFF7FEFF 		bl	PWM_1_WriteCompare
+  57:motor_s.c     ****     PWM_2_WriteCompare(duty_to_compare(LEFT_MOTOR_SIGN  * duty_left ));
+ 388              		.loc 1 57 0
+ 389 0070 B868     		ldr	r0, [r7, #8]
+ 390 0072 FFF7FEFF 		bl	duty_to_compare
+ 391 0076 0346     		mov	r3, r0
+ 392 0078 DBB2     		uxtb	r3, r3
+ 393 007a 1846     		mov	r0, r3
+ 394 007c FFF7FEFF 		bl	PWM_2_WriteCompare
+  58:motor_s.c     **** }
+ 395              		.loc 1 58 0
+ 396 0080 00BF     		nop
+ 397 0082 1037     		adds	r7, r7, #16
+ 398              		.cfi_def_cfa_offset 8
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 9
+
+
+ 399 0084 BD46     		mov	sp, r7
+ 400              		.cfi_def_cfa_register 13
+ 401              		@ sp needed
+ 402 0086 80BD     		pop	{r7, pc}
+ 403              		.cfi_endproc
+ 404              	.LFE68:
+ 405              		.size	set_motors_with_trim_and_steer, .-set_motors_with_trim_and_steer
+ 406              		.global	__aeabi_i2f
+ 407              		.global	__aeabi_fmul
+ 408              		.global	__aeabi_fadd
+ 409              		.global	__aeabi_fcmpgt
+ 410              		.global	__aeabi_fcmplt
+ 411              		.global	__aeabi_f2iz
+ 412              		.section	.text.dyn_brake_duty,"ax",%progbits
+ 413              		.align	2
+ 414              		.global	dyn_brake_duty
+ 415              		.thumb
+ 416              		.thumb_func
+ 417              		.type	dyn_brake_duty, %function
+ 418              	dyn_brake_duty:
+ 419              	.LFB69:
+  59:motor_s.c     **** 
+  60:motor_s.c     **** int dyn_brake_duty(int32_t v_mm_s_filt){
+ 420              		.loc 1 60 0
+ 421              		.cfi_startproc
+ 422              		@ args = 0, pretend = 0, frame = 16
+ 423              		@ frame_needed = 1, uses_anonymous_args = 0
+ 424 0000 80B5     		push	{r7, lr}
+ 425              		.cfi_def_cfa_offset 8
+ 426              		.cfi_offset 7, -8
+ 427              		.cfi_offset 14, -4
+ 428 0002 84B0     		sub	sp, sp, #16
+ 429              		.cfi_def_cfa_offset 24
+ 430 0004 00AF     		add	r7, sp, #0
+ 431              		.cfi_def_cfa_register 7
+ 432 0006 7860     		str	r0, [r7, #4]
+  61:motor_s.c     ****     /* 속도 크기에 따라 브레이크 듀티 가변 (네 v4 공식 그대로) */
+  62:motor_s.c     ****     int32_t spd = (v_mm_s_filt >= 0) ? v_mm_s_filt : -v_mm_s_filt;
+ 433              		.loc 1 62 0
+ 434 0008 7B68     		ldr	r3, [r7, #4]
+ 435 000a 002B     		cmp	r3, #0
+ 436 000c B8BF     		it	lt
+ 437 000e 5B42     		rsblt	r3, r3, #0
+ 438 0010 BB60     		str	r3, [r7, #8]
+  63:motor_s.c     ****     float d = (float)BRAKE_DUTY_MIN + BRAKE_DUTY_PER_MM_S * (float)spd;
+ 439              		.loc 1 63 0
+ 440 0012 B868     		ldr	r0, [r7, #8]
+ 441 0014 FFF7FEFF 		bl	__aeabi_i2f
+ 442 0018 0346     		mov	r3, r0
+ 443 001a 1649     		ldr	r1, .L30
+ 444 001c 1846     		mov	r0, r3
+ 445 001e FFF7FEFF 		bl	__aeabi_fmul
+ 446 0022 0346     		mov	r3, r0
+ 447 0024 1449     		ldr	r1, .L30+4
+ 448 0026 1846     		mov	r0, r3
+ 449 0028 FFF7FEFF 		bl	__aeabi_fadd
+ 450 002c 0346     		mov	r3, r0
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 10
+
+
+ 451 002e FB60     		str	r3, [r7, #12]	@ float
+  64:motor_s.c     ****     if (d > BRAKE_DUTY_MAX) d = BRAKE_DUTY_MAX;
+ 452              		.loc 1 64 0
+ 453 0030 1249     		ldr	r1, .L30+8
+ 454 0032 F868     		ldr	r0, [r7, #12]	@ float
+ 455 0034 FFF7FEFF 		bl	__aeabi_fcmpgt
+ 456 0038 0346     		mov	r3, r0
+ 457 003a 002B     		cmp	r3, #0
+ 458 003c 01D0     		beq	.L23
+ 459              		.loc 1 64 0 is_stmt 0 discriminator 1
+ 460 003e 0F4B     		ldr	r3, .L30+8
+ 461 0040 FB60     		str	r3, [r7, #12]	@ float
+ 462              	.L23:
+  65:motor_s.c     ****     if (d < 0) d = 0;
+ 463              		.loc 1 65 0 is_stmt 1
+ 464 0042 4FF00001 		mov	r1, #0
+ 465 0046 F868     		ldr	r0, [r7, #12]	@ float
+ 466 0048 FFF7FEFF 		bl	__aeabi_fcmplt
+ 467 004c 0346     		mov	r3, r0
+ 468 004e 002B     		cmp	r3, #0
+ 469 0050 02D0     		beq	.L25
+ 470              		.loc 1 65 0 is_stmt 0 discriminator 1
+ 471 0052 4FF00003 		mov	r3, #0
+ 472 0056 FB60     		str	r3, [r7, #12]	@ float
+ 473              	.L25:
+  66:motor_s.c     ****     return (int)(d + 0.5f);
+ 474              		.loc 1 66 0 is_stmt 1
+ 475 0058 4FF07C51 		mov	r1, #1056964608
+ 476 005c F868     		ldr	r0, [r7, #12]	@ float
+ 477 005e FFF7FEFF 		bl	__aeabi_fadd
+ 478 0062 0346     		mov	r3, r0
+ 479 0064 1846     		mov	r0, r3
+ 480 0066 FFF7FEFF 		bl	__aeabi_f2iz
+ 481 006a 0346     		mov	r3, r0
+  67:motor_s.c     **** }
+ 482              		.loc 1 67 0
+ 483 006c 1846     		mov	r0, r3
+ 484 006e 1037     		adds	r7, r7, #16
+ 485              		.cfi_def_cfa_offset 8
+ 486 0070 BD46     		mov	sp, r7
+ 487              		.cfi_def_cfa_register 13
+ 488              		@ sp needed
+ 489 0072 80BD     		pop	{r7, pc}
+ 490              	.L31:
+ 491              		.align	2
+ 492              	.L30:
+ 493 0074 295C0F3D 		.word	1024416809
+ 494 0078 0000F041 		.word	1106247680
+ 495 007c 00005C42 		.word	1113325568
+ 496              		.cfi_endproc
+ 497              	.LFE69:
+ 498              		.size	dyn_brake_duty, .-dyn_brake_duty
+ 499              		.text
+ 500              	.Letext0:
+ 501              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 502              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 503              		.file 4 "Generated_Source\\PSoC5/cytypes.h"
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 11
+
+
+ 504              		.file 5 "Generated_Source\\PSoC5/core_cm3.h"
+ 505              		.section	.debug_info,"",%progbits
+ 506              	.Ldebug_info0:
+ 507 0000 4A020000 		.4byte	0x24a
+ 508 0004 0400     		.2byte	0x4
+ 509 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 510 000a 04       		.byte	0x4
+ 511 000b 01       		.uleb128 0x1
+ 512 000c 15000000 		.4byte	.LASF35
+ 513 0010 0C       		.byte	0xc
+ 514 0011 E2000000 		.4byte	.LASF36
+ 515 0015 44020000 		.4byte	.LASF37
+ 516 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 517 001d 00000000 		.4byte	0
+ 518 0021 00000000 		.4byte	.Ldebug_line0
+ 519 0025 02       		.uleb128 0x2
+ 520 0026 01       		.byte	0x1
+ 521 0027 06       		.byte	0x6
+ 522 0028 38020000 		.4byte	.LASF0
+ 523 002c 02       		.uleb128 0x2
+ 524 002d 01       		.byte	0x1
+ 525 002e 08       		.byte	0x8
+ 526 002f 1C010000 		.4byte	.LASF1
+ 527 0033 02       		.uleb128 0x2
+ 528 0034 02       		.byte	0x2
+ 529 0035 05       		.byte	0x5
+ 530 0036 13020000 		.4byte	.LASF2
+ 531 003a 02       		.uleb128 0x2
+ 532 003b 02       		.byte	0x2
+ 533 003c 07       		.byte	0x7
+ 534 003d CF000000 		.4byte	.LASF3
+ 535 0041 03       		.uleb128 0x3
+ 536 0042 B0000000 		.4byte	.LASF9
+ 537 0046 02       		.byte	0x2
+ 538 0047 3F       		.byte	0x3f
+ 539 0048 4C000000 		.4byte	0x4c
+ 540 004c 02       		.uleb128 0x2
+ 541 004d 04       		.byte	0x4
+ 542 004e 05       		.byte	0x5
+ 543 004f 23020000 		.4byte	.LASF4
+ 544 0053 02       		.uleb128 0x2
+ 545 0054 04       		.byte	0x4
+ 546 0055 07       		.byte	0x7
+ 547 0056 35010000 		.4byte	.LASF5
+ 548 005a 02       		.uleb128 0x2
+ 549 005b 08       		.byte	0x8
+ 550 005c 05       		.byte	0x5
+ 551 005d EA010000 		.4byte	.LASF6
+ 552 0061 02       		.uleb128 0x2
+ 553 0062 08       		.byte	0x8
+ 554 0063 07       		.byte	0x7
+ 555 0064 7A010000 		.4byte	.LASF7
+ 556 0068 04       		.uleb128 0x4
+ 557 0069 04       		.byte	0x4
+ 558 006a 05       		.byte	0x5
+ 559 006b 696E7400 		.ascii	"int\000"
+ 560 006f 02       		.uleb128 0x2
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 12
+
+
+ 561 0070 04       		.byte	0x4
+ 562 0071 07       		.byte	0x7
+ 563 0072 6D010000 		.4byte	.LASF8
+ 564 0076 03       		.uleb128 0x3
+ 565 0077 F7000000 		.4byte	.LASF10
+ 566 007b 03       		.byte	0x3
+ 567 007c 2C       		.byte	0x2c
+ 568 007d 41000000 		.4byte	0x41
+ 569 0081 05       		.uleb128 0x5
+ 570 0082 1D020000 		.4byte	.LASF11
+ 571 0086 04       		.byte	0x4
+ 572 0087 E701     		.2byte	0x1e7
+ 573 0089 2C000000 		.4byte	0x2c
+ 574 008d 05       		.uleb128 0x5
+ 575 008e 66010000 		.4byte	.LASF12
+ 576 0092 04       		.byte	0x4
+ 577 0093 E801     		.2byte	0x1e8
+ 578 0095 3A000000 		.4byte	0x3a
+ 579 0099 05       		.uleb128 0x5
+ 580 009a 47010000 		.4byte	.LASF13
+ 581 009e 04       		.byte	0x4
+ 582 009f EC01     		.2byte	0x1ec
+ 583 00a1 4C000000 		.4byte	0x4c
+ 584 00a5 02       		.uleb128 0x2
+ 585 00a6 04       		.byte	0x4
+ 586 00a7 04       		.byte	0x4
+ 587 00a8 0A010000 		.4byte	.LASF14
+ 588 00ac 02       		.uleb128 0x2
+ 589 00ad 08       		.byte	0x8
+ 590 00ae 04       		.byte	0x4
+ 591 00af 5F010000 		.4byte	.LASF15
+ 592 00b3 02       		.uleb128 0x2
+ 593 00b4 01       		.byte	0x1
+ 594 00b5 08       		.byte	0x8
+ 595 00b6 FF010000 		.4byte	.LASF16
+ 596 00ba 02       		.uleb128 0x2
+ 597 00bb 08       		.byte	0x8
+ 598 00bc 04       		.byte	0x4
+ 599 00bd 2C020000 		.4byte	.LASF17
+ 600 00c1 02       		.uleb128 0x2
+ 601 00c2 04       		.byte	0x4
+ 602 00c3 07       		.byte	0x7
+ 603 00c4 E1010000 		.4byte	.LASF18
+ 604 00c8 06       		.uleb128 0x6
+ 605 00c9 BA000000 		.4byte	.LASF19
+ 606 00cd 01       		.byte	0x1
+ 607 00ce 0A       		.byte	0xa
+ 608 00cf 68000000 		.4byte	0x68
+ 609 00d3 00000000 		.4byte	.LFB63
+ 610 00d7 2C000000 		.4byte	.LFE63-.LFB63
+ 611 00db 01       		.uleb128 0x1
+ 612 00dc 9C       		.byte	0x9c
+ 613 00dd EE000000 		.4byte	0xee
+ 614 00e1 07       		.uleb128 0x7
+ 615 00e2 7800     		.ascii	"x\000"
+ 616 00e4 01       		.byte	0x1
+ 617 00e5 0A       		.byte	0xa
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 13
+
+
+ 618 00e6 68000000 		.4byte	0x68
+ 619 00ea 02       		.uleb128 0x2
+ 620 00eb 91       		.byte	0x91
+ 621 00ec 74       		.sleb128 -12
+ 622 00ed 00       		.byte	0
+ 623 00ee 06       		.uleb128 0x6
+ 624 00ef D1010000 		.4byte	.LASF20
+ 625 00f3 01       		.byte	0x1
+ 626 00f4 10       		.byte	0x10
+ 627 00f5 8D000000 		.4byte	0x8d
+ 628 00f9 00000000 		.4byte	.LFB64
+ 629 00fd 48000000 		.4byte	.LFE64-.LFB64
+ 630 0101 01       		.uleb128 0x1
+ 631 0102 9C       		.byte	0x9c
+ 632 0103 14010000 		.4byte	0x114
+ 633 0107 07       		.uleb128 0x7
+ 634 0108 7300     		.ascii	"s\000"
+ 635 010a 01       		.byte	0x1
+ 636 010b 10       		.byte	0x10
+ 637 010c 68000000 		.4byte	0x68
+ 638 0110 02       		.uleb128 0x2
+ 639 0111 91       		.byte	0x91
+ 640 0112 74       		.sleb128 -12
+ 641 0113 00       		.byte	0
+ 642 0114 08       		.uleb128 0x8
+ 643 0115 A3000000 		.4byte	.LASF26
+ 644 0119 01       		.byte	0x1
+ 645 011a 17       		.byte	0x17
+ 646 011b 00000000 		.4byte	.LFB65
+ 647 011f 46000000 		.4byte	.LFE65-.LFB65
+ 648 0123 01       		.uleb128 0x1
+ 649 0124 9C       		.byte	0x9c
+ 650 0125 52010000 		.4byte	0x152
+ 651 0129 09       		.uleb128 0x9
+ 652 012a 2A010000 		.4byte	.LASF21
+ 653 012e 01       		.byte	0x1
+ 654 012f 17       		.byte	0x17
+ 655 0130 81000000 		.4byte	0x81
+ 656 0134 02       		.uleb128 0x2
+ 657 0135 91       		.byte	0x91
+ 658 0136 6F       		.sleb128 -17
+ 659 0137 09       		.uleb128 0x9
+ 660 0138 FF000000 		.4byte	.LASF22
+ 661 013c 01       		.byte	0x1
+ 662 013d 17       		.byte	0x17
+ 663 013e 81000000 		.4byte	0x81
+ 664 0142 02       		.uleb128 0x2
+ 665 0143 91       		.byte	0x91
+ 666 0144 6E       		.sleb128 -18
+ 667 0145 0A       		.uleb128 0xa
+ 668 0146 7600     		.ascii	"v\000"
+ 669 0148 01       		.byte	0x1
+ 670 0149 18       		.byte	0x18
+ 671 014a 81000000 		.4byte	0x81
+ 672 014e 02       		.uleb128 0x2
+ 673 014f 91       		.byte	0x91
+ 674 0150 77       		.sleb128 -9
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 14
+
+
+ 675 0151 00       		.byte	0
+ 676 0152 06       		.uleb128 0x6
+ 677 0153 91010000 		.4byte	.LASF23
+ 678 0157 01       		.byte	0x1
+ 679 0158 1F       		.byte	0x1f
+ 680 0159 68000000 		.4byte	0x68
+ 681 015d 00000000 		.4byte	.LFB66
+ 682 0161 30000000 		.4byte	.LFE66-.LFB66
+ 683 0165 01       		.uleb128 0x1
+ 684 0166 9C       		.byte	0x9c
+ 685 0167 88010000 		.4byte	0x188
+ 686 016b 09       		.uleb128 0x9
+ 687 016c 4D010000 		.4byte	.LASF24
+ 688 0170 01       		.byte	0x1
+ 689 0171 1F       		.byte	0x1f
+ 690 0172 68000000 		.4byte	0x68
+ 691 0176 02       		.uleb128 0x2
+ 692 0177 91       		.byte	0x91
+ 693 0178 6C       		.sleb128 -20
+ 694 0179 0B       		.uleb128 0xb
+ 695 017a F8010000 		.4byte	.LASF25
+ 696 017e 01       		.byte	0x1
+ 697 017f 21       		.byte	0x21
+ 698 0180 76000000 		.4byte	0x76
+ 699 0184 02       		.uleb128 0x2
+ 700 0185 91       		.byte	0x91
+ 701 0186 74       		.sleb128 -12
+ 702 0187 00       		.byte	0
+ 703 0188 08       		.uleb128 0x8
+ 704 0189 00000000 		.4byte	.LASF27
+ 705 018d 01       		.byte	0x1
+ 706 018e 25       		.byte	0x25
+ 707 018f 00000000 		.4byte	.LFB67
+ 708 0193 3C000000 		.4byte	.LFE67-.LFB67
+ 709 0197 01       		.uleb128 0x1
+ 710 0198 9C       		.byte	0x9c
+ 711 0199 AC010000 		.4byte	0x1ac
+ 712 019d 09       		.uleb128 0x9
+ 713 019e 4D010000 		.4byte	.LASF24
+ 714 01a2 01       		.byte	0x1
+ 715 01a3 25       		.byte	0x25
+ 716 01a4 68000000 		.4byte	0x68
+ 717 01a8 02       		.uleb128 0x2
+ 718 01a9 91       		.byte	0x91
+ 719 01aa 74       		.sleb128 -12
+ 720 01ab 00       		.byte	0
+ 721 01ac 08       		.uleb128 0x8
+ 722 01ad B2010000 		.4byte	.LASF28
+ 723 01b1 01       		.byte	0x1
+ 724 01b2 2B       		.byte	0x2b
+ 725 01b3 00000000 		.4byte	.LFB68
+ 726 01b7 88000000 		.4byte	.LFE68-.LFB68
+ 727 01bb 01       		.uleb128 0x1
+ 728 01bc 9C       		.byte	0x9c
+ 729 01bd FA010000 		.4byte	0x1fa
+ 730 01c1 09       		.uleb128 0x9
+ 731 01c2 10010000 		.4byte	.LASF29
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 15
+
+
+ 732 01c6 01       		.byte	0x1
+ 733 01c7 2B       		.byte	0x2b
+ 734 01c8 68000000 		.4byte	0x68
+ 735 01cc 02       		.uleb128 0x2
+ 736 01cd 91       		.byte	0x91
+ 737 01ce 6C       		.sleb128 -20
+ 738 01cf 09       		.uleb128 0x9
+ 739 01d0 AC010000 		.4byte	.LASF30
+ 740 01d4 01       		.byte	0x1
+ 741 01d5 2B       		.byte	0x2b
+ 742 01d6 68000000 		.4byte	0x68
+ 743 01da 02       		.uleb128 0x2
+ 744 01db 91       		.byte	0x91
+ 745 01dc 68       		.sleb128 -24
+ 746 01dd 0B       		.uleb128 0xb
+ 747 01de EC000000 		.4byte	.LASF31
+ 748 01e2 01       		.byte	0x1
+ 749 01e3 2C       		.byte	0x2c
+ 750 01e4 68000000 		.4byte	0x68
+ 751 01e8 02       		.uleb128 0x2
+ 752 01e9 91       		.byte	0x91
+ 753 01ea 74       		.sleb128 -12
+ 754 01eb 0B       		.uleb128 0xb
+ 755 01ec A2010000 		.4byte	.LASF32
+ 756 01f0 01       		.byte	0x1
+ 757 01f1 2D       		.byte	0x2d
+ 758 01f2 68000000 		.4byte	0x68
+ 759 01f6 02       		.uleb128 0x2
+ 760 01f7 91       		.byte	0x91
+ 761 01f8 70       		.sleb128 -16
+ 762 01f9 00       		.byte	0
+ 763 01fa 0C       		.uleb128 0xc
+ 764 01fb 04020000 		.4byte	.LASF33
+ 765 01ff 01       		.byte	0x1
+ 766 0200 3C       		.byte	0x3c
+ 767 0201 68000000 		.4byte	0x68
+ 768 0205 00000000 		.4byte	.LFB69
+ 769 0209 80000000 		.4byte	.LFE69-.LFB69
+ 770 020d 01       		.uleb128 0x1
+ 771 020e 9C       		.byte	0x9c
+ 772 020f 3C020000 		.4byte	0x23c
+ 773 0213 09       		.uleb128 0x9
+ 774 0214 C3000000 		.4byte	.LASF34
+ 775 0218 01       		.byte	0x1
+ 776 0219 3C       		.byte	0x3c
+ 777 021a 76000000 		.4byte	0x76
+ 778 021e 02       		.uleb128 0x2
+ 779 021f 91       		.byte	0x91
+ 780 0220 6C       		.sleb128 -20
+ 781 0221 0A       		.uleb128 0xa
+ 782 0222 73706400 		.ascii	"spd\000"
+ 783 0226 01       		.byte	0x1
+ 784 0227 3E       		.byte	0x3e
+ 785 0228 76000000 		.4byte	0x76
+ 786 022c 02       		.uleb128 0x2
+ 787 022d 91       		.byte	0x91
+ 788 022e 70       		.sleb128 -16
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 16
+
+
+ 789 022f 0A       		.uleb128 0xa
+ 790 0230 6400     		.ascii	"d\000"
+ 791 0232 01       		.byte	0x1
+ 792 0233 3F       		.byte	0x3f
+ 793 0234 A5000000 		.4byte	0xa5
+ 794 0238 02       		.uleb128 0x2
+ 795 0239 91       		.byte	0x91
+ 796 023a 74       		.sleb128 -12
+ 797 023b 00       		.byte	0
+ 798 023c 0D       		.uleb128 0xd
+ 799 023d 52010000 		.4byte	.LASF38
+ 800 0241 05       		.byte	0x5
+ 801 0242 1207     		.2byte	0x712
+ 802 0244 48020000 		.4byte	0x248
+ 803 0248 0E       		.uleb128 0xe
+ 804 0249 76000000 		.4byte	0x76
+ 805 024d 00       		.byte	0
+ 806              		.section	.debug_abbrev,"",%progbits
+ 807              	.Ldebug_abbrev0:
+ 808 0000 01       		.uleb128 0x1
+ 809 0001 11       		.uleb128 0x11
+ 810 0002 01       		.byte	0x1
+ 811 0003 25       		.uleb128 0x25
+ 812 0004 0E       		.uleb128 0xe
+ 813 0005 13       		.uleb128 0x13
+ 814 0006 0B       		.uleb128 0xb
+ 815 0007 03       		.uleb128 0x3
+ 816 0008 0E       		.uleb128 0xe
+ 817 0009 1B       		.uleb128 0x1b
+ 818 000a 0E       		.uleb128 0xe
+ 819 000b 55       		.uleb128 0x55
+ 820 000c 17       		.uleb128 0x17
+ 821 000d 11       		.uleb128 0x11
+ 822 000e 01       		.uleb128 0x1
+ 823 000f 10       		.uleb128 0x10
+ 824 0010 17       		.uleb128 0x17
+ 825 0011 00       		.byte	0
+ 826 0012 00       		.byte	0
+ 827 0013 02       		.uleb128 0x2
+ 828 0014 24       		.uleb128 0x24
+ 829 0015 00       		.byte	0
+ 830 0016 0B       		.uleb128 0xb
+ 831 0017 0B       		.uleb128 0xb
+ 832 0018 3E       		.uleb128 0x3e
+ 833 0019 0B       		.uleb128 0xb
+ 834 001a 03       		.uleb128 0x3
+ 835 001b 0E       		.uleb128 0xe
+ 836 001c 00       		.byte	0
+ 837 001d 00       		.byte	0
+ 838 001e 03       		.uleb128 0x3
+ 839 001f 16       		.uleb128 0x16
+ 840 0020 00       		.byte	0
+ 841 0021 03       		.uleb128 0x3
+ 842 0022 0E       		.uleb128 0xe
+ 843 0023 3A       		.uleb128 0x3a
+ 844 0024 0B       		.uleb128 0xb
+ 845 0025 3B       		.uleb128 0x3b
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 17
+
+
+ 846 0026 0B       		.uleb128 0xb
+ 847 0027 49       		.uleb128 0x49
+ 848 0028 13       		.uleb128 0x13
+ 849 0029 00       		.byte	0
+ 850 002a 00       		.byte	0
+ 851 002b 04       		.uleb128 0x4
+ 852 002c 24       		.uleb128 0x24
+ 853 002d 00       		.byte	0
+ 854 002e 0B       		.uleb128 0xb
+ 855 002f 0B       		.uleb128 0xb
+ 856 0030 3E       		.uleb128 0x3e
+ 857 0031 0B       		.uleb128 0xb
+ 858 0032 03       		.uleb128 0x3
+ 859 0033 08       		.uleb128 0x8
+ 860 0034 00       		.byte	0
+ 861 0035 00       		.byte	0
+ 862 0036 05       		.uleb128 0x5
+ 863 0037 16       		.uleb128 0x16
+ 864 0038 00       		.byte	0
+ 865 0039 03       		.uleb128 0x3
+ 866 003a 0E       		.uleb128 0xe
+ 867 003b 3A       		.uleb128 0x3a
+ 868 003c 0B       		.uleb128 0xb
+ 869 003d 3B       		.uleb128 0x3b
+ 870 003e 05       		.uleb128 0x5
+ 871 003f 49       		.uleb128 0x49
+ 872 0040 13       		.uleb128 0x13
+ 873 0041 00       		.byte	0
+ 874 0042 00       		.byte	0
+ 875 0043 06       		.uleb128 0x6
+ 876 0044 2E       		.uleb128 0x2e
+ 877 0045 01       		.byte	0x1
+ 878 0046 3F       		.uleb128 0x3f
+ 879 0047 19       		.uleb128 0x19
+ 880 0048 03       		.uleb128 0x3
+ 881 0049 0E       		.uleb128 0xe
+ 882 004a 3A       		.uleb128 0x3a
+ 883 004b 0B       		.uleb128 0xb
+ 884 004c 3B       		.uleb128 0x3b
+ 885 004d 0B       		.uleb128 0xb
+ 886 004e 27       		.uleb128 0x27
+ 887 004f 19       		.uleb128 0x19
+ 888 0050 49       		.uleb128 0x49
+ 889 0051 13       		.uleb128 0x13
+ 890 0052 11       		.uleb128 0x11
+ 891 0053 01       		.uleb128 0x1
+ 892 0054 12       		.uleb128 0x12
+ 893 0055 06       		.uleb128 0x6
+ 894 0056 40       		.uleb128 0x40
+ 895 0057 18       		.uleb128 0x18
+ 896 0058 9742     		.uleb128 0x2117
+ 897 005a 19       		.uleb128 0x19
+ 898 005b 01       		.uleb128 0x1
+ 899 005c 13       		.uleb128 0x13
+ 900 005d 00       		.byte	0
+ 901 005e 00       		.byte	0
+ 902 005f 07       		.uleb128 0x7
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 18
+
+
+ 903 0060 05       		.uleb128 0x5
+ 904 0061 00       		.byte	0
+ 905 0062 03       		.uleb128 0x3
+ 906 0063 08       		.uleb128 0x8
+ 907 0064 3A       		.uleb128 0x3a
+ 908 0065 0B       		.uleb128 0xb
+ 909 0066 3B       		.uleb128 0x3b
+ 910 0067 0B       		.uleb128 0xb
+ 911 0068 49       		.uleb128 0x49
+ 912 0069 13       		.uleb128 0x13
+ 913 006a 02       		.uleb128 0x2
+ 914 006b 18       		.uleb128 0x18
+ 915 006c 00       		.byte	0
+ 916 006d 00       		.byte	0
+ 917 006e 08       		.uleb128 0x8
+ 918 006f 2E       		.uleb128 0x2e
+ 919 0070 01       		.byte	0x1
+ 920 0071 3F       		.uleb128 0x3f
+ 921 0072 19       		.uleb128 0x19
+ 922 0073 03       		.uleb128 0x3
+ 923 0074 0E       		.uleb128 0xe
+ 924 0075 3A       		.uleb128 0x3a
+ 925 0076 0B       		.uleb128 0xb
+ 926 0077 3B       		.uleb128 0x3b
+ 927 0078 0B       		.uleb128 0xb
+ 928 0079 27       		.uleb128 0x27
+ 929 007a 19       		.uleb128 0x19
+ 930 007b 11       		.uleb128 0x11
+ 931 007c 01       		.uleb128 0x1
+ 932 007d 12       		.uleb128 0x12
+ 933 007e 06       		.uleb128 0x6
+ 934 007f 40       		.uleb128 0x40
+ 935 0080 18       		.uleb128 0x18
+ 936 0081 9642     		.uleb128 0x2116
+ 937 0083 19       		.uleb128 0x19
+ 938 0084 01       		.uleb128 0x1
+ 939 0085 13       		.uleb128 0x13
+ 940 0086 00       		.byte	0
+ 941 0087 00       		.byte	0
+ 942 0088 09       		.uleb128 0x9
+ 943 0089 05       		.uleb128 0x5
+ 944 008a 00       		.byte	0
+ 945 008b 03       		.uleb128 0x3
+ 946 008c 0E       		.uleb128 0xe
+ 947 008d 3A       		.uleb128 0x3a
+ 948 008e 0B       		.uleb128 0xb
+ 949 008f 3B       		.uleb128 0x3b
+ 950 0090 0B       		.uleb128 0xb
+ 951 0091 49       		.uleb128 0x49
+ 952 0092 13       		.uleb128 0x13
+ 953 0093 02       		.uleb128 0x2
+ 954 0094 18       		.uleb128 0x18
+ 955 0095 00       		.byte	0
+ 956 0096 00       		.byte	0
+ 957 0097 0A       		.uleb128 0xa
+ 958 0098 34       		.uleb128 0x34
+ 959 0099 00       		.byte	0
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 19
+
+
+ 960 009a 03       		.uleb128 0x3
+ 961 009b 08       		.uleb128 0x8
+ 962 009c 3A       		.uleb128 0x3a
+ 963 009d 0B       		.uleb128 0xb
+ 964 009e 3B       		.uleb128 0x3b
+ 965 009f 0B       		.uleb128 0xb
+ 966 00a0 49       		.uleb128 0x49
+ 967 00a1 13       		.uleb128 0x13
+ 968 00a2 02       		.uleb128 0x2
+ 969 00a3 18       		.uleb128 0x18
+ 970 00a4 00       		.byte	0
+ 971 00a5 00       		.byte	0
+ 972 00a6 0B       		.uleb128 0xb
+ 973 00a7 34       		.uleb128 0x34
+ 974 00a8 00       		.byte	0
+ 975 00a9 03       		.uleb128 0x3
+ 976 00aa 0E       		.uleb128 0xe
+ 977 00ab 3A       		.uleb128 0x3a
+ 978 00ac 0B       		.uleb128 0xb
+ 979 00ad 3B       		.uleb128 0x3b
+ 980 00ae 0B       		.uleb128 0xb
+ 981 00af 49       		.uleb128 0x49
+ 982 00b0 13       		.uleb128 0x13
+ 983 00b1 02       		.uleb128 0x2
+ 984 00b2 18       		.uleb128 0x18
+ 985 00b3 00       		.byte	0
+ 986 00b4 00       		.byte	0
+ 987 00b5 0C       		.uleb128 0xc
+ 988 00b6 2E       		.uleb128 0x2e
+ 989 00b7 01       		.byte	0x1
+ 990 00b8 3F       		.uleb128 0x3f
+ 991 00b9 19       		.uleb128 0x19
+ 992 00ba 03       		.uleb128 0x3
+ 993 00bb 0E       		.uleb128 0xe
+ 994 00bc 3A       		.uleb128 0x3a
+ 995 00bd 0B       		.uleb128 0xb
+ 996 00be 3B       		.uleb128 0x3b
+ 997 00bf 0B       		.uleb128 0xb
+ 998 00c0 27       		.uleb128 0x27
+ 999 00c1 19       		.uleb128 0x19
+ 1000 00c2 49       		.uleb128 0x49
+ 1001 00c3 13       		.uleb128 0x13
+ 1002 00c4 11       		.uleb128 0x11
+ 1003 00c5 01       		.uleb128 0x1
+ 1004 00c6 12       		.uleb128 0x12
+ 1005 00c7 06       		.uleb128 0x6
+ 1006 00c8 40       		.uleb128 0x40
+ 1007 00c9 18       		.uleb128 0x18
+ 1008 00ca 9642     		.uleb128 0x2116
+ 1009 00cc 19       		.uleb128 0x19
+ 1010 00cd 01       		.uleb128 0x1
+ 1011 00ce 13       		.uleb128 0x13
+ 1012 00cf 00       		.byte	0
+ 1013 00d0 00       		.byte	0
+ 1014 00d1 0D       		.uleb128 0xd
+ 1015 00d2 34       		.uleb128 0x34
+ 1016 00d3 00       		.byte	0
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 20
+
+
+ 1017 00d4 03       		.uleb128 0x3
+ 1018 00d5 0E       		.uleb128 0xe
+ 1019 00d6 3A       		.uleb128 0x3a
+ 1020 00d7 0B       		.uleb128 0xb
+ 1021 00d8 3B       		.uleb128 0x3b
+ 1022 00d9 05       		.uleb128 0x5
+ 1023 00da 49       		.uleb128 0x49
+ 1024 00db 13       		.uleb128 0x13
+ 1025 00dc 3F       		.uleb128 0x3f
+ 1026 00dd 19       		.uleb128 0x19
+ 1027 00de 3C       		.uleb128 0x3c
+ 1028 00df 19       		.uleb128 0x19
+ 1029 00e0 00       		.byte	0
+ 1030 00e1 00       		.byte	0
+ 1031 00e2 0E       		.uleb128 0xe
+ 1032 00e3 35       		.uleb128 0x35
+ 1033 00e4 00       		.byte	0
+ 1034 00e5 49       		.uleb128 0x49
+ 1035 00e6 13       		.uleb128 0x13
+ 1036 00e7 00       		.byte	0
+ 1037 00e8 00       		.byte	0
+ 1038 00e9 00       		.byte	0
+ 1039              		.section	.debug_aranges,"",%progbits
+ 1040 0000 4C000000 		.4byte	0x4c
+ 1041 0004 0200     		.2byte	0x2
+ 1042 0006 00000000 		.4byte	.Ldebug_info0
+ 1043 000a 04       		.byte	0x4
+ 1044 000b 00       		.byte	0
+ 1045 000c 0000     		.2byte	0
+ 1046 000e 0000     		.2byte	0
+ 1047 0010 00000000 		.4byte	.LFB63
+ 1048 0014 2C000000 		.4byte	.LFE63-.LFB63
+ 1049 0018 00000000 		.4byte	.LFB64
+ 1050 001c 48000000 		.4byte	.LFE64-.LFB64
+ 1051 0020 00000000 		.4byte	.LFB65
+ 1052 0024 46000000 		.4byte	.LFE65-.LFB65
+ 1053 0028 00000000 		.4byte	.LFB66
+ 1054 002c 30000000 		.4byte	.LFE66-.LFB66
+ 1055 0030 00000000 		.4byte	.LFB67
+ 1056 0034 3C000000 		.4byte	.LFE67-.LFB67
+ 1057 0038 00000000 		.4byte	.LFB68
+ 1058 003c 88000000 		.4byte	.LFE68-.LFB68
+ 1059 0040 00000000 		.4byte	.LFB69
+ 1060 0044 80000000 		.4byte	.LFE69-.LFB69
+ 1061 0048 00000000 		.4byte	0
+ 1062 004c 00000000 		.4byte	0
+ 1063              		.section	.debug_ranges,"",%progbits
+ 1064              	.Ldebug_ranges0:
+ 1065 0000 00000000 		.4byte	.LFB63
+ 1066 0004 2C000000 		.4byte	.LFE63
+ 1067 0008 00000000 		.4byte	.LFB64
+ 1068 000c 48000000 		.4byte	.LFE64
+ 1069 0010 00000000 		.4byte	.LFB65
+ 1070 0014 46000000 		.4byte	.LFE65
+ 1071 0018 00000000 		.4byte	.LFB66
+ 1072 001c 30000000 		.4byte	.LFE66
+ 1073 0020 00000000 		.4byte	.LFB67
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 21
+
+
+ 1074 0024 3C000000 		.4byte	.LFE67
+ 1075 0028 00000000 		.4byte	.LFB68
+ 1076 002c 88000000 		.4byte	.LFE68
+ 1077 0030 00000000 		.4byte	.LFB69
+ 1078 0034 80000000 		.4byte	.LFE69
+ 1079 0038 00000000 		.4byte	0
+ 1080 003c 00000000 		.4byte	0
+ 1081              		.section	.debug_line,"",%progbits
+ 1082              	.Ldebug_line0:
+ 1083 0000 32020000 		.section	.debug_str,"MS",%progbits,1
+ 1083      02004F01 
+ 1083      00000201 
+ 1083      FB0E0D00 
+ 1083      01010101 
+ 1084              	.LASF27:
+ 1085 0000 7365745F 		.ascii	"set_motors_symmetric\000"
+ 1085      6D6F746F 
+ 1085      72735F73 
+ 1085      796D6D65 
+ 1085      74726963 
+ 1086              	.LASF35:
+ 1087 0015 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1087      43313120 
+ 1087      352E342E 
+ 1087      31203230 
+ 1087      31363036 
+ 1088 0048 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1088      20726576 
+ 1088      6973696F 
+ 1088      6E203233 
+ 1088      37373135 
+ 1089 007b 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 1089      66756E63 
+ 1089      74696F6E 
+ 1089      2D736563 
+ 1089      74696F6E 
+ 1090              	.LASF26:
+ 1091 00a3 6D6F746F 		.ascii	"motor_enable\000"
+ 1091      725F656E 
+ 1091      61626C65 
+ 1091      00
+ 1092              	.LASF9:
+ 1093 00b0 5F5F696E 		.ascii	"__int32_t\000"
+ 1093      7433325F 
+ 1093      7400
+ 1094              	.LASF19:
+ 1095 00ba 636C616D 		.ascii	"clamp100\000"
+ 1095      70313030 
+ 1095      00
+ 1096              	.LASF34:
+ 1097 00c3 765F6D6D 		.ascii	"v_mm_s_filt\000"
+ 1097      5F735F66 
+ 1097      696C7400 
+ 1098              	.LASF3:
+ 1099 00cf 73686F72 		.ascii	"short unsigned int\000"
+ 1099      7420756E 
+ 1099      7369676E 
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 22
+
+
+ 1099      65642069 
+ 1099      6E7400
+ 1100              	.LASF36:
+ 1101 00e2 6D6F746F 		.ascii	"motor_s.c\000"
+ 1101      725F732E 
+ 1101      6300
+ 1102              	.LASF31:
+ 1103 00ec 64757479 		.ascii	"duty_right\000"
+ 1103      5F726967 
+ 1103      687400
+ 1104              	.LASF10:
+ 1105 00f7 696E7433 		.ascii	"int32_t\000"
+ 1105      325F7400 
+ 1106              	.LASF22:
+ 1107 00ff 6D325F64 		.ascii	"m2_disable\000"
+ 1107      69736162 
+ 1107      6C6500
+ 1108              	.LASF14:
+ 1109 010a 666C6F61 		.ascii	"float\000"
+ 1109      7400
+ 1110              	.LASF29:
+ 1111 0110 64757479 		.ascii	"duty_center\000"
+ 1111      5F63656E 
+ 1111      74657200 
+ 1112              	.LASF1:
+ 1113 011c 756E7369 		.ascii	"unsigned char\000"
+ 1113      676E6564 
+ 1113      20636861 
+ 1113      7200
+ 1114              	.LASF21:
+ 1115 012a 6D315F64 		.ascii	"m1_disable\000"
+ 1115      69736162 
+ 1115      6C6500
+ 1116              	.LASF5:
+ 1117 0135 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1117      20756E73 
+ 1117      69676E65 
+ 1117      6420696E 
+ 1117      7400
+ 1118              	.LASF13:
+ 1119 0147 696E7433 		.ascii	"int32\000"
+ 1119      3200
+ 1120              	.LASF24:
+ 1121 014d 64757479 		.ascii	"duty\000"
+ 1121      00
+ 1122              	.LASF38:
+ 1123 0152 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 1123      52784275 
+ 1123      66666572 
+ 1123      00
+ 1124              	.LASF15:
+ 1125 015f 646F7562 		.ascii	"double\000"
+ 1125      6C6500
+ 1126              	.LASF12:
+ 1127 0166 75696E74 		.ascii	"uint16\000"
+ 1127      313600
+ 1128              	.LASF8:
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 23
+
+
+ 1129 016d 756E7369 		.ascii	"unsigned int\000"
+ 1129      676E6564 
+ 1129      20696E74 
+ 1129      00
+ 1130              	.LASF7:
+ 1131 017a 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1131      206C6F6E 
+ 1131      6720756E 
+ 1131      7369676E 
+ 1131      65642069 
+ 1132              	.LASF23:
+ 1133 0191 6170706C 		.ascii	"apply_right_trim\000"
+ 1133      795F7269 
+ 1133      6768745F 
+ 1133      7472696D 
+ 1133      00
+ 1134              	.LASF32:
+ 1135 01a2 64757479 		.ascii	"duty_left\000"
+ 1135      5F6C6566 
+ 1135      7400
+ 1136              	.LASF30:
+ 1137 01ac 73746565 		.ascii	"steer\000"
+ 1137      7200
+ 1138              	.LASF28:
+ 1139 01b2 7365745F 		.ascii	"set_motors_with_trim_and_steer\000"
+ 1139      6D6F746F 
+ 1139      72735F77 
+ 1139      6974685F 
+ 1139      7472696D 
+ 1140              	.LASF20:
+ 1141 01d1 64757479 		.ascii	"duty_to_compare\000"
+ 1141      5F746F5F 
+ 1141      636F6D70 
+ 1141      61726500 
+ 1142              	.LASF18:
+ 1143 01e1 73697A65 		.ascii	"sizetype\000"
+ 1143      74797065 
+ 1143      00
+ 1144              	.LASF6:
+ 1145 01ea 6C6F6E67 		.ascii	"long long int\000"
+ 1145      206C6F6E 
+ 1145      6720696E 
+ 1145      7400
+ 1146              	.LASF25:
+ 1147 01f8 7363616C 		.ascii	"scaled\000"
+ 1147      656400
+ 1148              	.LASF16:
+ 1149 01ff 63686172 		.ascii	"char\000"
+ 1149      00
+ 1150              	.LASF33:
+ 1151 0204 64796E5F 		.ascii	"dyn_brake_duty\000"
+ 1151      6272616B 
+ 1151      655F6475 
+ 1151      747900
+ 1152              	.LASF2:
+ 1153 0213 73686F72 		.ascii	"short int\000"
+ 1153      7420696E 
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccWHXgJM.s 			page 24
+
+
+ 1153      7400
+ 1154              	.LASF11:
+ 1155 021d 75696E74 		.ascii	"uint8\000"
+ 1155      3800
+ 1156              	.LASF4:
+ 1157 0223 6C6F6E67 		.ascii	"long int\000"
+ 1157      20696E74 
+ 1157      00
+ 1158              	.LASF17:
+ 1159 022c 6C6F6E67 		.ascii	"long double\000"
+ 1159      20646F75 
+ 1159      626C6500 
+ 1160              	.LASF0:
+ 1161 0238 7369676E 		.ascii	"signed char\000"
+ 1161      65642063 
+ 1161      68617200 
+ 1162              	.LASF37:
+ 1163 0244 433A5C55 		.ascii	"C:\\Users\\ylee818\\Documents\\GitHub\\COMPSYS301\\"
+ 1163      73657273 
+ 1163      5C796C65 
+ 1163      65383138 
+ 1163      5C446F63 
+ 1164 0271 42656E63 		.ascii	"Benchmarktest___combined\\Benchmarktest___combined\\"
+ 1164      686D6172 
+ 1164      6B746573 
+ 1164      745F5F5F 
+ 1164      636F6D62 
+ 1165 02a3 70736F63 		.ascii	"psoc student pack\\psoc_code_base\\CS301_Class.cyds"
+ 1165      20737475 
+ 1165      64656E74 
+ 1165      20706163 
+ 1165      6B5C7073 
+ 1166 02d4 6E00     		.ascii	"n\000"
+ 1167              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
