@@ -1,0 +1,1945 @@
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"directions.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.data
+  20              		.align	2
+  21              		.type	TICKS_90_LEFT, %object
+  22              		.size	TICKS_90_LEFT, 4
+  23              	TICKS_90_LEFT:
+  24 0000 70030000 		.word	880
+  25              		.align	2
+  26              		.type	TICKS_90_RIGHT, %object
+  27              		.size	TICKS_90_RIGHT, 4
+  28              	TICKS_90_RIGHT:
+  29 0004 84030000 		.word	900
+  30              		.bss
+  31              	s_state:
+  32 0000 00       		.space	1
+  33              	s_turn_side:
+  34 0001 00       		.space	1
+  35 0002 0000     		.align	2
+  36              	s_target_ticks:
+  37 0004 00000000 		.space	4
+  38              		.align	2
+  39              	s_acc_ticks:
+  40 0008 00000000 		.space	4
+  41              		.align	1
+  42              	s_safety_count:
+  43 000c 0000     		.space	2
+  44              		.section	.text.enc_pause_background,"ax",%progbits
+  45              		.align	2
+  46              		.thumb
+  47              		.thumb_func
+  48              		.type	enc_pause_background, %function
+  49              	enc_pause_background:
+  50              	.LFB63:
+  51              		.file 1 "directions.c"
+   1:directions.c  **** #include <project.h>
+   2:directions.c  **** #include <stdint.h>
+   3:directions.c  **** #include <stdbool.h>
+   4:directions.c  **** 
+   5:directions.c  **** #include "directions.h"
+   6:directions.c  **** #include "motor_s.h"     // set_motors_symmetric(), set_motors_with_trim_and_steer(), motor_enable
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 2
+
+
+   7:directions.c  **** #include "defines.h"     // your project-wide defines
+   8:directions.c  **** 
+   9:directions.c  **** /* ===================== Tunables ===================== */
+  10:directions.c  **** /* Encoder counts for ~90° pivots (tune on your tape) */
+  11:directions.c  **** static volatile int32_t TICKS_90_LEFT  = 880;   /* abs(|ΔL|)+abs(|ΔR|) */
+  12:directions.c  **** static volatile int32_t TICKS_90_RIGHT = 900;
+  13:directions.c  **** 
+  14:directions.c  **** /* Pivot speed (%) — keep modest to avoid overshoot */
+  15:directions.c  **** #define PIVOT_SPEED_PC        28
+  16:directions.c  **** #define STOP_BEFORE_MS        80
+  17:directions.c  **** #define BRAKE_AFTER_MS        90
+  18:directions.c  **** 
+  19:directions.c  **** /* Safety: max number of handler calls allowed while turning.
+  20:directions.c  ****  * With your ~8 ms loop this is ~3.2 s (400 * 8 ms) which is plenty. */
+  21:directions.c  **** #define MAX_TURN_HANDLER_TICKS  400
+  22:directions.c  **** 
+  23:directions.c  **** /* ===================== Internal state ===================== */
+  24:directions.c  **** typedef enum {
+  25:directions.c  ****     DIR_IDLE = 0,
+  26:directions.c  ****     DIR_PREP,
+  27:directions.c  ****     DIR_TURNING,
+  28:directions.c  ****     DIR_FINISH
+  29:directions.c  **** } dir_state_t;
+  30:directions.c  **** 
+  31:directions.c  **** static dir_state_t s_state = DIR_IDLE;
+  32:directions.c  **** static uint8_t     s_turn_side = 0;        /* 1 = left, 2 = right */
+  33:directions.c  **** static int32_t     s_target_ticks = 0;     /* goal = ~90° */
+  34:directions.c  **** static int32_t     s_acc_ticks    = 0;     /* running sum of |ΔL|+|ΔR| */
+  35:directions.c  **** static uint16_t    s_safety_count = 0;
+  36:directions.c  **** 
+  37:directions.c  **** /* ---------------- Encoder helpers ----------------
+  38:directions.c  ****  * We pause your background 5 ms encoder task while we own the counters,
+  39:directions.c  ****  * so our deltas don't get zeroed behind our back.
+  40:directions.c  ****  */
+  41:directions.c  **** static inline void enc_pause_background(void)
+  42:directions.c  **** {
+  52              		.loc 1 42 0
+  53              		.cfi_startproc
+  54              		@ args = 0, pretend = 0, frame = 0
+  55              		@ frame_needed = 1, uses_anonymous_args = 0
+  56              		@ link register save eliminated.
+  57 0000 80B4     		push	{r7}
+  58              		.cfi_def_cfa_offset 4
+  59              		.cfi_offset 7, -4
+  60 0002 00AF     		add	r7, sp, #0
+  61              		.cfi_def_cfa_register 7
+  43:directions.c  **** #if defined(Timer_QD_Stop)
+  44:directions.c  ****     Timer_QD_Stop();
+  45:directions.c  **** #endif
+  46:directions.c  **** #if defined(isr_qd_Disable)
+  47:directions.c  ****     isr_qd_Disable();
+  48:directions.c  **** #endif
+  49:directions.c  **** }
+  62              		.loc 1 49 0
+  63 0004 00BF     		nop
+  64 0006 BD46     		mov	sp, r7
+  65              		.cfi_def_cfa_register 13
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 3
+
+
+  66              		@ sp needed
+  67 0008 80BC     		pop	{r7}
+  68              		.cfi_restore 7
+  69              		.cfi_def_cfa_offset 0
+  70 000a 7047     		bx	lr
+  71              		.cfi_endproc
+  72              	.LFE63:
+  73              		.size	enc_pause_background, .-enc_pause_background
+  74              		.section	.text.enc_resume_background,"ax",%progbits
+  75              		.align	2
+  76              		.thumb
+  77              		.thumb_func
+  78              		.type	enc_resume_background, %function
+  79              	enc_resume_background:
+  80              	.LFB64:
+  50:directions.c  **** 
+  51:directions.c  **** static inline void enc_resume_background(void)
+  52:directions.c  **** {
+  81              		.loc 1 52 0
+  82              		.cfi_startproc
+  83              		@ args = 0, pretend = 0, frame = 0
+  84              		@ frame_needed = 1, uses_anonymous_args = 0
+  85              		@ link register save eliminated.
+  86 0000 80B4     		push	{r7}
+  87              		.cfi_def_cfa_offset 4
+  88              		.cfi_offset 7, -4
+  89 0002 00AF     		add	r7, sp, #0
+  90              		.cfi_def_cfa_register 7
+  53:directions.c  **** #if defined(isr_qd_Enable)
+  54:directions.c  ****     isr_qd_Enable();
+  55:directions.c  **** #endif
+  56:directions.c  **** #if defined(Timer_QD_Start)
+  57:directions.c  ****     Timer_QD_Start();
+  58:directions.c  **** #endif
+  59:directions.c  **** }
+  91              		.loc 1 59 0
+  92 0004 00BF     		nop
+  93 0006 BD46     		mov	sp, r7
+  94              		.cfi_def_cfa_register 13
+  95              		@ sp needed
+  96 0008 80BC     		pop	{r7}
+  97              		.cfi_restore 7
+  98              		.cfi_def_cfa_offset 0
+  99 000a 7047     		bx	lr
+ 100              		.cfi_endproc
+ 101              	.LFE64:
+ 102              		.size	enc_resume_background, .-enc_resume_background
+ 103              		.section	.text.enc_reset_local,"ax",%progbits
+ 104              		.align	2
+ 105              		.thumb
+ 106              		.thumb_func
+ 107              		.type	enc_reset_local, %function
+ 108              	enc_reset_local:
+ 109              	.LFB65:
+  60:directions.c  **** 
+  61:directions.c  **** static inline void enc_reset_local(void)
+  62:directions.c  **** {
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 4
+
+
+ 110              		.loc 1 62 0
+ 111              		.cfi_startproc
+ 112              		@ args = 0, pretend = 0, frame = 0
+ 113              		@ frame_needed = 1, uses_anonymous_args = 0
+ 114              		@ link register save eliminated.
+ 115 0000 80B4     		push	{r7}
+ 116              		.cfi_def_cfa_offset 4
+ 117              		.cfi_offset 7, -4
+ 118 0002 00AF     		add	r7, sp, #0
+ 119              		.cfi_def_cfa_register 7
+  63:directions.c  **** #if defined(QuadDec_M1_SetCounter) && defined(QuadDec_M2_SetCounter)
+  64:directions.c  ****     QuadDec_M1_SetCounter(0);
+  65:directions.c  ****     QuadDec_M2_SetCounter(0);
+  66:directions.c  **** #endif
+  67:directions.c  ****     s_acc_ticks = 0;
+ 120              		.loc 1 67 0
+ 121 0004 034B     		ldr	r3, .L4
+ 122 0006 0022     		movs	r2, #0
+ 123 0008 1A60     		str	r2, [r3]
+  68:directions.c  **** }
+ 124              		.loc 1 68 0
+ 125 000a 00BF     		nop
+ 126 000c BD46     		mov	sp, r7
+ 127              		.cfi_def_cfa_register 13
+ 128              		@ sp needed
+ 129 000e 80BC     		pop	{r7}
+ 130              		.cfi_restore 7
+ 131              		.cfi_def_cfa_offset 0
+ 132 0010 7047     		bx	lr
+ 133              	.L5:
+ 134 0012 00BF     		.align	2
+ 135              	.L4:
+ 136 0014 08000000 		.word	s_acc_ticks
+ 137              		.cfi_endproc
+ 138              	.LFE65:
+ 139              		.size	enc_reset_local, .-enc_reset_local
+ 140              		.section	.text.enc_accumulate_now,"ax",%progbits
+ 141              		.align	2
+ 142              		.thumb
+ 143              		.thumb_func
+ 144              		.type	enc_accumulate_now, %function
+ 145              	enc_accumulate_now:
+ 146              	.LFB66:
+  69:directions.c  **** 
+  70:directions.c  **** /* Accumulate |ΔL| + |ΔR| since last call, then zero counters */
+  71:directions.c  **** static inline void enc_accumulate_now(void)
+  72:directions.c  **** {
+ 147              		.loc 1 72 0
+ 148              		.cfi_startproc
+ 149              		@ args = 0, pretend = 0, frame = 8
+ 150              		@ frame_needed = 1, uses_anonymous_args = 0
+ 151              		@ link register save eliminated.
+ 152 0000 80B4     		push	{r7}
+ 153              		.cfi_def_cfa_offset 4
+ 154              		.cfi_offset 7, -4
+ 155 0002 83B0     		sub	sp, sp, #12
+ 156              		.cfi_def_cfa_offset 16
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 5
+
+
+ 157 0004 00AF     		add	r7, sp, #0
+ 158              		.cfi_def_cfa_register 7
+  73:directions.c  ****     int32_t dL = 0, dR = 0;
+ 159              		.loc 1 73 0
+ 160 0006 0023     		movs	r3, #0
+ 161 0008 7B60     		str	r3, [r7, #4]
+ 162 000a 0023     		movs	r3, #0
+ 163 000c 3B60     		str	r3, [r7]
+  74:directions.c  **** #if defined(QuadDec_M1_GetCounter) && defined(QuadDec_M2_GetCounter)
+  75:directions.c  ****     dL = QuadDec_M1_GetCounter();
+  76:directions.c  ****     dR = QuadDec_M2_GetCounter();
+  77:directions.c  ****     QuadDec_M1_SetCounter(0);
+  78:directions.c  ****     QuadDec_M2_SetCounter(0);
+  79:directions.c  **** #endif
+  80:directions.c  ****     if (dL < 0) dL = -dL;
+ 164              		.loc 1 80 0
+ 165 000e 7B68     		ldr	r3, [r7, #4]
+ 166 0010 002B     		cmp	r3, #0
+ 167 0012 02DA     		bge	.L7
+ 168              		.loc 1 80 0 is_stmt 0 discriminator 1
+ 169 0014 7B68     		ldr	r3, [r7, #4]
+ 170 0016 5B42     		negs	r3, r3
+ 171 0018 7B60     		str	r3, [r7, #4]
+ 172              	.L7:
+  81:directions.c  ****     if (dR < 0) dR = -dR;
+ 173              		.loc 1 81 0 is_stmt 1
+ 174 001a 3B68     		ldr	r3, [r7]
+ 175 001c 002B     		cmp	r3, #0
+ 176 001e 02DA     		bge	.L8
+ 177              		.loc 1 81 0 is_stmt 0 discriminator 1
+ 178 0020 3B68     		ldr	r3, [r7]
+ 179 0022 5B42     		negs	r3, r3
+ 180 0024 3B60     		str	r3, [r7]
+ 181              	.L8:
+  82:directions.c  ****     s_acc_ticks += (dL + dR);
+ 182              		.loc 1 82 0 is_stmt 1
+ 183 0026 7A68     		ldr	r2, [r7, #4]
+ 184 0028 3B68     		ldr	r3, [r7]
+ 185 002a 1A44     		add	r2, r2, r3
+ 186 002c 044B     		ldr	r3, .L9
+ 187 002e 1B68     		ldr	r3, [r3]
+ 188 0030 1344     		add	r3, r3, r2
+ 189 0032 034A     		ldr	r2, .L9
+ 190 0034 1360     		str	r3, [r2]
+  83:directions.c  **** }
+ 191              		.loc 1 83 0
+ 192 0036 00BF     		nop
+ 193 0038 0C37     		adds	r7, r7, #12
+ 194              		.cfi_def_cfa_offset 4
+ 195 003a BD46     		mov	sp, r7
+ 196              		.cfi_def_cfa_register 13
+ 197              		@ sp needed
+ 198 003c 80BC     		pop	{r7}
+ 199              		.cfi_restore 7
+ 200              		.cfi_def_cfa_offset 0
+ 201 003e 7047     		bx	lr
+ 202              	.L10:
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 6
+
+
+ 203              		.align	2
+ 204              	.L9:
+ 205 0040 08000000 		.word	s_acc_ticks
+ 206              		.cfi_endproc
+ 207              	.LFE66:
+ 208              		.size	enc_accumulate_now, .-enc_accumulate_now
+ 209              		.section	.text.pivot_left_speed,"ax",%progbits
+ 210              		.align	2
+ 211              		.thumb
+ 212              		.thumb_func
+ 213              		.type	pivot_left_speed, %function
+ 214              	pivot_left_speed:
+ 215              	.LFB67:
+  84:directions.c  **** 
+  85:directions.c  **** /* ---------------- Motor helpers (spin-in-place) ----------------
+  86:directions.c  ****  * If your hardware can’t reverse, change these to skid turns:
+  87:directions.c  ****  *  - left:  left=0,  right=+PIVOT_SPEED_PC
+  88:directions.c  ****  *  - right: left=+PIVOT_SPEED_PC, right=0
+  89:directions.c  ****  */
+  90:directions.c  **** static void pivot_left_speed(int pct)
+  91:directions.c  **** {
+ 216              		.loc 1 91 0
+ 217              		.cfi_startproc
+ 218              		@ args = 0, pretend = 0, frame = 24
+ 219              		@ frame_needed = 1, uses_anonymous_args = 0
+ 220 0000 80B5     		push	{r7, lr}
+ 221              		.cfi_def_cfa_offset 8
+ 222              		.cfi_offset 7, -8
+ 223              		.cfi_offset 14, -4
+ 224 0002 86B0     		sub	sp, sp, #24
+ 225              		.cfi_def_cfa_offset 32
+ 226 0004 00AF     		add	r7, sp, #0
+ 227              		.cfi_def_cfa_register 7
+ 228 0006 7860     		str	r0, [r7, #4]
+  92:directions.c  ****     int L = -pct;   // reverse
+ 229              		.loc 1 92 0
+ 230 0008 7B68     		ldr	r3, [r7, #4]
+ 231 000a 5B42     		negs	r3, r3
+ 232 000c 7B61     		str	r3, [r7, #20]
+  93:directions.c  ****     int R = +pct;   // forward
+ 233              		.loc 1 93 0
+ 234 000e 7B68     		ldr	r3, [r7, #4]
+ 235 0010 3B61     		str	r3, [r7, #16]
+  94:directions.c  ****     int base  = (L + R) / 2;
+ 236              		.loc 1 94 0
+ 237 0012 7A69     		ldr	r2, [r7, #20]
+ 238 0014 3B69     		ldr	r3, [r7, #16]
+ 239 0016 1344     		add	r3, r3, r2
+ 240 0018 DA0F     		lsrs	r2, r3, #31
+ 241 001a 1344     		add	r3, r3, r2
+ 242 001c 5B10     		asrs	r3, r3, #1
+ 243 001e FB60     		str	r3, [r7, #12]
+  95:directions.c  ****     int steer = (R - L) / 2;
+ 244              		.loc 1 95 0
+ 245 0020 3A69     		ldr	r2, [r7, #16]
+ 246 0022 7B69     		ldr	r3, [r7, #20]
+ 247 0024 D31A     		subs	r3, r2, r3
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 7
+
+
+ 248 0026 DA0F     		lsrs	r2, r3, #31
+ 249 0028 1344     		add	r3, r3, r2
+ 250 002a 5B10     		asrs	r3, r3, #1
+ 251 002c BB60     		str	r3, [r7, #8]
+  96:directions.c  ****     set_motors_with_trim_and_steer(base, steer);
+ 252              		.loc 1 96 0
+ 253 002e B968     		ldr	r1, [r7, #8]
+ 254 0030 F868     		ldr	r0, [r7, #12]
+ 255 0032 FFF7FEFF 		bl	set_motors_with_trim_and_steer
+  97:directions.c  **** }
+ 256              		.loc 1 97 0
+ 257 0036 00BF     		nop
+ 258 0038 1837     		adds	r7, r7, #24
+ 259              		.cfi_def_cfa_offset 8
+ 260 003a BD46     		mov	sp, r7
+ 261              		.cfi_def_cfa_register 13
+ 262              		@ sp needed
+ 263 003c 80BD     		pop	{r7, pc}
+ 264              		.cfi_endproc
+ 265              	.LFE67:
+ 266              		.size	pivot_left_speed, .-pivot_left_speed
+ 267 003e 00BF     		.section	.text.pivot_right_speed,"ax",%progbits
+ 268              		.align	2
+ 269              		.thumb
+ 270              		.thumb_func
+ 271              		.type	pivot_right_speed, %function
+ 272              	pivot_right_speed:
+ 273              	.LFB68:
+  98:directions.c  **** 
+  99:directions.c  **** static void pivot_right_speed(int pct)
+ 100:directions.c  **** {
+ 274              		.loc 1 100 0
+ 275              		.cfi_startproc
+ 276              		@ args = 0, pretend = 0, frame = 24
+ 277              		@ frame_needed = 1, uses_anonymous_args = 0
+ 278 0000 80B5     		push	{r7, lr}
+ 279              		.cfi_def_cfa_offset 8
+ 280              		.cfi_offset 7, -8
+ 281              		.cfi_offset 14, -4
+ 282 0002 86B0     		sub	sp, sp, #24
+ 283              		.cfi_def_cfa_offset 32
+ 284 0004 00AF     		add	r7, sp, #0
+ 285              		.cfi_def_cfa_register 7
+ 286 0006 7860     		str	r0, [r7, #4]
+ 101:directions.c  ****     int L = +pct;
+ 287              		.loc 1 101 0
+ 288 0008 7B68     		ldr	r3, [r7, #4]
+ 289 000a 7B61     		str	r3, [r7, #20]
+ 102:directions.c  ****     int R = -pct;
+ 290              		.loc 1 102 0
+ 291 000c 7B68     		ldr	r3, [r7, #4]
+ 292 000e 5B42     		negs	r3, r3
+ 293 0010 3B61     		str	r3, [r7, #16]
+ 103:directions.c  ****     int base  = (L + R) / 2;
+ 294              		.loc 1 103 0
+ 295 0012 7A69     		ldr	r2, [r7, #20]
+ 296 0014 3B69     		ldr	r3, [r7, #16]
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 8
+
+
+ 297 0016 1344     		add	r3, r3, r2
+ 298 0018 DA0F     		lsrs	r2, r3, #31
+ 299 001a 1344     		add	r3, r3, r2
+ 300 001c 5B10     		asrs	r3, r3, #1
+ 301 001e FB60     		str	r3, [r7, #12]
+ 104:directions.c  ****     int steer = (R - L) / 2;
+ 302              		.loc 1 104 0
+ 303 0020 3A69     		ldr	r2, [r7, #16]
+ 304 0022 7B69     		ldr	r3, [r7, #20]
+ 305 0024 D31A     		subs	r3, r2, r3
+ 306 0026 DA0F     		lsrs	r2, r3, #31
+ 307 0028 1344     		add	r3, r3, r2
+ 308 002a 5B10     		asrs	r3, r3, #1
+ 309 002c BB60     		str	r3, [r7, #8]
+ 105:directions.c  ****     set_motors_with_trim_and_steer(base, steer);
+ 310              		.loc 1 105 0
+ 311 002e B968     		ldr	r1, [r7, #8]
+ 312 0030 F868     		ldr	r0, [r7, #12]
+ 313 0032 FFF7FEFF 		bl	set_motors_with_trim_and_steer
+ 106:directions.c  **** }
+ 314              		.loc 1 106 0
+ 315 0036 00BF     		nop
+ 316 0038 1837     		adds	r7, r7, #24
+ 317              		.cfi_def_cfa_offset 8
+ 318 003a BD46     		mov	sp, r7
+ 319              		.cfi_def_cfa_register 13
+ 320              		@ sp needed
+ 321 003c 80BD     		pop	{r7, pc}
+ 322              		.cfi_endproc
+ 323              	.LFE68:
+ 324              		.size	pivot_right_speed, .-pivot_right_speed
+ 325 003e 00BF     		.section	.text.finish_and_release,"ax",%progbits
+ 326              		.align	2
+ 327              		.thumb
+ 328              		.thumb_func
+ 329              		.type	finish_and_release, %function
+ 330              	finish_and_release:
+ 331              	.LFB69:
+ 107:directions.c  **** 
+ 108:directions.c  **** /* Ensure we always exit cleanly and release to straight */
+ 109:directions.c  **** static void finish_and_release(volatile uint8_t* p_dir)
+ 110:directions.c  **** {
+ 332              		.loc 1 110 0
+ 333              		.cfi_startproc
+ 334              		@ args = 0, pretend = 0, frame = 8
+ 335              		@ frame_needed = 1, uses_anonymous_args = 0
+ 336 0000 80B5     		push	{r7, lr}
+ 337              		.cfi_def_cfa_offset 8
+ 338              		.cfi_offset 7, -8
+ 339              		.cfi_offset 14, -4
+ 340 0002 82B0     		sub	sp, sp, #8
+ 341              		.cfi_def_cfa_offset 16
+ 342 0004 00AF     		add	r7, sp, #0
+ 343              		.cfi_def_cfa_register 7
+ 344 0006 7860     		str	r0, [r7, #4]
+ 111:directions.c  ****     /* Stop motion and brief brake/coast window */
+ 112:directions.c  ****     set_motors_symmetric(0);
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 9
+
+
+ 345              		.loc 1 112 0
+ 346 0008 0020     		movs	r0, #0
+ 347 000a FFF7FEFF 		bl	set_motors_symmetric
+ 113:directions.c  ****     CyDelay(BRAKE_AFTER_MS);
+ 348              		.loc 1 113 0
+ 349 000e 5A20     		movs	r0, #90
+ 350 0010 FFF7FEFF 		bl	CyDelay
+ 114:directions.c  **** 
+ 115:directions.c  ****     /* Give counters back to the background task */
+ 116:directions.c  ****     enc_resume_background();
+ 351              		.loc 1 116 0
+ 352 0014 FFF7FEFF 		bl	enc_resume_background
+ 117:directions.c  ****     enc_reset_local();
+ 353              		.loc 1 117 0
+ 354 0018 FFF7FEFF 		bl	enc_reset_local
+ 118:directions.c  **** 
+ 119:directions.c  ****     /* Release to straight and reset our state machine */
+ 120:directions.c  ****     if (p_dir) *p_dir = 0u;
+ 355              		.loc 1 120 0
+ 356 001c 7B68     		ldr	r3, [r7, #4]
+ 357 001e 002B     		cmp	r3, #0
+ 358 0020 02D0     		beq	.L14
+ 359              		.loc 1 120 0 is_stmt 0 discriminator 1
+ 360 0022 7B68     		ldr	r3, [r7, #4]
+ 361 0024 0022     		movs	r2, #0
+ 362 0026 1A70     		strb	r2, [r3]
+ 363              	.L14:
+ 121:directions.c  ****     s_state = DIR_IDLE;
+ 364              		.loc 1 121 0 is_stmt 1
+ 365 0028 094B     		ldr	r3, .L15
+ 366 002a 0022     		movs	r2, #0
+ 367 002c 1A70     		strb	r2, [r3]
+ 122:directions.c  ****     s_turn_side = 0u;
+ 368              		.loc 1 122 0
+ 369 002e 094B     		ldr	r3, .L15+4
+ 370 0030 0022     		movs	r2, #0
+ 371 0032 1A70     		strb	r2, [r3]
+ 123:directions.c  ****     s_target_ticks = 0;
+ 372              		.loc 1 123 0
+ 373 0034 084B     		ldr	r3, .L15+8
+ 374 0036 0022     		movs	r2, #0
+ 375 0038 1A60     		str	r2, [r3]
+ 124:directions.c  ****     s_acc_ticks = 0;
+ 376              		.loc 1 124 0
+ 377 003a 084B     		ldr	r3, .L15+12
+ 378 003c 0022     		movs	r2, #0
+ 379 003e 1A60     		str	r2, [r3]
+ 125:directions.c  ****     s_safety_count = 0;
+ 380              		.loc 1 125 0
+ 381 0040 074B     		ldr	r3, .L15+16
+ 382 0042 0022     		movs	r2, #0
+ 383 0044 1A80     		strh	r2, [r3]	@ movhi
+ 126:directions.c  **** }
+ 384              		.loc 1 126 0
+ 385 0046 00BF     		nop
+ 386 0048 0837     		adds	r7, r7, #8
+ 387              		.cfi_def_cfa_offset 8
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 10
+
+
+ 388 004a BD46     		mov	sp, r7
+ 389              		.cfi_def_cfa_register 13
+ 390              		@ sp needed
+ 391 004c 80BD     		pop	{r7, pc}
+ 392              	.L16:
+ 393 004e 00BF     		.align	2
+ 394              	.L15:
+ 395 0050 00000000 		.word	s_state
+ 396 0054 01000000 		.word	s_turn_side
+ 397 0058 04000000 		.word	s_target_ticks
+ 398 005c 08000000 		.word	s_acc_ticks
+ 399 0060 0C000000 		.word	s_safety_count
+ 400              		.cfi_endproc
+ 401              	.LFE69:
+ 402              		.size	finish_and_release, .-finish_and_release
+ 403              		.section	.text.Directions_Init,"ax",%progbits
+ 404              		.align	2
+ 405              		.global	Directions_Init
+ 406              		.thumb
+ 407              		.thumb_func
+ 408              		.type	Directions_Init, %function
+ 409              	Directions_Init:
+ 410              	.LFB70:
+ 127:directions.c  **** 
+ 128:directions.c  **** /* ======================= Public API ======================= */
+ 129:directions.c  **** 
+ 130:directions.c  **** void Directions_Init(void)
+ 131:directions.c  **** {
+ 411              		.loc 1 131 0
+ 412              		.cfi_startproc
+ 413              		@ args = 0, pretend = 0, frame = 0
+ 414              		@ frame_needed = 1, uses_anonymous_args = 0
+ 415              		@ link register save eliminated.
+ 416 0000 80B4     		push	{r7}
+ 417              		.cfi_def_cfa_offset 4
+ 418              		.cfi_offset 7, -4
+ 419 0002 00AF     		add	r7, sp, #0
+ 420              		.cfi_def_cfa_register 7
+ 132:directions.c  ****     s_state = DIR_IDLE;
+ 421              		.loc 1 132 0
+ 422 0004 094B     		ldr	r3, .L18
+ 423 0006 0022     		movs	r2, #0
+ 424 0008 1A70     		strb	r2, [r3]
+ 133:directions.c  ****     s_turn_side = 0u;
+ 425              		.loc 1 133 0
+ 426 000a 094B     		ldr	r3, .L18+4
+ 427 000c 0022     		movs	r2, #0
+ 428 000e 1A70     		strb	r2, [r3]
+ 134:directions.c  ****     s_target_ticks = 0;
+ 429              		.loc 1 134 0
+ 430 0010 084B     		ldr	r3, .L18+8
+ 431 0012 0022     		movs	r2, #0
+ 432 0014 1A60     		str	r2, [r3]
+ 135:directions.c  ****     s_acc_ticks = 0;
+ 433              		.loc 1 135 0
+ 434 0016 084B     		ldr	r3, .L18+12
+ 435 0018 0022     		movs	r2, #0
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 11
+
+
+ 436 001a 1A60     		str	r2, [r3]
+ 136:directions.c  ****     s_safety_count = 0;
+ 437              		.loc 1 136 0
+ 438 001c 074B     		ldr	r3, .L18+16
+ 439 001e 0022     		movs	r2, #0
+ 440 0020 1A80     		strh	r2, [r3]	@ movhi
+ 137:directions.c  **** }
+ 441              		.loc 1 137 0
+ 442 0022 00BF     		nop
+ 443 0024 BD46     		mov	sp, r7
+ 444              		.cfi_def_cfa_register 13
+ 445              		@ sp needed
+ 446 0026 80BC     		pop	{r7}
+ 447              		.cfi_restore 7
+ 448              		.cfi_def_cfa_offset 0
+ 449 0028 7047     		bx	lr
+ 450              	.L19:
+ 451 002a 00BF     		.align	2
+ 452              	.L18:
+ 453 002c 00000000 		.word	s_state
+ 454 0030 01000000 		.word	s_turn_side
+ 455 0034 04000000 		.word	s_target_ticks
+ 456 0038 08000000 		.word	s_acc_ticks
+ 457 003c 0C000000 		.word	s_safety_count
+ 458              		.cfi_endproc
+ 459              	.LFE70:
+ 460              		.size	Directions_Init, .-Directions_Init
+ 461              		.section	.text.Directions_Handle,"ax",%progbits
+ 462              		.align	2
+ 463              		.global	Directions_Handle
+ 464              		.thumb
+ 465              		.thumb_func
+ 466              		.type	Directions_Handle, %function
+ 467              	Directions_Handle:
+ 468              	.LFB71:
+ 138:directions.c  **** 
+ 139:directions.c  **** void Directions_Handle(volatile uint8_t* p_dir)
+ 140:directions.c  **** {
+ 469              		.loc 1 140 0
+ 470              		.cfi_startproc
+ 471              		@ args = 0, pretend = 0, frame = 16
+ 472              		@ frame_needed = 1, uses_anonymous_args = 0
+ 473 0000 80B5     		push	{r7, lr}
+ 474              		.cfi_def_cfa_offset 8
+ 475              		.cfi_offset 7, -8
+ 476              		.cfi_offset 14, -4
+ 477 0002 84B0     		sub	sp, sp, #16
+ 478              		.cfi_def_cfa_offset 24
+ 479 0004 00AF     		add	r7, sp, #0
+ 480              		.cfi_def_cfa_register 7
+ 481 0006 7860     		str	r0, [r7, #4]
+ 141:directions.c  ****     const uint8_t req = (p_dir ? *p_dir : 0u);
+ 482              		.loc 1 141 0
+ 483 0008 7B68     		ldr	r3, [r7, #4]
+ 484 000a 002B     		cmp	r3, #0
+ 485 000c 03D0     		beq	.L21
+ 486              		.loc 1 141 0 is_stmt 0 discriminator 1
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 12
+
+
+ 487 000e 7B68     		ldr	r3, [r7, #4]
+ 488 0010 1B78     		ldrb	r3, [r3]
+ 489 0012 DBB2     		uxtb	r3, r3
+ 490 0014 00E0     		b	.L22
+ 491              	.L21:
+ 492              		.loc 1 141 0 discriminator 2
+ 493 0016 0023     		movs	r3, #0
+ 494              	.L22:
+ 495              		.loc 1 141 0 discriminator 4
+ 496 0018 FB73     		strb	r3, [r7, #15]
+ 142:directions.c  **** 
+ 143:directions.c  ****     switch (s_state)
+ 497              		.loc 1 143 0 is_stmt 1 discriminator 4
+ 498 001a 344B     		ldr	r3, .L39
+ 499 001c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 500 001e 022B     		cmp	r3, #2
+ 501 0020 2ED0     		beq	.L24
+ 502 0022 032B     		cmp	r3, #3
+ 503 0024 52D0     		beq	.L25
+ 504 0026 002B     		cmp	r3, #0
+ 505 0028 54D1     		bne	.L36
+ 144:directions.c  ****     {
+ 145:directions.c  ****     case DIR_IDLE:
+ 146:directions.c  ****         if (req == 1u || req == 2u) {
+ 506              		.loc 1 146 0
+ 507 002a FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 508 002c 012B     		cmp	r3, #1
+ 509 002e 02D0     		beq	.L27
+ 510              		.loc 1 146 0 is_stmt 0 discriminator 1
+ 511 0030 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 512 0032 022B     		cmp	r3, #2
+ 513 0034 52D1     		bne	.L37
+ 514              	.L27:
+ 147:directions.c  ****             /* Stop, settle, pause encoders, zero counters */
+ 148:directions.c  ****             set_motors_symmetric(0);
+ 515              		.loc 1 148 0 is_stmt 1
+ 516 0036 0020     		movs	r0, #0
+ 517 0038 FFF7FEFF 		bl	set_motors_symmetric
+ 149:directions.c  ****             motor_enable(0u, 0u);
+ 518              		.loc 1 149 0
+ 519 003c 0021     		movs	r1, #0
+ 520 003e 0020     		movs	r0, #0
+ 521 0040 FFF7FEFF 		bl	motor_enable
+ 150:directions.c  ****             CyDelay(STOP_BEFORE_MS);
+ 522              		.loc 1 150 0
+ 523 0044 5020     		movs	r0, #80
+ 524 0046 FFF7FEFF 		bl	CyDelay
+ 151:directions.c  **** 
+ 152:directions.c  ****             enc_pause_background();
+ 525              		.loc 1 152 0
+ 526 004a FFF7FEFF 		bl	enc_pause_background
+ 153:directions.c  ****             enc_reset_local();
+ 527              		.loc 1 153 0
+ 528 004e FFF7FEFF 		bl	enc_reset_local
+ 154:directions.c  **** 
+ 155:directions.c  ****             s_turn_side = req; /* latch side */
+ 529              		.loc 1 155 0
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 13
+
+
+ 530 0052 274A     		ldr	r2, .L39+4
+ 531 0054 FB7B     		ldrb	r3, [r7, #15]
+ 532 0056 1370     		strb	r3, [r2]
+ 156:directions.c  ****             s_target_ticks = (req == 1u) ? TICKS_90_LEFT : TICKS_90_RIGHT;
+ 533              		.loc 1 156 0
+ 534 0058 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 535 005a 012B     		cmp	r3, #1
+ 536 005c 02D1     		bne	.L29
+ 537              		.loc 1 156 0 is_stmt 0 discriminator 1
+ 538 005e 254B     		ldr	r3, .L39+8
+ 539 0060 1B68     		ldr	r3, [r3]
+ 540 0062 01E0     		b	.L30
+ 541              	.L29:
+ 542              		.loc 1 156 0 discriminator 2
+ 543 0064 244B     		ldr	r3, .L39+12
+ 544 0066 1B68     		ldr	r3, [r3]
+ 545              	.L30:
+ 546              		.loc 1 156 0 discriminator 4
+ 547 0068 244A     		ldr	r2, .L39+16
+ 548 006a 1360     		str	r3, [r2]
+ 157:directions.c  ****             s_acc_ticks = 0;
+ 549              		.loc 1 157 0 is_stmt 1 discriminator 4
+ 550 006c 244B     		ldr	r3, .L39+20
+ 551 006e 0022     		movs	r2, #0
+ 552 0070 1A60     		str	r2, [r3]
+ 158:directions.c  ****             s_safety_count = 0;
+ 553              		.loc 1 158 0 discriminator 4
+ 554 0072 244B     		ldr	r3, .L39+24
+ 555 0074 0022     		movs	r2, #0
+ 556 0076 1A80     		strh	r2, [r3]	@ movhi
+ 159:directions.c  ****             s_state = DIR_TURNING;
+ 557              		.loc 1 159 0 discriminator 4
+ 558 0078 1C4B     		ldr	r3, .L39
+ 559 007a 0222     		movs	r2, #2
+ 560 007c 1A70     		strb	r2, [r3]
+ 160:directions.c  ****         }
+ 161:directions.c  ****         break;
+ 561              		.loc 1 161 0 discriminator 4
+ 562 007e 2DE0     		b	.L37
+ 563              	.L24:
+ 162:directions.c  **** 
+ 163:directions.c  ****     case DIR_TURNING:
+ 164:directions.c  ****         /* Drive the pivot */
+ 165:directions.c  ****         if (s_turn_side == 1u) {
+ 564              		.loc 1 165 0
+ 565 0080 1B4B     		ldr	r3, .L39+4
+ 566 0082 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 567 0084 012B     		cmp	r3, #1
+ 568 0086 03D1     		bne	.L32
+ 166:directions.c  ****             pivot_left_speed(PIVOT_SPEED_PC);
+ 569              		.loc 1 166 0
+ 570 0088 1C20     		movs	r0, #28
+ 571 008a FFF7FEFF 		bl	pivot_left_speed
+ 572 008e 02E0     		b	.L33
+ 573              	.L32:
+ 167:directions.c  ****         } else {
+ 168:directions.c  ****             pivot_right_speed(PIVOT_SPEED_PC);
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 14
+
+
+ 574              		.loc 1 168 0
+ 575 0090 1C20     		movs	r0, #28
+ 576 0092 FFF7FEFF 		bl	pivot_right_speed
+ 577              	.L33:
+ 169:directions.c  ****         }
+ 170:directions.c  **** 
+ 171:directions.c  ****         /* Progress + safety */
+ 172:directions.c  ****         enc_accumulate_now();
+ 578              		.loc 1 172 0
+ 579 0096 FFF7FEFF 		bl	enc_accumulate_now
+ 173:directions.c  ****         if (++s_safety_count > MAX_TURN_HANDLER_TICKS) {
+ 580              		.loc 1 173 0
+ 581 009a 1A4B     		ldr	r3, .L39+24
+ 582 009c 1B88     		ldrh	r3, [r3]
+ 583 009e 0133     		adds	r3, r3, #1
+ 584 00a0 9AB2     		uxth	r2, r3
+ 585 00a2 184B     		ldr	r3, .L39+24
+ 586 00a4 1A80     		strh	r2, [r3]	@ movhi
+ 587 00a6 174B     		ldr	r3, .L39+24
+ 588 00a8 1B88     		ldrh	r3, [r3]
+ 589 00aa B3F5C87F 		cmp	r3, #400
+ 590 00ae 03D9     		bls	.L34
+ 174:directions.c  ****             /* Fail-safe: bail out even if encoders misbehave */
+ 175:directions.c  ****             finish_and_release(p_dir);
+ 591              		.loc 1 175 0
+ 592 00b0 7868     		ldr	r0, [r7, #4]
+ 593 00b2 FFF7FEFF 		bl	finish_and_release
+ 176:directions.c  ****             break;
+ 594              		.loc 1 176 0
+ 595 00b6 14E0     		b	.L31
+ 596              	.L34:
+ 177:directions.c  ****         }
+ 178:directions.c  **** 
+ 179:directions.c  ****         /* Done? */
+ 180:directions.c  ****         if (s_acc_ticks >= s_target_ticks) {
+ 597              		.loc 1 180 0
+ 598 00b8 114B     		ldr	r3, .L39+20
+ 599 00ba 1A68     		ldr	r2, [r3]
+ 600 00bc 0F4B     		ldr	r3, .L39+16
+ 601 00be 1B68     		ldr	r3, [r3]
+ 602 00c0 9A42     		cmp	r2, r3
+ 603 00c2 0DDB     		blt	.L38
+ 181:directions.c  ****             s_state = DIR_FINISH;
+ 604              		.loc 1 181 0
+ 605 00c4 094B     		ldr	r3, .L39
+ 606 00c6 0322     		movs	r2, #3
+ 607 00c8 1A70     		strb	r2, [r3]
+ 182:directions.c  ****         }
+ 183:directions.c  ****         break;
+ 608              		.loc 1 183 0
+ 609 00ca 09E0     		b	.L38
+ 610              	.L25:
+ 184:directions.c  **** 
+ 185:directions.c  ****     case DIR_FINISH:
+ 186:directions.c  ****         /* One last stop; then release to straight */
+ 187:directions.c  ****         finish_and_release(p_dir);
+ 611              		.loc 1 187 0
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 15
+
+
+ 612 00cc 7868     		ldr	r0, [r7, #4]
+ 613 00ce FFF7FEFF 		bl	finish_and_release
+ 188:directions.c  ****         break;
+ 614              		.loc 1 188 0
+ 615 00d2 06E0     		b	.L31
+ 616              	.L36:
+ 189:directions.c  **** 
+ 190:directions.c  ****     default:
+ 191:directions.c  ****         /* Shouldn’t happen, but recover gracefully */
+ 192:directions.c  ****         finish_and_release(p_dir);
+ 617              		.loc 1 192 0
+ 618 00d4 7868     		ldr	r0, [r7, #4]
+ 619 00d6 FFF7FEFF 		bl	finish_and_release
+ 193:directions.c  ****         break;
+ 620              		.loc 1 193 0
+ 621 00da 02E0     		b	.L31
+ 622              	.L37:
+ 161:directions.c  **** 
+ 623              		.loc 1 161 0
+ 624 00dc 00BF     		nop
+ 625 00de 00E0     		b	.L31
+ 626              	.L38:
+ 183:directions.c  **** 
+ 627              		.loc 1 183 0
+ 628 00e0 00BF     		nop
+ 629              	.L31:
+ 194:directions.c  ****     }
+ 195:directions.c  **** }
+ 630              		.loc 1 195 0
+ 631 00e2 00BF     		nop
+ 632 00e4 1037     		adds	r7, r7, #16
+ 633              		.cfi_def_cfa_offset 8
+ 634 00e6 BD46     		mov	sp, r7
+ 635              		.cfi_def_cfa_register 13
+ 636              		@ sp needed
+ 637 00e8 80BD     		pop	{r7, pc}
+ 638              	.L40:
+ 639 00ea 00BF     		.align	2
+ 640              	.L39:
+ 641 00ec 00000000 		.word	s_state
+ 642 00f0 01000000 		.word	s_turn_side
+ 643 00f4 00000000 		.word	TICKS_90_LEFT
+ 644 00f8 04000000 		.word	TICKS_90_RIGHT
+ 645 00fc 04000000 		.word	s_target_ticks
+ 646 0100 08000000 		.word	s_acc_ticks
+ 647 0104 0C000000 		.word	s_safety_count
+ 648              		.cfi_endproc
+ 649              	.LFE71:
+ 650              		.size	Directions_Handle, .-Directions_Handle
+ 651              		.text
+ 652              	.Letext0:
+ 653              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 654              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 655              		.file 4 "Generated_Source\\PSoC5/core_cm3.h"
+ 656              		.section	.debug_info,"",%progbits
+ 657              	.Ldebug_info0:
+ 658 0000 0F030000 		.4byte	0x30f
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 16
+
+
+ 659 0004 0400     		.2byte	0x4
+ 660 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 661 000a 04       		.byte	0x4
+ 662 000b 01       		.uleb128 0x1
+ 663 000c 0A000000 		.4byte	.LASF42
+ 664 0010 0C       		.byte	0xc
+ 665 0011 5D010000 		.4byte	.LASF43
+ 666 0015 B6020000 		.4byte	.LASF44
+ 667 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 668 001d 00000000 		.4byte	0
+ 669 0021 00000000 		.4byte	.Ldebug_line0
+ 670 0025 02       		.uleb128 0x2
+ 671 0026 01       		.byte	0x1
+ 672 0027 06       		.byte	0x6
+ 673 0028 A1020000 		.4byte	.LASF0
+ 674 002c 03       		.uleb128 0x3
+ 675 002d 00000000 		.4byte	.LASF3
+ 676 0031 02       		.byte	0x2
+ 677 0032 1D       		.byte	0x1d
+ 678 0033 37000000 		.4byte	0x37
+ 679 0037 02       		.uleb128 0x2
+ 680 0038 01       		.byte	0x1
+ 681 0039 08       		.byte	0x8
+ 682 003a 05010000 		.4byte	.LASF1
+ 683 003e 02       		.uleb128 0x2
+ 684 003f 02       		.byte	0x2
+ 685 0040 05       		.byte	0x5
+ 686 0041 4E020000 		.4byte	.LASF2
+ 687 0045 03       		.uleb128 0x3
+ 688 0046 7C010000 		.4byte	.LASF4
+ 689 004a 02       		.byte	0x2
+ 690 004b 2B       		.byte	0x2b
+ 691 004c 50000000 		.4byte	0x50
+ 692 0050 02       		.uleb128 0x2
+ 693 0051 02       		.byte	0x2
+ 694 0052 07       		.byte	0x7
+ 695 0053 2F010000 		.4byte	.LASF5
+ 696 0057 03       		.uleb128 0x3
+ 697 0058 A7000000 		.4byte	.LASF6
+ 698 005c 02       		.byte	0x2
+ 699 005d 3F       		.byte	0x3f
+ 700 005e 62000000 		.4byte	0x62
+ 701 0062 02       		.uleb128 0x2
+ 702 0063 04       		.byte	0x4
+ 703 0064 05       		.byte	0x5
+ 704 0065 76020000 		.4byte	.LASF7
+ 705 0069 02       		.uleb128 0x2
+ 706 006a 04       		.byte	0x4
+ 707 006b 07       		.byte	0x7
+ 708 006c 87010000 		.4byte	.LASF8
+ 709 0070 02       		.uleb128 0x2
+ 710 0071 08       		.byte	0x8
+ 711 0072 05       		.byte	0x5
+ 712 0073 2C020000 		.4byte	.LASF9
+ 713 0077 02       		.uleb128 0x2
+ 714 0078 08       		.byte	0x8
+ 715 0079 07       		.byte	0x7
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 17
+
+
+ 716 007a D5010000 		.4byte	.LASF10
+ 717 007e 04       		.uleb128 0x4
+ 718 007f 04       		.byte	0x4
+ 719 0080 05       		.byte	0x5
+ 720 0081 696E7400 		.ascii	"int\000"
+ 721 0085 02       		.uleb128 0x2
+ 722 0086 04       		.byte	0x4
+ 723 0087 07       		.byte	0x7
+ 724 0088 B5010000 		.4byte	.LASF11
+ 725 008c 03       		.uleb128 0x3
+ 726 008d EC010000 		.4byte	.LASF12
+ 727 0091 03       		.byte	0x3
+ 728 0092 18       		.byte	0x18
+ 729 0093 2C000000 		.4byte	0x2c
+ 730 0097 03       		.uleb128 0x3
+ 731 0098 6D020000 		.4byte	.LASF13
+ 732 009c 03       		.byte	0x3
+ 733 009d 24       		.byte	0x24
+ 734 009e 45000000 		.4byte	0x45
+ 735 00a2 03       		.uleb128 0x3
+ 736 00a3 D2000000 		.4byte	.LASF14
+ 737 00a7 03       		.byte	0x3
+ 738 00a8 2C       		.byte	0x2c
+ 739 00a9 57000000 		.4byte	0x57
+ 740 00ad 02       		.uleb128 0x2
+ 741 00ae 04       		.byte	0x4
+ 742 00af 04       		.byte	0x4
+ 743 00b0 EC000000 		.4byte	.LASF15
+ 744 00b4 02       		.uleb128 0x2
+ 745 00b5 08       		.byte	0x8
+ 746 00b6 04       		.byte	0x4
+ 747 00b7 CB000000 		.4byte	.LASF16
+ 748 00bb 02       		.uleb128 0x2
+ 749 00bc 01       		.byte	0x1
+ 750 00bd 08       		.byte	0x8
+ 751 00be 49020000 		.4byte	.LASF17
+ 752 00c2 02       		.uleb128 0x2
+ 753 00c3 08       		.byte	0x8
+ 754 00c4 04       		.byte	0x4
+ 755 00c5 17020000 		.4byte	.LASF18
+ 756 00c9 02       		.uleb128 0x2
+ 757 00ca 04       		.byte	0x4
+ 758 00cb 07       		.byte	0x7
+ 759 00cc 23020000 		.4byte	.LASF19
+ 760 00d0 05       		.uleb128 0x5
+ 761 00d1 8C000000 		.4byte	0x8c
+ 762 00d5 06       		.uleb128 0x6
+ 763 00d6 01       		.byte	0x1
+ 764 00d7 37000000 		.4byte	0x37
+ 765 00db 01       		.byte	0x1
+ 766 00dc 18       		.byte	0x18
+ 767 00dd FA000000 		.4byte	0xfa
+ 768 00e1 07       		.uleb128 0x7
+ 769 00e2 AD020000 		.4byte	.LASF20
+ 770 00e6 00       		.byte	0
+ 771 00e7 07       		.uleb128 0x7
+ 772 00e8 0E020000 		.4byte	.LASF21
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 18
+
+
+ 773 00ec 01       		.byte	0x1
+ 774 00ed 07       		.uleb128 0x7
+ 775 00ee 7F020000 		.4byte	.LASF22
+ 776 00f2 02       		.byte	0x2
+ 777 00f3 07       		.uleb128 0x7
+ 778 00f4 52010000 		.4byte	.LASF23
+ 779 00f8 03       		.byte	0x3
+ 780 00f9 00       		.byte	0
+ 781 00fa 03       		.uleb128 0x3
+ 782 00fb BF000000 		.4byte	.LASF24
+ 783 00ff 01       		.byte	0x1
+ 784 0100 1D       		.byte	0x1d
+ 785 0101 D5000000 		.4byte	0xd5
+ 786 0105 08       		.uleb128 0x8
+ 787 0106 58020000 		.4byte	.LASF25
+ 788 010a 01       		.byte	0x1
+ 789 010b 29       		.byte	0x29
+ 790 010c 00000000 		.4byte	.LFB63
+ 791 0110 0C000000 		.4byte	.LFE63-.LFB63
+ 792 0114 01       		.uleb128 0x1
+ 793 0115 9C       		.byte	0x9c
+ 794 0116 08       		.uleb128 0x8
+ 795 0117 8B020000 		.4byte	.LASF26
+ 796 011b 01       		.byte	0x1
+ 797 011c 33       		.byte	0x33
+ 798 011d 00000000 		.4byte	.LFB64
+ 799 0121 0C000000 		.4byte	.LFE64-.LFB64
+ 800 0125 01       		.uleb128 0x1
+ 801 0126 9C       		.byte	0x9c
+ 802 0127 08       		.uleb128 0x8
+ 803 0128 48030000 		.4byte	.LASF27
+ 804 012c 01       		.byte	0x1
+ 805 012d 3D       		.byte	0x3d
+ 806 012e 00000000 		.4byte	.LFB65
+ 807 0132 18000000 		.4byte	.LFE65-.LFB65
+ 808 0136 01       		.uleb128 0x1
+ 809 0137 9C       		.byte	0x9c
+ 810 0138 09       		.uleb128 0x9
+ 811 0139 F2000000 		.4byte	.LASF28
+ 812 013d 01       		.byte	0x1
+ 813 013e 47       		.byte	0x47
+ 814 013f 00000000 		.4byte	.LFB66
+ 815 0143 44000000 		.4byte	.LFE66-.LFB66
+ 816 0147 01       		.uleb128 0x1
+ 817 0148 9C       		.byte	0x9c
+ 818 0149 68010000 		.4byte	0x168
+ 819 014d 0A       		.uleb128 0xa
+ 820 014e 644C00   		.ascii	"dL\000"
+ 821 0151 01       		.byte	0x1
+ 822 0152 49       		.byte	0x49
+ 823 0153 A2000000 		.4byte	0xa2
+ 824 0157 02       		.uleb128 0x2
+ 825 0158 91       		.byte	0x91
+ 826 0159 74       		.sleb128 -12
+ 827 015a 0A       		.uleb128 0xa
+ 828 015b 645200   		.ascii	"dR\000"
+ 829 015e 01       		.byte	0x1
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 19
+
+
+ 830 015f 49       		.byte	0x49
+ 831 0160 A2000000 		.4byte	0xa2
+ 832 0164 02       		.uleb128 0x2
+ 833 0165 91       		.byte	0x91
+ 834 0166 70       		.sleb128 -16
+ 835 0167 00       		.byte	0
+ 836 0168 0B       		.uleb128 0xb
+ 837 0169 13010000 		.4byte	.LASF29
+ 838 016d 01       		.byte	0x1
+ 839 016e 5A       		.byte	0x5a
+ 840 016f 00000000 		.4byte	.LFB67
+ 841 0173 3E000000 		.4byte	.LFE67-.LFB67
+ 842 0177 01       		.uleb128 0x1
+ 843 0178 9C       		.byte	0x9c
+ 844 0179 C0010000 		.4byte	0x1c0
+ 845 017d 0C       		.uleb128 0xc
+ 846 017e 70637400 		.ascii	"pct\000"
+ 847 0182 01       		.byte	0x1
+ 848 0183 5A       		.byte	0x5a
+ 849 0184 7E000000 		.4byte	0x7e
+ 850 0188 02       		.uleb128 0x2
+ 851 0189 91       		.byte	0x91
+ 852 018a 64       		.sleb128 -28
+ 853 018b 0A       		.uleb128 0xa
+ 854 018c 4C00     		.ascii	"L\000"
+ 855 018e 01       		.byte	0x1
+ 856 018f 5C       		.byte	0x5c
+ 857 0190 7E000000 		.4byte	0x7e
+ 858 0194 02       		.uleb128 0x2
+ 859 0195 91       		.byte	0x91
+ 860 0196 74       		.sleb128 -12
+ 861 0197 0A       		.uleb128 0xa
+ 862 0198 5200     		.ascii	"R\000"
+ 863 019a 01       		.byte	0x1
+ 864 019b 5D       		.byte	0x5d
+ 865 019c 7E000000 		.4byte	0x7e
+ 866 01a0 02       		.uleb128 0x2
+ 867 01a1 91       		.byte	0x91
+ 868 01a2 70       		.sleb128 -16
+ 869 01a3 0D       		.uleb128 0xd
+ 870 01a4 2A010000 		.4byte	.LASF30
+ 871 01a8 01       		.byte	0x1
+ 872 01a9 5E       		.byte	0x5e
+ 873 01aa 7E000000 		.4byte	0x7e
+ 874 01ae 02       		.uleb128 0x2
+ 875 01af 91       		.byte	0x91
+ 876 01b0 6C       		.sleb128 -20
+ 877 01b1 0D       		.uleb128 0xd
+ 878 01b2 08020000 		.4byte	.LASF31
+ 879 01b6 01       		.byte	0x1
+ 880 01b7 5F       		.byte	0x5f
+ 881 01b8 7E000000 		.4byte	0x7e
+ 882 01bc 02       		.uleb128 0x2
+ 883 01bd 91       		.byte	0x91
+ 884 01be 68       		.sleb128 -24
+ 885 01bf 00       		.byte	0
+ 886 01c0 0B       		.uleb128 0xb
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 20
+
+
+ 887 01c1 6A010000 		.4byte	.LASF32
+ 888 01c5 01       		.byte	0x1
+ 889 01c6 63       		.byte	0x63
+ 890 01c7 00000000 		.4byte	.LFB68
+ 891 01cb 3E000000 		.4byte	.LFE68-.LFB68
+ 892 01cf 01       		.uleb128 0x1
+ 893 01d0 9C       		.byte	0x9c
+ 894 01d1 18020000 		.4byte	0x218
+ 895 01d5 0C       		.uleb128 0xc
+ 896 01d6 70637400 		.ascii	"pct\000"
+ 897 01da 01       		.byte	0x1
+ 898 01db 63       		.byte	0x63
+ 899 01dc 7E000000 		.4byte	0x7e
+ 900 01e0 02       		.uleb128 0x2
+ 901 01e1 91       		.byte	0x91
+ 902 01e2 64       		.sleb128 -28
+ 903 01e3 0A       		.uleb128 0xa
+ 904 01e4 4C00     		.ascii	"L\000"
+ 905 01e6 01       		.byte	0x1
+ 906 01e7 65       		.byte	0x65
+ 907 01e8 7E000000 		.4byte	0x7e
+ 908 01ec 02       		.uleb128 0x2
+ 909 01ed 91       		.byte	0x91
+ 910 01ee 74       		.sleb128 -12
+ 911 01ef 0A       		.uleb128 0xa
+ 912 01f0 5200     		.ascii	"R\000"
+ 913 01f2 01       		.byte	0x1
+ 914 01f3 66       		.byte	0x66
+ 915 01f4 7E000000 		.4byte	0x7e
+ 916 01f8 02       		.uleb128 0x2
+ 917 01f9 91       		.byte	0x91
+ 918 01fa 70       		.sleb128 -16
+ 919 01fb 0D       		.uleb128 0xd
+ 920 01fc 2A010000 		.4byte	.LASF30
+ 921 0200 01       		.byte	0x1
+ 922 0201 67       		.byte	0x67
+ 923 0202 7E000000 		.4byte	0x7e
+ 924 0206 02       		.uleb128 0x2
+ 925 0207 91       		.byte	0x91
+ 926 0208 6C       		.sleb128 -20
+ 927 0209 0D       		.uleb128 0xd
+ 928 020a 08020000 		.4byte	.LASF31
+ 929 020e 01       		.byte	0x1
+ 930 020f 68       		.byte	0x68
+ 931 0210 7E000000 		.4byte	0x7e
+ 932 0214 02       		.uleb128 0x2
+ 933 0215 91       		.byte	0x91
+ 934 0216 68       		.sleb128 -24
+ 935 0217 00       		.byte	0
+ 936 0218 0B       		.uleb128 0xb
+ 937 0219 C2010000 		.4byte	.LASF33
+ 938 021d 01       		.byte	0x1
+ 939 021e 6D       		.byte	0x6d
+ 940 021f 00000000 		.4byte	.LFB69
+ 941 0223 64000000 		.4byte	.LFE69-.LFB69
+ 942 0227 01       		.uleb128 0x1
+ 943 0228 9C       		.byte	0x9c
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 21
+
+
+ 944 0229 3C020000 		.4byte	0x23c
+ 945 022d 0E       		.uleb128 0xe
+ 946 022e 24010000 		.4byte	.LASF34
+ 947 0232 01       		.byte	0x1
+ 948 0233 6D       		.byte	0x6d
+ 949 0234 3C020000 		.4byte	0x23c
+ 950 0238 02       		.uleb128 0x2
+ 951 0239 91       		.byte	0x91
+ 952 023a 74       		.sleb128 -12
+ 953 023b 00       		.byte	0
+ 954 023c 0F       		.uleb128 0xf
+ 955 023d 04       		.byte	0x4
+ 956 023e D0000000 		.4byte	0xd0
+ 957 0242 10       		.uleb128 0x10
+ 958 0243 42010000 		.4byte	.LASF45
+ 959 0247 01       		.byte	0x1
+ 960 0248 82       		.byte	0x82
+ 961 0249 00000000 		.4byte	.LFB70
+ 962 024d 40000000 		.4byte	.LFE70-.LFB70
+ 963 0251 01       		.uleb128 0x1
+ 964 0252 9C       		.byte	0x9c
+ 965 0253 11       		.uleb128 0x11
+ 966 0254 DA000000 		.4byte	.LASF46
+ 967 0258 01       		.byte	0x1
+ 968 0259 8B       		.byte	0x8b
+ 969 025a 00000000 		.4byte	.LFB71
+ 970 025e 08010000 		.4byte	.LFE71-.LFB71
+ 971 0262 01       		.uleb128 0x1
+ 972 0263 9C       		.byte	0x9c
+ 973 0264 85020000 		.4byte	0x285
+ 974 0268 0E       		.uleb128 0xe
+ 975 0269 24010000 		.4byte	.LASF34
+ 976 026d 01       		.byte	0x1
+ 977 026e 8B       		.byte	0x8b
+ 978 026f 3C020000 		.4byte	0x23c
+ 979 0273 02       		.uleb128 0x2
+ 980 0274 91       		.byte	0x91
+ 981 0275 6C       		.sleb128 -20
+ 982 0276 0A       		.uleb128 0xa
+ 983 0277 72657100 		.ascii	"req\000"
+ 984 027b 01       		.byte	0x1
+ 985 027c 8D       		.byte	0x8d
+ 986 027d 85020000 		.4byte	0x285
+ 987 0281 02       		.uleb128 0x2
+ 988 0282 91       		.byte	0x91
+ 989 0283 77       		.sleb128 -9
+ 990 0284 00       		.byte	0
+ 991 0285 12       		.uleb128 0x12
+ 992 0286 8C000000 		.4byte	0x8c
+ 993 028a 0D       		.uleb128 0xd
+ 994 028b B1000000 		.4byte	.LASF35
+ 995 028f 01       		.byte	0x1
+ 996 0290 0B       		.byte	0xb
+ 997 0291 9B020000 		.4byte	0x29b
+ 998 0295 05       		.uleb128 0x5
+ 999 0296 03       		.byte	0x3
+ 1000 0297 00000000 		.4byte	TICKS_90_LEFT
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 22
+
+
+ 1001 029b 05       		.uleb128 0x5
+ 1002 029c A2000000 		.4byte	0xa2
+ 1003 02a0 0D       		.uleb128 0xd
+ 1004 02a1 A6010000 		.4byte	.LASF36
+ 1005 02a5 01       		.byte	0x1
+ 1006 02a6 0C       		.byte	0xc
+ 1007 02a7 9B020000 		.4byte	0x29b
+ 1008 02ab 05       		.uleb128 0x5
+ 1009 02ac 03       		.byte	0x3
+ 1010 02ad 04000000 		.4byte	TICKS_90_RIGHT
+ 1011 02b1 0D       		.uleb128 0xd
+ 1012 02b2 00020000 		.4byte	.LASF37
+ 1013 02b6 01       		.byte	0x1
+ 1014 02b7 1F       		.byte	0x1f
+ 1015 02b8 FA000000 		.4byte	0xfa
+ 1016 02bc 05       		.uleb128 0x5
+ 1017 02bd 03       		.byte	0x3
+ 1018 02be 00000000 		.4byte	s_state
+ 1019 02c2 0D       		.uleb128 0xd
+ 1020 02c3 58030000 		.4byte	.LASF38
+ 1021 02c7 01       		.byte	0x1
+ 1022 02c8 20       		.byte	0x20
+ 1023 02c9 8C000000 		.4byte	0x8c
+ 1024 02cd 05       		.uleb128 0x5
+ 1025 02ce 03       		.byte	0x3
+ 1026 02cf 01000000 		.4byte	s_turn_side
+ 1027 02d3 0D       		.uleb128 0xd
+ 1028 02d4 3A020000 		.4byte	.LASF39
+ 1029 02d8 01       		.byte	0x1
+ 1030 02d9 21       		.byte	0x21
+ 1031 02da A2000000 		.4byte	0xa2
+ 1032 02de 05       		.uleb128 0x5
+ 1033 02df 03       		.byte	0x3
+ 1034 02e0 04000000 		.4byte	s_target_ticks
+ 1035 02e4 0D       		.uleb128 0xd
+ 1036 02e5 F4010000 		.4byte	.LASF40
+ 1037 02e9 01       		.byte	0x1
+ 1038 02ea 22       		.byte	0x22
+ 1039 02eb A2000000 		.4byte	0xa2
+ 1040 02ef 05       		.uleb128 0x5
+ 1041 02f0 03       		.byte	0x3
+ 1042 02f1 08000000 		.4byte	s_acc_ticks
+ 1043 02f5 0D       		.uleb128 0xd
+ 1044 02f6 98000000 		.4byte	.LASF41
+ 1045 02fa 01       		.byte	0x1
+ 1046 02fb 23       		.byte	0x23
+ 1047 02fc 97000000 		.4byte	0x97
+ 1048 0300 05       		.uleb128 0x5
+ 1049 0301 03       		.byte	0x3
+ 1050 0302 0C000000 		.4byte	s_safety_count
+ 1051 0306 13       		.uleb128 0x13
+ 1052 0307 99010000 		.4byte	.LASF47
+ 1053 030b 04       		.byte	0x4
+ 1054 030c 1207     		.2byte	0x712
+ 1055 030e 9B020000 		.4byte	0x29b
+ 1056 0312 00       		.byte	0
+ 1057              		.section	.debug_abbrev,"",%progbits
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 23
+
+
+ 1058              	.Ldebug_abbrev0:
+ 1059 0000 01       		.uleb128 0x1
+ 1060 0001 11       		.uleb128 0x11
+ 1061 0002 01       		.byte	0x1
+ 1062 0003 25       		.uleb128 0x25
+ 1063 0004 0E       		.uleb128 0xe
+ 1064 0005 13       		.uleb128 0x13
+ 1065 0006 0B       		.uleb128 0xb
+ 1066 0007 03       		.uleb128 0x3
+ 1067 0008 0E       		.uleb128 0xe
+ 1068 0009 1B       		.uleb128 0x1b
+ 1069 000a 0E       		.uleb128 0xe
+ 1070 000b 55       		.uleb128 0x55
+ 1071 000c 17       		.uleb128 0x17
+ 1072 000d 11       		.uleb128 0x11
+ 1073 000e 01       		.uleb128 0x1
+ 1074 000f 10       		.uleb128 0x10
+ 1075 0010 17       		.uleb128 0x17
+ 1076 0011 00       		.byte	0
+ 1077 0012 00       		.byte	0
+ 1078 0013 02       		.uleb128 0x2
+ 1079 0014 24       		.uleb128 0x24
+ 1080 0015 00       		.byte	0
+ 1081 0016 0B       		.uleb128 0xb
+ 1082 0017 0B       		.uleb128 0xb
+ 1083 0018 3E       		.uleb128 0x3e
+ 1084 0019 0B       		.uleb128 0xb
+ 1085 001a 03       		.uleb128 0x3
+ 1086 001b 0E       		.uleb128 0xe
+ 1087 001c 00       		.byte	0
+ 1088 001d 00       		.byte	0
+ 1089 001e 03       		.uleb128 0x3
+ 1090 001f 16       		.uleb128 0x16
+ 1091 0020 00       		.byte	0
+ 1092 0021 03       		.uleb128 0x3
+ 1093 0022 0E       		.uleb128 0xe
+ 1094 0023 3A       		.uleb128 0x3a
+ 1095 0024 0B       		.uleb128 0xb
+ 1096 0025 3B       		.uleb128 0x3b
+ 1097 0026 0B       		.uleb128 0xb
+ 1098 0027 49       		.uleb128 0x49
+ 1099 0028 13       		.uleb128 0x13
+ 1100 0029 00       		.byte	0
+ 1101 002a 00       		.byte	0
+ 1102 002b 04       		.uleb128 0x4
+ 1103 002c 24       		.uleb128 0x24
+ 1104 002d 00       		.byte	0
+ 1105 002e 0B       		.uleb128 0xb
+ 1106 002f 0B       		.uleb128 0xb
+ 1107 0030 3E       		.uleb128 0x3e
+ 1108 0031 0B       		.uleb128 0xb
+ 1109 0032 03       		.uleb128 0x3
+ 1110 0033 08       		.uleb128 0x8
+ 1111 0034 00       		.byte	0
+ 1112 0035 00       		.byte	0
+ 1113 0036 05       		.uleb128 0x5
+ 1114 0037 35       		.uleb128 0x35
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 24
+
+
+ 1115 0038 00       		.byte	0
+ 1116 0039 49       		.uleb128 0x49
+ 1117 003a 13       		.uleb128 0x13
+ 1118 003b 00       		.byte	0
+ 1119 003c 00       		.byte	0
+ 1120 003d 06       		.uleb128 0x6
+ 1121 003e 04       		.uleb128 0x4
+ 1122 003f 01       		.byte	0x1
+ 1123 0040 0B       		.uleb128 0xb
+ 1124 0041 0B       		.uleb128 0xb
+ 1125 0042 49       		.uleb128 0x49
+ 1126 0043 13       		.uleb128 0x13
+ 1127 0044 3A       		.uleb128 0x3a
+ 1128 0045 0B       		.uleb128 0xb
+ 1129 0046 3B       		.uleb128 0x3b
+ 1130 0047 0B       		.uleb128 0xb
+ 1131 0048 01       		.uleb128 0x1
+ 1132 0049 13       		.uleb128 0x13
+ 1133 004a 00       		.byte	0
+ 1134 004b 00       		.byte	0
+ 1135 004c 07       		.uleb128 0x7
+ 1136 004d 28       		.uleb128 0x28
+ 1137 004e 00       		.byte	0
+ 1138 004f 03       		.uleb128 0x3
+ 1139 0050 0E       		.uleb128 0xe
+ 1140 0051 1C       		.uleb128 0x1c
+ 1141 0052 0B       		.uleb128 0xb
+ 1142 0053 00       		.byte	0
+ 1143 0054 00       		.byte	0
+ 1144 0055 08       		.uleb128 0x8
+ 1145 0056 2E       		.uleb128 0x2e
+ 1146 0057 00       		.byte	0
+ 1147 0058 03       		.uleb128 0x3
+ 1148 0059 0E       		.uleb128 0xe
+ 1149 005a 3A       		.uleb128 0x3a
+ 1150 005b 0B       		.uleb128 0xb
+ 1151 005c 3B       		.uleb128 0x3b
+ 1152 005d 0B       		.uleb128 0xb
+ 1153 005e 27       		.uleb128 0x27
+ 1154 005f 19       		.uleb128 0x19
+ 1155 0060 11       		.uleb128 0x11
+ 1156 0061 01       		.uleb128 0x1
+ 1157 0062 12       		.uleb128 0x12
+ 1158 0063 06       		.uleb128 0x6
+ 1159 0064 40       		.uleb128 0x40
+ 1160 0065 18       		.uleb128 0x18
+ 1161 0066 9742     		.uleb128 0x2117
+ 1162 0068 19       		.uleb128 0x19
+ 1163 0069 00       		.byte	0
+ 1164 006a 00       		.byte	0
+ 1165 006b 09       		.uleb128 0x9
+ 1166 006c 2E       		.uleb128 0x2e
+ 1167 006d 01       		.byte	0x1
+ 1168 006e 03       		.uleb128 0x3
+ 1169 006f 0E       		.uleb128 0xe
+ 1170 0070 3A       		.uleb128 0x3a
+ 1171 0071 0B       		.uleb128 0xb
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 25
+
+
+ 1172 0072 3B       		.uleb128 0x3b
+ 1173 0073 0B       		.uleb128 0xb
+ 1174 0074 27       		.uleb128 0x27
+ 1175 0075 19       		.uleb128 0x19
+ 1176 0076 11       		.uleb128 0x11
+ 1177 0077 01       		.uleb128 0x1
+ 1178 0078 12       		.uleb128 0x12
+ 1179 0079 06       		.uleb128 0x6
+ 1180 007a 40       		.uleb128 0x40
+ 1181 007b 18       		.uleb128 0x18
+ 1182 007c 9742     		.uleb128 0x2117
+ 1183 007e 19       		.uleb128 0x19
+ 1184 007f 01       		.uleb128 0x1
+ 1185 0080 13       		.uleb128 0x13
+ 1186 0081 00       		.byte	0
+ 1187 0082 00       		.byte	0
+ 1188 0083 0A       		.uleb128 0xa
+ 1189 0084 34       		.uleb128 0x34
+ 1190 0085 00       		.byte	0
+ 1191 0086 03       		.uleb128 0x3
+ 1192 0087 08       		.uleb128 0x8
+ 1193 0088 3A       		.uleb128 0x3a
+ 1194 0089 0B       		.uleb128 0xb
+ 1195 008a 3B       		.uleb128 0x3b
+ 1196 008b 0B       		.uleb128 0xb
+ 1197 008c 49       		.uleb128 0x49
+ 1198 008d 13       		.uleb128 0x13
+ 1199 008e 02       		.uleb128 0x2
+ 1200 008f 18       		.uleb128 0x18
+ 1201 0090 00       		.byte	0
+ 1202 0091 00       		.byte	0
+ 1203 0092 0B       		.uleb128 0xb
+ 1204 0093 2E       		.uleb128 0x2e
+ 1205 0094 01       		.byte	0x1
+ 1206 0095 03       		.uleb128 0x3
+ 1207 0096 0E       		.uleb128 0xe
+ 1208 0097 3A       		.uleb128 0x3a
+ 1209 0098 0B       		.uleb128 0xb
+ 1210 0099 3B       		.uleb128 0x3b
+ 1211 009a 0B       		.uleb128 0xb
+ 1212 009b 27       		.uleb128 0x27
+ 1213 009c 19       		.uleb128 0x19
+ 1214 009d 11       		.uleb128 0x11
+ 1215 009e 01       		.uleb128 0x1
+ 1216 009f 12       		.uleb128 0x12
+ 1217 00a0 06       		.uleb128 0x6
+ 1218 00a1 40       		.uleb128 0x40
+ 1219 00a2 18       		.uleb128 0x18
+ 1220 00a3 9642     		.uleb128 0x2116
+ 1221 00a5 19       		.uleb128 0x19
+ 1222 00a6 01       		.uleb128 0x1
+ 1223 00a7 13       		.uleb128 0x13
+ 1224 00a8 00       		.byte	0
+ 1225 00a9 00       		.byte	0
+ 1226 00aa 0C       		.uleb128 0xc
+ 1227 00ab 05       		.uleb128 0x5
+ 1228 00ac 00       		.byte	0
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 26
+
+
+ 1229 00ad 03       		.uleb128 0x3
+ 1230 00ae 08       		.uleb128 0x8
+ 1231 00af 3A       		.uleb128 0x3a
+ 1232 00b0 0B       		.uleb128 0xb
+ 1233 00b1 3B       		.uleb128 0x3b
+ 1234 00b2 0B       		.uleb128 0xb
+ 1235 00b3 49       		.uleb128 0x49
+ 1236 00b4 13       		.uleb128 0x13
+ 1237 00b5 02       		.uleb128 0x2
+ 1238 00b6 18       		.uleb128 0x18
+ 1239 00b7 00       		.byte	0
+ 1240 00b8 00       		.byte	0
+ 1241 00b9 0D       		.uleb128 0xd
+ 1242 00ba 34       		.uleb128 0x34
+ 1243 00bb 00       		.byte	0
+ 1244 00bc 03       		.uleb128 0x3
+ 1245 00bd 0E       		.uleb128 0xe
+ 1246 00be 3A       		.uleb128 0x3a
+ 1247 00bf 0B       		.uleb128 0xb
+ 1248 00c0 3B       		.uleb128 0x3b
+ 1249 00c1 0B       		.uleb128 0xb
+ 1250 00c2 49       		.uleb128 0x49
+ 1251 00c3 13       		.uleb128 0x13
+ 1252 00c4 02       		.uleb128 0x2
+ 1253 00c5 18       		.uleb128 0x18
+ 1254 00c6 00       		.byte	0
+ 1255 00c7 00       		.byte	0
+ 1256 00c8 0E       		.uleb128 0xe
+ 1257 00c9 05       		.uleb128 0x5
+ 1258 00ca 00       		.byte	0
+ 1259 00cb 03       		.uleb128 0x3
+ 1260 00cc 0E       		.uleb128 0xe
+ 1261 00cd 3A       		.uleb128 0x3a
+ 1262 00ce 0B       		.uleb128 0xb
+ 1263 00cf 3B       		.uleb128 0x3b
+ 1264 00d0 0B       		.uleb128 0xb
+ 1265 00d1 49       		.uleb128 0x49
+ 1266 00d2 13       		.uleb128 0x13
+ 1267 00d3 02       		.uleb128 0x2
+ 1268 00d4 18       		.uleb128 0x18
+ 1269 00d5 00       		.byte	0
+ 1270 00d6 00       		.byte	0
+ 1271 00d7 0F       		.uleb128 0xf
+ 1272 00d8 0F       		.uleb128 0xf
+ 1273 00d9 00       		.byte	0
+ 1274 00da 0B       		.uleb128 0xb
+ 1275 00db 0B       		.uleb128 0xb
+ 1276 00dc 49       		.uleb128 0x49
+ 1277 00dd 13       		.uleb128 0x13
+ 1278 00de 00       		.byte	0
+ 1279 00df 00       		.byte	0
+ 1280 00e0 10       		.uleb128 0x10
+ 1281 00e1 2E       		.uleb128 0x2e
+ 1282 00e2 00       		.byte	0
+ 1283 00e3 3F       		.uleb128 0x3f
+ 1284 00e4 19       		.uleb128 0x19
+ 1285 00e5 03       		.uleb128 0x3
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 27
+
+
+ 1286 00e6 0E       		.uleb128 0xe
+ 1287 00e7 3A       		.uleb128 0x3a
+ 1288 00e8 0B       		.uleb128 0xb
+ 1289 00e9 3B       		.uleb128 0x3b
+ 1290 00ea 0B       		.uleb128 0xb
+ 1291 00eb 27       		.uleb128 0x27
+ 1292 00ec 19       		.uleb128 0x19
+ 1293 00ed 11       		.uleb128 0x11
+ 1294 00ee 01       		.uleb128 0x1
+ 1295 00ef 12       		.uleb128 0x12
+ 1296 00f0 06       		.uleb128 0x6
+ 1297 00f1 40       		.uleb128 0x40
+ 1298 00f2 18       		.uleb128 0x18
+ 1299 00f3 9742     		.uleb128 0x2117
+ 1300 00f5 19       		.uleb128 0x19
+ 1301 00f6 00       		.byte	0
+ 1302 00f7 00       		.byte	0
+ 1303 00f8 11       		.uleb128 0x11
+ 1304 00f9 2E       		.uleb128 0x2e
+ 1305 00fa 01       		.byte	0x1
+ 1306 00fb 3F       		.uleb128 0x3f
+ 1307 00fc 19       		.uleb128 0x19
+ 1308 00fd 03       		.uleb128 0x3
+ 1309 00fe 0E       		.uleb128 0xe
+ 1310 00ff 3A       		.uleb128 0x3a
+ 1311 0100 0B       		.uleb128 0xb
+ 1312 0101 3B       		.uleb128 0x3b
+ 1313 0102 0B       		.uleb128 0xb
+ 1314 0103 27       		.uleb128 0x27
+ 1315 0104 19       		.uleb128 0x19
+ 1316 0105 11       		.uleb128 0x11
+ 1317 0106 01       		.uleb128 0x1
+ 1318 0107 12       		.uleb128 0x12
+ 1319 0108 06       		.uleb128 0x6
+ 1320 0109 40       		.uleb128 0x40
+ 1321 010a 18       		.uleb128 0x18
+ 1322 010b 9642     		.uleb128 0x2116
+ 1323 010d 19       		.uleb128 0x19
+ 1324 010e 01       		.uleb128 0x1
+ 1325 010f 13       		.uleb128 0x13
+ 1326 0110 00       		.byte	0
+ 1327 0111 00       		.byte	0
+ 1328 0112 12       		.uleb128 0x12
+ 1329 0113 26       		.uleb128 0x26
+ 1330 0114 00       		.byte	0
+ 1331 0115 49       		.uleb128 0x49
+ 1332 0116 13       		.uleb128 0x13
+ 1333 0117 00       		.byte	0
+ 1334 0118 00       		.byte	0
+ 1335 0119 13       		.uleb128 0x13
+ 1336 011a 34       		.uleb128 0x34
+ 1337 011b 00       		.byte	0
+ 1338 011c 03       		.uleb128 0x3
+ 1339 011d 0E       		.uleb128 0xe
+ 1340 011e 3A       		.uleb128 0x3a
+ 1341 011f 0B       		.uleb128 0xb
+ 1342 0120 3B       		.uleb128 0x3b
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 28
+
+
+ 1343 0121 05       		.uleb128 0x5
+ 1344 0122 49       		.uleb128 0x49
+ 1345 0123 13       		.uleb128 0x13
+ 1346 0124 3F       		.uleb128 0x3f
+ 1347 0125 19       		.uleb128 0x19
+ 1348 0126 3C       		.uleb128 0x3c
+ 1349 0127 19       		.uleb128 0x19
+ 1350 0128 00       		.byte	0
+ 1351 0129 00       		.byte	0
+ 1352 012a 00       		.byte	0
+ 1353              		.section	.debug_aranges,"",%progbits
+ 1354 0000 5C000000 		.4byte	0x5c
+ 1355 0004 0200     		.2byte	0x2
+ 1356 0006 00000000 		.4byte	.Ldebug_info0
+ 1357 000a 04       		.byte	0x4
+ 1358 000b 00       		.byte	0
+ 1359 000c 0000     		.2byte	0
+ 1360 000e 0000     		.2byte	0
+ 1361 0010 00000000 		.4byte	.LFB63
+ 1362 0014 0C000000 		.4byte	.LFE63-.LFB63
+ 1363 0018 00000000 		.4byte	.LFB64
+ 1364 001c 0C000000 		.4byte	.LFE64-.LFB64
+ 1365 0020 00000000 		.4byte	.LFB65
+ 1366 0024 18000000 		.4byte	.LFE65-.LFB65
+ 1367 0028 00000000 		.4byte	.LFB66
+ 1368 002c 44000000 		.4byte	.LFE66-.LFB66
+ 1369 0030 00000000 		.4byte	.LFB67
+ 1370 0034 3E000000 		.4byte	.LFE67-.LFB67
+ 1371 0038 00000000 		.4byte	.LFB68
+ 1372 003c 3E000000 		.4byte	.LFE68-.LFB68
+ 1373 0040 00000000 		.4byte	.LFB69
+ 1374 0044 64000000 		.4byte	.LFE69-.LFB69
+ 1375 0048 00000000 		.4byte	.LFB70
+ 1376 004c 40000000 		.4byte	.LFE70-.LFB70
+ 1377 0050 00000000 		.4byte	.LFB71
+ 1378 0054 08010000 		.4byte	.LFE71-.LFB71
+ 1379 0058 00000000 		.4byte	0
+ 1380 005c 00000000 		.4byte	0
+ 1381              		.section	.debug_ranges,"",%progbits
+ 1382              	.Ldebug_ranges0:
+ 1383 0000 00000000 		.4byte	.LFB63
+ 1384 0004 0C000000 		.4byte	.LFE63
+ 1385 0008 00000000 		.4byte	.LFB64
+ 1386 000c 0C000000 		.4byte	.LFE64
+ 1387 0010 00000000 		.4byte	.LFB65
+ 1388 0014 18000000 		.4byte	.LFE65
+ 1389 0018 00000000 		.4byte	.LFB66
+ 1390 001c 44000000 		.4byte	.LFE66
+ 1391 0020 00000000 		.4byte	.LFB67
+ 1392 0024 3E000000 		.4byte	.LFE67
+ 1393 0028 00000000 		.4byte	.LFB68
+ 1394 002c 3E000000 		.4byte	.LFE68
+ 1395 0030 00000000 		.4byte	.LFB69
+ 1396 0034 64000000 		.4byte	.LFE69
+ 1397 0038 00000000 		.4byte	.LFB70
+ 1398 003c 40000000 		.4byte	.LFE70
+ 1399 0040 00000000 		.4byte	.LFB71
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 29
+
+
+ 1400 0044 08010000 		.4byte	.LFE71
+ 1401 0048 00000000 		.4byte	0
+ 1402 004c 00000000 		.4byte	0
+ 1403              		.section	.debug_line,"",%progbits
+ 1404              	.Ldebug_line0:
+ 1405 0000 75020000 		.section	.debug_str,"MS",%progbits,1
+ 1405      02004501 
+ 1405      00000201 
+ 1405      FB0E0D00 
+ 1405      01010101 
+ 1406              	.LASF3:
+ 1407 0000 5F5F7569 		.ascii	"__uint8_t\000"
+ 1407      6E74385F 
+ 1407      7400
+ 1408              	.LASF42:
+ 1409 000a 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1409      43313120 
+ 1409      352E342E 
+ 1409      31203230 
+ 1409      31363036 
+ 1410 003d 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1410      20726576 
+ 1410      6973696F 
+ 1410      6E203233 
+ 1410      37373135 
+ 1411 0070 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 1411      66756E63 
+ 1411      74696F6E 
+ 1411      2D736563 
+ 1411      74696F6E 
+ 1412              	.LASF41:
+ 1413 0098 735F7361 		.ascii	"s_safety_count\000"
+ 1413      66657479 
+ 1413      5F636F75 
+ 1413      6E7400
+ 1414              	.LASF6:
+ 1415 00a7 5F5F696E 		.ascii	"__int32_t\000"
+ 1415      7433325F 
+ 1415      7400
+ 1416              	.LASF35:
+ 1417 00b1 5449434B 		.ascii	"TICKS_90_LEFT\000"
+ 1417      535F3930 
+ 1417      5F4C4546 
+ 1417      5400
+ 1418              	.LASF24:
+ 1419 00bf 6469725F 		.ascii	"dir_state_t\000"
+ 1419      73746174 
+ 1419      655F7400 
+ 1420              	.LASF16:
+ 1421 00cb 646F7562 		.ascii	"double\000"
+ 1421      6C6500
+ 1422              	.LASF14:
+ 1423 00d2 696E7433 		.ascii	"int32_t\000"
+ 1423      325F7400 
+ 1424              	.LASF46:
+ 1425 00da 44697265 		.ascii	"Directions_Handle\000"
+ 1425      6374696F 
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 30
+
+
+ 1425      6E735F48 
+ 1425      616E646C 
+ 1425      6500
+ 1426              	.LASF15:
+ 1427 00ec 666C6F61 		.ascii	"float\000"
+ 1427      7400
+ 1428              	.LASF28:
+ 1429 00f2 656E635F 		.ascii	"enc_accumulate_now\000"
+ 1429      61636375 
+ 1429      6D756C61 
+ 1429      74655F6E 
+ 1429      6F7700
+ 1430              	.LASF1:
+ 1431 0105 756E7369 		.ascii	"unsigned char\000"
+ 1431      676E6564 
+ 1431      20636861 
+ 1431      7200
+ 1432              	.LASF29:
+ 1433 0113 7069766F 		.ascii	"pivot_left_speed\000"
+ 1433      745F6C65 
+ 1433      66745F73 
+ 1433      70656564 
+ 1433      00
+ 1434              	.LASF34:
+ 1435 0124 705F6469 		.ascii	"p_dir\000"
+ 1435      7200
+ 1436              	.LASF30:
+ 1437 012a 62617365 		.ascii	"base\000"
+ 1437      00
+ 1438              	.LASF5:
+ 1439 012f 73686F72 		.ascii	"short unsigned int\000"
+ 1439      7420756E 
+ 1439      7369676E 
+ 1439      65642069 
+ 1439      6E7400
+ 1440              	.LASF45:
+ 1441 0142 44697265 		.ascii	"Directions_Init\000"
+ 1441      6374696F 
+ 1441      6E735F49 
+ 1441      6E697400 
+ 1442              	.LASF23:
+ 1443 0152 4449525F 		.ascii	"DIR_FINISH\000"
+ 1443      46494E49 
+ 1443      534800
+ 1444              	.LASF43:
+ 1445 015d 64697265 		.ascii	"directions.c\000"
+ 1445      6374696F 
+ 1445      6E732E63 
+ 1445      00
+ 1446              	.LASF32:
+ 1447 016a 7069766F 		.ascii	"pivot_right_speed\000"
+ 1447      745F7269 
+ 1447      6768745F 
+ 1447      73706565 
+ 1447      6400
+ 1448              	.LASF4:
+ 1449 017c 5F5F7569 		.ascii	"__uint16_t\000"
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 31
+
+
+ 1449      6E743136 
+ 1449      5F7400
+ 1450              	.LASF8:
+ 1451 0187 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1451      20756E73 
+ 1451      69676E65 
+ 1451      6420696E 
+ 1451      7400
+ 1452              	.LASF47:
+ 1453 0199 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 1453      52784275 
+ 1453      66666572 
+ 1453      00
+ 1454              	.LASF36:
+ 1455 01a6 5449434B 		.ascii	"TICKS_90_RIGHT\000"
+ 1455      535F3930 
+ 1455      5F524947 
+ 1455      485400
+ 1456              	.LASF11:
+ 1457 01b5 756E7369 		.ascii	"unsigned int\000"
+ 1457      676E6564 
+ 1457      20696E74 
+ 1457      00
+ 1458              	.LASF33:
+ 1459 01c2 66696E69 		.ascii	"finish_and_release\000"
+ 1459      73685F61 
+ 1459      6E645F72 
+ 1459      656C6561 
+ 1459      736500
+ 1460              	.LASF10:
+ 1461 01d5 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1461      206C6F6E 
+ 1461      6720756E 
+ 1461      7369676E 
+ 1461      65642069 
+ 1462              	.LASF12:
+ 1463 01ec 75696E74 		.ascii	"uint8_t\000"
+ 1463      385F7400 
+ 1464              	.LASF40:
+ 1465 01f4 735F6163 		.ascii	"s_acc_ticks\000"
+ 1465      635F7469 
+ 1465      636B7300 
+ 1466              	.LASF37:
+ 1467 0200 735F7374 		.ascii	"s_state\000"
+ 1467      61746500 
+ 1468              	.LASF31:
+ 1469 0208 73746565 		.ascii	"steer\000"
+ 1469      7200
+ 1470              	.LASF21:
+ 1471 020e 4449525F 		.ascii	"DIR_PREP\000"
+ 1471      50524550 
+ 1471      00
+ 1472              	.LASF18:
+ 1473 0217 6C6F6E67 		.ascii	"long double\000"
+ 1473      20646F75 
+ 1473      626C6500 
+ 1474              	.LASF19:
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 32
+
+
+ 1475 0223 73697A65 		.ascii	"sizetype\000"
+ 1475      74797065 
+ 1475      00
+ 1476              	.LASF9:
+ 1477 022c 6C6F6E67 		.ascii	"long long int\000"
+ 1477      206C6F6E 
+ 1477      6720696E 
+ 1477      7400
+ 1478              	.LASF39:
+ 1479 023a 735F7461 		.ascii	"s_target_ticks\000"
+ 1479      72676574 
+ 1479      5F746963 
+ 1479      6B7300
+ 1480              	.LASF17:
+ 1481 0249 63686172 		.ascii	"char\000"
+ 1481      00
+ 1482              	.LASF2:
+ 1483 024e 73686F72 		.ascii	"short int\000"
+ 1483      7420696E 
+ 1483      7400
+ 1484              	.LASF25:
+ 1485 0258 656E635F 		.ascii	"enc_pause_background\000"
+ 1485      70617573 
+ 1485      655F6261 
+ 1485      636B6772 
+ 1485      6F756E64 
+ 1486              	.LASF13:
+ 1487 026d 75696E74 		.ascii	"uint16_t\000"
+ 1487      31365F74 
+ 1487      00
+ 1488              	.LASF7:
+ 1489 0276 6C6F6E67 		.ascii	"long int\000"
+ 1489      20696E74 
+ 1489      00
+ 1490              	.LASF22:
+ 1491 027f 4449525F 		.ascii	"DIR_TURNING\000"
+ 1491      5455524E 
+ 1491      494E4700 
+ 1492              	.LASF26:
+ 1493 028b 656E635F 		.ascii	"enc_resume_background\000"
+ 1493      72657375 
+ 1493      6D655F62 
+ 1493      61636B67 
+ 1493      726F756E 
+ 1494              	.LASF0:
+ 1495 02a1 7369676E 		.ascii	"signed char\000"
+ 1495      65642063 
+ 1495      68617200 
+ 1496              	.LASF20:
+ 1497 02ad 4449525F 		.ascii	"DIR_IDLE\000"
+ 1497      49444C45 
+ 1497      00
+ 1498              	.LASF44:
+ 1499 02b6 433A5C55 		.ascii	"C:\\Users\\ylee818\\Documents\\GitHub\\COMPSYS301\\"
+ 1499      73657273 
+ 1499      5C796C65 
+ 1499      65383138 
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccYmMVJ5.s 			page 33
+
+
+ 1499      5C446F63 
+ 1500 02e3 42656E63 		.ascii	"Benchmarktest___combined\\Benchmarktest___combined\\"
+ 1500      686D6172 
+ 1500      6B746573 
+ 1500      745F5F5F 
+ 1500      636F6D62 
+ 1501 0315 70736F63 		.ascii	"psoc student pack\\psoc_code_base\\CS301_Class.cyds"
+ 1501      20737475 
+ 1501      64656E74 
+ 1501      20706163 
+ 1501      6B5C7073 
+ 1502 0346 6E00     		.ascii	"n\000"
+ 1503              	.LASF27:
+ 1504 0348 656E635F 		.ascii	"enc_reset_local\000"
+ 1504      72657365 
+ 1504      745F6C6F 
+ 1504      63616C00 
+ 1505              	.LASF38:
+ 1506 0358 735F7475 		.ascii	"s_turn_side\000"
+ 1506      726E5F73 
+ 1506      69646500 
+ 1507              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
