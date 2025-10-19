@@ -1536,7 +1536,7 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x62bd
+.debug_info     0x00000000     0x62bc
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x512 .\CortexM3\ARM_GCC_541\Debug\main.o
  .debug_info    0x00000512      0x14e .\CortexM3\ARM_GCC_541\Debug\tacho.o
@@ -1567,9 +1567,9 @@ END GROUP
  .debug_info    0x000052ca      0x25d .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(Clock_QD.o)
  .debug_info    0x00005527      0x245 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(Timer_QD.o)
  .debug_info    0x0000576c      0x241 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(isr_qd.o)
- .debug_info    0x000059ad       0x97 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(CyBootAsmGnu.o)
- .debug_info    0x00005a44      0x3b9 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(CyFlash.o)
- .debug_info    0x00005dfd      0x4c0 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(CySpc.o)
+ .debug_info    0x000059ad       0x96 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(CyBootAsmGnu.o)
+ .debug_info    0x00005a43      0x3b9 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(CyFlash.o)
+ .debug_info    0x00005dfc      0x4c0 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(CySpc.o)
 
 .debug_abbrev   0x00000000     0x22f1
  *(.debug_abbrev)
@@ -1681,70 +1681,70 @@ END GROUP
  .debug_frame   0x00003a1c       0x28 c:/program files (x86)/cypress/psoc creator/4.2/psoc creator/import/gnu/arm/5.4.1/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg_nano.a(lib_a-memcpy-stub.o)
  .debug_frame   0x00003a44       0x20 c:/program files (x86)/cypress/psoc creator/4.2/psoc creator/import/gnu/arm/5.4.1/bin/../lib/gcc/arm-none-eabi/5.4.1/../../../../arm-none-eabi/lib/armv7-m\libg_nano.a(lib_a-memset.o)
 
-.debug_str      0x00000000     0x2ef3
+.debug_str      0x00000000     0x2ef2
  *(.debug_str)
- .debug_str     0x00000000      0x2fb .\CortexM3\ARM_GCC_541\Debug\main.o
-                                0x362 (size before relaxing)
- .debug_str     0x000002fb       0x37 .\CortexM3\ARM_GCC_541\Debug\tacho.o
-                                0x1de (size before relaxing)
- .debug_str     0x00000332       0x42 .\CortexM3\ARM_GCC_541\Debug\sensors.o
-                                0x209 (size before relaxing)
- .debug_str     0x00000374       0xdb .\CortexM3\ARM_GCC_541\Debug\motor_s.o
-                                0x28d (size before relaxing)
- .debug_str     0x0000044f      0x139 .\CortexM3\ARM_GCC_541\Debug\directions.o
-                                0x306 (size before relaxing)
- .debug_str     0x00000588      0x19c .\CortexM3\ARM_GCC_541\Debug\cyfitter_cfg.o
-                                0x345 (size before relaxing)
- .debug_str     0x00000724       0x75 .\CortexM3\ARM_GCC_541\Debug\cymetadata.o
-                                0x1eb (size before relaxing)
- .debug_str     0x00000799      0x11d .\CortexM3\ARM_GCC_541\Debug\Cm3Start.o
-                                0x2de (size before relaxing)
- .debug_str     0x000008b6      0x1cb .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(ADC.o)
-                                0x386 (size before relaxing)
- .debug_str     0x00000a81       0x29 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(ADC_INT.o)
-                                0x1ab (size before relaxing)
- .debug_str     0x00000aaa       0x44 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(CONTROL.o)
-                                0x1bc (size before relaxing)
- .debug_str     0x00000aee      0x1e4 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(ADC_SAR.o)
-                                0x407 (size before relaxing)
- .debug_str     0x00000cd2       0xab .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(ADC_TempBuf_dma.o)
-                                0x23a (size before relaxing)
- .debug_str     0x00000d7d       0x74 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(ADC_FinalBuf_dma.o)
-                                0x23e (size before relaxing)
- .debug_str     0x00000df1      0x11a .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(ADC_IRQ.o)
-                                0x2c9 (size before relaxing)
- .debug_str     0x00000f0b      0x34f .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(CyDmac.o)
-                                0x524 (size before relaxing)
- .debug_str     0x0000125a      0x7c9 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(CyLib.o)
-                                0x9f1 (size before relaxing)
- .debug_str     0x00001a23      0x371 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(cyPm.o)
-                                0x54a (size before relaxing)
- .debug_str     0x00001d94      0x12a .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(PWM_1.o)
-                                0x2d4 (size before relaxing)
- .debug_str     0x00001ebe      0x17a .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(Clock_PWM.o)
-                                0x30d (size before relaxing)
- .debug_str     0x00002038      0x13b .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(Clock_QENC.o)
-                                0x319 (size before relaxing)
- .debug_str     0x00002173      0x109 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(PWM_2.o)
-                                0x2d4 (size before relaxing)
- .debug_str     0x0000227c       0xfa .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(QuadDec_M1.o)
-                                0x2bc (size before relaxing)
- .debug_str     0x00002376       0xf3 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(QuadDec_M2.o)
-                                0x2bc (size before relaxing)
- .debug_str     0x00002469      0x24d .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(QuadDec_M1_Cnt16.o)
-                                0x403 (size before relaxing)
- .debug_str     0x000026b6      0x236 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(QuadDec_M2_Cnt16.o)
-                                0x403 (size before relaxing)
- .debug_str     0x000028ec      0x123 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(Clock_QD.o)
-                                0x301 (size before relaxing)
- .debug_str     0x00002a0f      0x16d .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(Timer_QD.o)
-                                0x32c (size before relaxing)
- .debug_str     0x00002b7c       0xf4 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(isr_qd.o)
+ .debug_str     0x00000000      0x2fa .\CortexM3\ARM_GCC_541\Debug\main.o
+                                0x361 (size before relaxing)
+ .debug_str     0x000002fa       0x37 .\CortexM3\ARM_GCC_541\Debug\tacho.o
+                                0x1dd (size before relaxing)
+ .debug_str     0x00000331       0x42 .\CortexM3\ARM_GCC_541\Debug\sensors.o
+                                0x208 (size before relaxing)
+ .debug_str     0x00000373       0xdb .\CortexM3\ARM_GCC_541\Debug\motor_s.o
+                                0x28c (size before relaxing)
+ .debug_str     0x0000044e      0x139 .\CortexM3\ARM_GCC_541\Debug\directions.o
+                                0x305 (size before relaxing)
+ .debug_str     0x00000587      0x19c .\CortexM3\ARM_GCC_541\Debug\cyfitter_cfg.o
+                                0x344 (size before relaxing)
+ .debug_str     0x00000723       0x75 .\CortexM3\ARM_GCC_541\Debug\cymetadata.o
+                                0x1ea (size before relaxing)
+ .debug_str     0x00000798      0x11d .\CortexM3\ARM_GCC_541\Debug\Cm3Start.o
+                                0x2dd (size before relaxing)
+ .debug_str     0x000008b5      0x1cb .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(ADC.o)
+                                0x385 (size before relaxing)
+ .debug_str     0x00000a80       0x29 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(ADC_INT.o)
+                                0x1aa (size before relaxing)
+ .debug_str     0x00000aa9       0x44 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(CONTROL.o)
+                                0x1bb (size before relaxing)
+ .debug_str     0x00000aed      0x1e4 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(ADC_SAR.o)
+                                0x406 (size before relaxing)
+ .debug_str     0x00000cd1       0xab .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(ADC_TempBuf_dma.o)
+                                0x239 (size before relaxing)
+ .debug_str     0x00000d7c       0x74 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(ADC_FinalBuf_dma.o)
+                                0x23d (size before relaxing)
+ .debug_str     0x00000df0      0x11a .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(ADC_IRQ.o)
+                                0x2c8 (size before relaxing)
+ .debug_str     0x00000f0a      0x34f .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(CyDmac.o)
+                                0x523 (size before relaxing)
+ .debug_str     0x00001259      0x7c9 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(CyLib.o)
+                                0x9f0 (size before relaxing)
+ .debug_str     0x00001a22      0x371 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(cyPm.o)
+                                0x549 (size before relaxing)
+ .debug_str     0x00001d93      0x12a .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(PWM_1.o)
+                                0x2d3 (size before relaxing)
+ .debug_str     0x00001ebd      0x17a .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(Clock_PWM.o)
+                                0x30c (size before relaxing)
+ .debug_str     0x00002037      0x13b .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(Clock_QENC.o)
+                                0x318 (size before relaxing)
+ .debug_str     0x00002172      0x109 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(PWM_2.o)
+                                0x2d3 (size before relaxing)
+ .debug_str     0x0000227b       0xfa .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(QuadDec_M1.o)
                                 0x2bb (size before relaxing)
- .debug_str     0x00002c70      0x156 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(CyFlash.o)
-                                0x30e (size before relaxing)
- .debug_str     0x00002dc6      0x12d .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(CySpc.o)
-                                0x308 (size before relaxing)
+ .debug_str     0x00002375       0xf3 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(QuadDec_M2.o)
+                                0x2bb (size before relaxing)
+ .debug_str     0x00002468      0x24d .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(QuadDec_M1_Cnt16.o)
+                                0x402 (size before relaxing)
+ .debug_str     0x000026b5      0x236 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(QuadDec_M2_Cnt16.o)
+                                0x402 (size before relaxing)
+ .debug_str     0x000028eb      0x123 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(Clock_QD.o)
+                                0x300 (size before relaxing)
+ .debug_str     0x00002a0e      0x16d .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(Timer_QD.o)
+                                0x32b (size before relaxing)
+ .debug_str     0x00002b7b       0xf4 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(isr_qd.o)
+                                0x2ba (size before relaxing)
+ .debug_str     0x00002c6f      0x156 .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(CyFlash.o)
+                                0x30d (size before relaxing)
+ .debug_str     0x00002dc5      0x12d .\CortexM3\ARM_GCC_541\Debug\CS301_Class.a(CySpc.o)
+                                0x307 (size before relaxing)
 
 .debug_loc
  *(.debug_loc)
@@ -1940,4 +1940,4 @@ END GROUP
 
 /DISCARD/
  *(.note.GNU-stack)
-OUTPUT(C:\Users\yram171\Downloads\Yukyung CODE\psoc_code_base\CS301_Class.cydsn\CortexM3\ARM_GCC_541\Debug\CS301_Class.elf elf32-littlearm)
+OUTPUT(C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\CortexM3\ARM_GCC_541\Debug\CS301_Class.elf elf32-littlearm)

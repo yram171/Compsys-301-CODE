@@ -114,7 +114,7 @@ static void pivot_right_speed(void)
 static void finish_and_release(volatile uint8_t* p_dir)
 {
     /* Stop motion and brief brake/coast window */
-    set_motors_symmetric(0);
+    set_motors_symmetric(0); 
     CyDelay(BRAKE_AFTER_MS);
     set_motors_symmetric(0);
 
@@ -129,7 +129,6 @@ static void finish_and_release(volatile uint8_t* p_dir)
     s_target_ticks = 0;
     s_acc_ticks = 0;
     s_safety_count = 0;
-    motor_enable(1u, 1u);
 }
 
 /* ======================= Public API ======================= */

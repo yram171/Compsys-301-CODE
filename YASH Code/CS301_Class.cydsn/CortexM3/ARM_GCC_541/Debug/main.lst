@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 1
 
 
    1              		.syntax unified
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
    2:main.c        ****  * - Keeps straight-line PI active during a short delay after g_direction flips (Option A)
    3:main.c        ****  * - Then calls Directions_Handle(&g_direction) to run the maneuver
    4:main.c        ****  * - Resets PI integrator after the turn completes
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 2
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 2
 
 
    5:main.c        ****  * ============================================================================================== *
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
   59:main.c        **** 
   60:main.c        **** /* ------------------------------- 5 ms Timer ISR: accumulate distance (kept) ---------------------
   61:main.c        **** CY_ISR(isr_qd_Handler)
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 3
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 3
 
 
   62:main.c        **** {
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  101 003e 3B63     		str	r3, [r7, #48]
   69:main.c        ****     int32_t davg_abs  = (a1 + a2) / 2;
  102              		.loc 1 69 0
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 4
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 4
 
 
  103 0040 7A6B     		ldr	r2, [r7, #52]
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  154 00b4 D7E90434 		ldrd	r3, [r7, #16]
  155 00b8 5B18     		adds	r3, r3, r1
  156 00ba 44EB0204 		adc	r4, r4, r2
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 5
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 5
 
 
  157 00be C7E90834 		strd	r3, [r7, #32]
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  209 014e 0C46     		mov	r4, r1
  210 0150 1A46     		mov	r2, r3
  211 0152 BB6A     		ldr	r3, [r7, #40]
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 6
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 6
 
 
  212 0154 03FB02F3 		mul	r3, r3, r2
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  258              		.cfi_def_cfa_register 7
  259 0006 0346     		mov	r3, r0
  260 0008 FB80     		strh	r3, [r7, #6]	@ movhi
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 7
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 7
 
 
   83:main.c        ****     if (pp <= S_MINC_COUNTS) return 0.0f;
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
   88:main.c        **** /* Read sensors and (maybe) request a turn based on S1 / S2 (kept) */
   89:main.c        **** static void light_sensors_update_and_maybe_request_turn(uint16_t* V4_pp, uint16_t* V5_pp, uint16_t*
   90:main.c        **** {
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 8
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 8
 
 
  310              		.loc 1 90 0
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  356 0048 FB68     		ldr	r3, [r7, #12]
  357 004a 002B     		cmp	r3, #0
  358 004c 02D0     		beq	.L13
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 9
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 9
 
 
  359              		.loc 1 98 0 is_stmt 0 discriminator 1
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  408              		.loc 1 103 0 discriminator 3
  409 008e 0122     		movs	r2, #1
  410 0090 00E0     		b	.L19
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 10
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 10
 
 
  411              	.L18:
@@ -598,7 +598,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  462              		.loc 1 106 0 discriminator 3
  463 00d0 0122     		movs	r2, #1
  464 00d2 00E0     		b	.L25
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 11
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 11
 
 
  465              	.L24:
@@ -658,7 +658,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  508              		.loc 1 112 0
  509 010a 064B     		ldr	r3, .L31+4
  510 010c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 12
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 12
 
 
  511 010e 002B     		cmp	r3, #0
@@ -718,7 +718,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  554              		.cfi_offset 7, -8
  555              		.cfi_offset 14, -4
  556 0002 84B0     		sub	sp, sp, #16
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 13
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 13
 
 
  557              		.cfi_def_cfa_offset 24
@@ -778,7 +778,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  611              	.LFB68:
  127:main.c        **** 
  128:main.c        **** static int pi_step(pi_t* pi, uint16_t V4_pp, uint16_t V5_pp, uint16_t V6_pp)
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 14
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 14
 
 
  129:main.c        **** {
@@ -838,7 +838,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  660              		.loc 1 134 0
  661 004e 0123     		movs	r3, #1
  662 0050 1C46     		mov	r4, r3
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 15
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 15
 
 
  663 0052 7949     		ldr	r1, .L65
@@ -898,7 +898,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  709 00b4 FB68     		ldr	r3, [r7, #12]
  710 00b6 9B68     		ldr	r3, [r3, #8]	@ float
  711 00b8 6049     		ldr	r1, .L65+4
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 16
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 16
 
 
  712 00ba 1846     		mov	r0, r3
@@ -958,7 +958,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  760 011a FFF7FEFF 		bl	__aeabi_fmul
  761 011e 0346     		mov	r3, r0
  762 0120 1946     		mov	r1, r3
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 17
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 17
 
 
  763 0122 2046     		mov	r0, r4
@@ -1018,7 +1018,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  812 018a 0346     		mov	r3, r0
  813 018c 002B     		cmp	r3, #0
  814 018e 01D1     		bne	.L53
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 18
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 18
 
 
  815 0190 0023     		movs	r3, #0
@@ -1078,7 +1078,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  866              	.L57:
  157:main.c        ****         /* don’t integrate further into saturation */
  158:main.c        ****     } else {
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 19
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 19
 
 
  159:main.c        ****         pi->i = i_next;
@@ -1138,7 +1138,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  915 024c 0000F041 		.word	1106247680
  916 0250 0000F0C1 		.word	-1041235968
  917 0254 00006041 		.word	1096810496
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 20
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 20
 
 
  918 0258 F4FD8F41 		.word	1099955700
@@ -1198,7 +1198,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  960 001a FFF7FEFF 		bl	Clock_QENC_Start
  177:main.c        ****     QuadDec_M1_Start(); QuadDec_M2_Start();
  961              		.loc 1 177 0
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 21
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 21
 
 
  962 001e FFF7FEFF 		bl	QuadDec_M1_Start
@@ -1258,7 +1258,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  194:main.c        **** 
  195:main.c        ****     /* Feed-forward cruise duty (kept) */
  196:main.c        ****     int center_duty_est = (int)((V_CRUISE_MM_S * 100) / VMAX_CONST_MM_S);
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 22
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 22
 
 
  1000              		.loc 1 196 0
@@ -1318,7 +1318,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1043              	.L71:
  1044              		.loc 1 207 0 discriminator 4
  1045 00b4 454B     		ldr	r3, .L83+12
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 23
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 23
 
 
  1046 00b6 1A70     		strb	r2, [r3]
@@ -1378,7 +1378,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1085 00fc 1B78     		ldrb	r3, [r3]
  1086 00fe DBB2     		uxtb	r3, r3
  1087 0100 012B     		cmp	r3, #1
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 24
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 24
 
 
  1088 0102 04D0     		beq	.L74
@@ -1438,7 +1438,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1132              		.loc 1 232 0
  1133 0144 1F4B     		ldr	r3, .L83+4
  1134 0146 1B78     		ldrb	r3, [r3]
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 25
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 25
 
 
  1135 0148 DBB2     		uxtb	r3, r3
@@ -1498,7 +1498,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1178 0194 1A70     		strb	r2, [r3]
  1179              	.L80:
  244:main.c        ****                 }
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 26
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 26
 
 
  245:main.c        ****                 CyDelay(LOOP_DT_MS);
@@ -1558,7 +1558,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1222              	.Ldebug_info0:
  1223 0000 0E050000 		.4byte	0x50e
  1224 0004 0400     		.2byte	0x4
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 27
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 27
 
 
  1225 0006 00000000 		.4byte	.Ldebug_abbrev0
@@ -1566,24 +1566,24 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1227 000b 01       		.uleb128 0x1
  1228 000c 30000000 		.4byte	.LASF56
  1229 0010 0C       		.byte	0xc
- 1230 0011 B2020000 		.4byte	.LASF57
- 1231 0015 24020000 		.4byte	.LASF58
+ 1230 0011 B1020000 		.4byte	.LASF57
+ 1231 0015 EB000000 		.4byte	.LASF58
  1232 0019 00000000 		.4byte	.Ldebug_ranges0+0
  1233 001d 00000000 		.4byte	0
  1234 0021 00000000 		.4byte	.Ldebug_line0
  1235 0025 02       		.uleb128 0x2
  1236 0026 01       		.byte	0x1
  1237 0027 06       		.byte	0x6
- 1238 0028 83010000 		.4byte	.LASF0
+ 1238 0028 CB010000 		.4byte	.LASF0
  1239 002c 03       		.uleb128 0x3
- 1240 002d 28010000 		.4byte	.LASF3
+ 1240 002d 70010000 		.4byte	.LASF3
  1241 0031 02       		.byte	0x2
  1242 0032 1D       		.byte	0x1d
  1243 0033 37000000 		.4byte	0x37
  1244 0037 02       		.uleb128 0x2
  1245 0038 01       		.byte	0x1
  1246 0039 08       		.byte	0x8
- 1247 003a 3F010000 		.4byte	.LASF1
+ 1247 003a 87010000 		.4byte	.LASF1
  1248 003e 02       		.uleb128 0x2
  1249 003f 02       		.byte	0x2
  1250 0040 05       		.byte	0x5
@@ -1596,36 +1596,36 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1257 0050 02       		.uleb128 0x2
  1258 0051 02       		.byte	0x2
  1259 0052 07       		.byte	0x7
- 1260 0053 EC010000 		.4byte	.LASF5
+ 1260 0053 2C020000 		.4byte	.LASF5
  1261 0057 03       		.uleb128 0x3
- 1262 0058 0F030000 		.4byte	.LASF6
+ 1262 0058 0E030000 		.4byte	.LASF6
  1263 005c 02       		.byte	0x2
  1264 005d 3F       		.byte	0x3f
  1265 005e 62000000 		.4byte	0x62
  1266 0062 02       		.uleb128 0x2
  1267 0063 04       		.byte	0x4
  1268 0064 05       		.byte	0x5
- 1269 0065 0F010000 		.4byte	.LASF7
+ 1269 0065 57010000 		.4byte	.LASF7
  1270 0069 02       		.uleb128 0x2
  1271 006a 04       		.byte	0x4
  1272 006b 07       		.byte	0x7
- 1273 006c B9020000 		.4byte	.LASF8
+ 1273 006c B8020000 		.4byte	.LASF8
  1274 0070 03       		.uleb128 0x3
- 1275 0071 18010000 		.4byte	.LASF9
+ 1275 0071 60010000 		.4byte	.LASF9
  1276 0075 02       		.byte	0x2
  1277 0076 59       		.byte	0x59
  1278 0077 7B000000 		.4byte	0x7b
  1279 007b 02       		.uleb128 0x2
  1280 007c 08       		.byte	0x8
  1281 007d 05       		.byte	0x5
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 28
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 28
 
 
- 1282 007e F7000000 		.4byte	.LASF10
+ 1282 007e 3F010000 		.4byte	.LASF10
  1283 0082 02       		.uleb128 0x2
  1284 0083 08       		.byte	0x8
  1285 0084 07       		.byte	0x7
- 1286 0085 97010000 		.4byte	.LASF11
+ 1286 0085 D7010000 		.4byte	.LASF11
  1287 0089 04       		.uleb128 0x4
  1288 008a 04       		.byte	0x4
  1289 008b 05       		.byte	0x5
@@ -1633,19 +1633,19 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1291 0090 02       		.uleb128 0x2
  1292 0091 04       		.byte	0x4
  1293 0092 07       		.byte	0x7
- 1294 0093 BB010000 		.4byte	.LASF12
+ 1294 0093 FB010000 		.4byte	.LASF12
  1295 0097 03       		.uleb128 0x3
  1296 0098 D6000000 		.4byte	.LASF13
  1297 009c 03       		.byte	0x3
  1298 009d 18       		.byte	0x18
  1299 009e 2C000000 		.4byte	0x2c
  1300 00a2 03       		.uleb128 0x3
- 1301 00a3 CE010000 		.4byte	.LASF14
+ 1301 00a3 0E020000 		.4byte	.LASF14
  1302 00a7 03       		.byte	0x3
  1303 00a8 24       		.byte	0x24
  1304 00a9 45000000 		.4byte	0x45
  1305 00ad 03       		.uleb128 0x3
- 1306 00ae 8F010000 		.4byte	.LASF15
+ 1306 00ae 64020000 		.4byte	.LASF15
  1307 00b2 03       		.byte	0x3
  1308 00b3 2C       		.byte	0x2c
  1309 00b4 57000000 		.4byte	0x57
@@ -1657,19 +1657,19 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1315 00c3 02       		.uleb128 0x2
  1316 00c4 04       		.byte	0x4
  1317 00c5 04       		.byte	0x4
- 1318 00c6 F1000000 		.4byte	.LASF17
+ 1318 00c6 39010000 		.4byte	.LASF17
  1319 00ca 02       		.uleb128 0x2
  1320 00cb 08       		.byte	0x8
  1321 00cc 04       		.byte	0x4
- 1322 00cd 3B030000 		.4byte	.LASF18
+ 1322 00cd 3A030000 		.4byte	.LASF18
  1323 00d1 02       		.uleb128 0x2
  1324 00d2 01       		.byte	0x1
  1325 00d3 08       		.byte	0x8
- 1326 00d4 05010000 		.4byte	.LASF19
+ 1326 00d4 4D010000 		.4byte	.LASF19
  1327 00d8 02       		.uleb128 0x2
  1328 00d9 08       		.byte	0x8
  1329 00da 04       		.byte	0x4
- 1330 00db 52010000 		.4byte	.LASF20
+ 1330 00db 9A010000 		.4byte	.LASF20
  1331 00df 02       		.uleb128 0x2
  1332 00e0 04       		.byte	0x4
  1333 00e1 07       		.byte	0x7
@@ -1678,7 +1678,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1336 00e7 97000000 		.4byte	0x97
  1337 00eb 06       		.uleb128 0x6
  1338 00ec 0C       		.byte	0xc
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 29
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 29
 
 
  1339 00ed 01       		.byte	0x1
@@ -1697,19 +1697,19 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1352 0102 C3000000 		.4byte	0xc3
  1353 0106 04       		.byte	0x4
  1354 0107 08       		.uleb128 0x8
- 1355 0108 08030000 		.4byte	.LASF22
+ 1355 0108 07030000 		.4byte	.LASF22
  1356 010c 01       		.byte	0x1
  1357 010d 7D       		.byte	0x7d
  1358 010e C3000000 		.4byte	0xc3
  1359 0112 08       		.byte	0x8
  1360 0113 00       		.byte	0
  1361 0114 03       		.uleb128 0x3
- 1362 0115 0A010000 		.4byte	.LASF23
+ 1362 0115 52010000 		.4byte	.LASF23
  1363 0119 01       		.byte	0x1
  1364 011a 7D       		.byte	0x7d
  1365 011b EB000000 		.4byte	0xeb
  1366 011f 09       		.uleb128 0x9
- 1367 0120 81020000 		.4byte	.LASF59
+ 1367 0120 80020000 		.4byte	.LASF59
  1368 0124 01       		.byte	0x1
  1369 0125 3D       		.byte	0x3d
  1370 0126 00000000 		.4byte	.LFB64
@@ -1718,7 +1718,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1373 012f 9C       		.byte	0x9c
  1374 0130 D0010000 		.4byte	0x1d0
  1375 0134 0A       		.uleb128 0xa
- 1376 0135 4D010000 		.4byte	.LASF24
+ 1376 0135 95010000 		.4byte	.LASF24
  1377 0139 01       		.byte	0x1
  1378 013a 3F       		.byte	0x3f
  1379 013b AD000000 		.4byte	0xad
@@ -1738,7 +1738,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1393 0154 01       		.byte	0x1
  1394 0155 42       		.byte	0x42
  1395 0156 AD000000 		.4byte	0xad
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 30
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 30
 
 
  1396 015a 02       		.uleb128 0x2
@@ -1769,7 +1769,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1421 0182 91       		.byte	0x91
  1422 0183 40       		.sleb128 -64
  1423 0184 0A       		.uleb128 0xa
- 1424 0185 59030000 		.4byte	.LASF26
+ 1424 0185 58030000 		.4byte	.LASF26
  1425 0189 01       		.byte	0x1
  1426 018a 45       		.byte	0x45
  1427 018b AD000000 		.4byte	0xad
@@ -1777,7 +1777,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1429 0190 91       		.byte	0x91
  1430 0191 BC7F     		.sleb128 -68
  1431 0193 0A       		.uleb128 0xa
- 1432 0194 CB020000 		.4byte	.LASF27
+ 1432 0194 CA020000 		.4byte	.LASF27
  1433 0198 01       		.byte	0x1
  1434 0199 46       		.byte	0x46
  1435 019a AD000000 		.4byte	0xad
@@ -1785,7 +1785,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1437 019f 91       		.byte	0x91
  1438 01a0 B87F     		.sleb128 -72
  1439 01a2 0A       		.uleb128 0xa
- 1440 01a3 0C020000 		.4byte	.LASF28
+ 1440 01a3 4C020000 		.4byte	.LASF28
  1441 01a7 01       		.byte	0x1
  1442 01a8 48       		.byte	0x48
  1443 01a9 B8000000 		.4byte	0xb8
@@ -1798,13 +1798,13 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1450 01b7 49       		.byte	0x49
  1451 01b8 AD000000 		.4byte	0xad
  1452 01bc 03       		.uleb128 0x3
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 31
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 31
 
 
  1453 01bd 91       		.byte	0x91
  1454 01be AC7F     		.sleb128 -84
  1455 01c0 0A       		.uleb128 0xa
- 1456 01c1 90020000 		.4byte	.LASF30
+ 1456 01c1 8F020000 		.4byte	.LASF30
  1457 01c5 01       		.byte	0x1
  1458 01c6 4A       		.byte	0x4a
  1459 01c7 AD000000 		.4byte	0xad
@@ -1813,7 +1813,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1462 01cd A87F     		.sleb128 -88
  1463 01cf 00       		.byte	0
  1464 01d0 0C       		.uleb128 0xc
- 1465 01d1 19030000 		.4byte	.LASF34
+ 1465 01d1 18030000 		.4byte	.LASF34
  1466 01d5 01       		.byte	0x1
  1467 01d6 51       		.byte	0x51
  1468 01d7 C3000000 		.4byte	0xc3
@@ -1832,7 +1832,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1481 01f5 76       		.sleb128 -10
  1482 01f6 00       		.byte	0
  1483 01f7 0E       		.uleb128 0xe
- 1484 01f8 D5020000 		.4byte	.LASF60
+ 1484 01f8 D4020000 		.4byte	.LASF60
  1485 01fc 01       		.byte	0x1
  1486 01fd 59       		.byte	0x59
  1487 01fe 00000000 		.4byte	.LFB66
@@ -1849,7 +1849,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1498 0218 91       		.byte	0x91
  1499 0219 64       		.sleb128 -28
  1500 021a 0F       		.uleb128 0xf
- 1501 021b EB000000 		.4byte	.LASF32
+ 1501 021b 33010000 		.4byte	.LASF32
  1502 021f 01       		.byte	0x1
  1503 0220 59       		.byte	0x59
  1504 0221 85020000 		.4byte	0x285
@@ -1857,8 +1857,8 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1506 0226 91       		.byte	0x91
  1507 0227 60       		.sleb128 -32
  1508 0228 0F       		.uleb128 0xf
- 1509 0229 C8010000 		.4byte	.LASF33
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 32
+ 1509 0229 08020000 		.4byte	.LASF33
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 32
 
 
  1510 022d 01       		.byte	0x1
@@ -1918,12 +1918,12 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1564 0284 00       		.byte	0
  1565 0285 10       		.uleb128 0x10
  1566 0286 04       		.byte	0x4
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 33
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 33
 
 
  1567 0287 A2000000 		.4byte	0xa2
  1568 028b 0C       		.uleb128 0xc
- 1569 028c E4010000 		.4byte	.LASF35
+ 1569 028c 24020000 		.4byte	.LASF35
  1570 0290 01       		.byte	0x1
  1571 0291 7E       		.byte	0x7e
  1572 0292 C3000000 		.4byte	0xc3
@@ -1958,7 +1958,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1601 02c9 6C       		.sleb128 -20
  1602 02ca 00       		.byte	0
  1603 02cb 0C       		.uleb128 0xc
- 1604 02cc 6D020000 		.4byte	.LASF36
+ 1604 02cc 6C020000 		.4byte	.LASF36
  1605 02d0 01       		.byte	0x1
  1606 02d1 80       		.byte	0x80
  1607 02d2 89000000 		.4byte	0x89
@@ -1978,7 +1978,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1621 02f2 0F       		.uleb128 0xf
  1622 02f3 17000000 		.4byte	.LASF31
  1623 02f7 01       		.byte	0x1
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 34
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 34
 
 
  1624 02f8 80       		.byte	0x80
@@ -1987,7 +1987,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1627 02fe 91       		.byte	0x91
  1628 02ff BA7F     		.sleb128 -70
  1629 0301 0F       		.uleb128 0xf
- 1630 0302 EB000000 		.4byte	.LASF32
+ 1630 0302 33010000 		.4byte	.LASF32
  1631 0306 01       		.byte	0x1
  1632 0307 80       		.byte	0x80
  1633 0308 A2000000 		.4byte	0xa2
@@ -1995,7 +1995,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1635 030d 91       		.byte	0x91
  1636 030e B87F     		.sleb128 -72
  1637 0310 0F       		.uleb128 0xf
- 1638 0311 C8010000 		.4byte	.LASF33
+ 1638 0311 08020000 		.4byte	.LASF33
  1639 0315 01       		.byte	0x1
  1640 0316 80       		.byte	0x80
  1641 0317 A2000000 		.4byte	0xa2
@@ -2038,7 +2038,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1678 0355 00000000 		.4byte	.LASF37
  1679 0359 01       		.byte	0x1
  1680 035a 86       		.byte	0x86
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 35
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 35
 
 
  1681 035b C7030000 		.4byte	0x3c7
@@ -2062,7 +2062,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1699 037a 91       		.byte	0x91
  1700 037b 54       		.sleb128 -44
  1701 037c 0A       		.uleb128 0xa
- 1702 037d AB020000 		.4byte	.LASF38
+ 1702 037d AA020000 		.4byte	.LASF38
  1703 0381 01       		.byte	0x1
  1704 0382 94       		.byte	0x94
  1705 0383 C3000000 		.4byte	0xc3
@@ -2070,7 +2070,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1707 0388 91       		.byte	0x91
  1708 0389 50       		.sleb128 -48
  1709 038a 0A       		.uleb128 0xa
- 1710 038b 22010000 		.4byte	.LASF39
+ 1710 038b 6A010000 		.4byte	.LASF39
  1711 038f 01       		.byte	0x1
  1712 0390 95       		.byte	0x95
  1713 0391 C3000000 		.4byte	0xc3
@@ -2086,7 +2086,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1723 03a2 91       		.byte	0x91
  1724 03a3 48       		.sleb128 -56
  1725 03a4 0A       		.uleb128 0xa
- 1726 03a5 01030000 		.4byte	.LASF40
+ 1726 03a5 00030000 		.4byte	.LASF40
  1727 03a9 01       		.byte	0x1
  1728 03aa 98       		.byte	0x98
  1729 03ab C7030000 		.4byte	0x3c7
@@ -2094,11 +2094,11 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1731 03b0 91       		.byte	0x91
  1732 03b1 47       		.sleb128 -57
  1733 03b2 0A       		.uleb128 0xa
- 1734 03b3 34030000 		.4byte	.LASF41
+ 1734 03b3 33030000 		.4byte	.LASF41
  1735 03b7 01       		.byte	0x1
  1736 03b8 99       		.byte	0x99
  1737 03b9 C7030000 		.4byte	0x3c7
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 36
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 36
 
 
  1738 03bd 02       		.uleb128 0x2
@@ -2111,7 +2111,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1745 03c7 02       		.uleb128 0x2
  1746 03c8 01       		.byte	0x1
  1747 03c9 02       		.byte	0x2
- 1748 03ca 7B020000 		.4byte	.LASF42
+ 1748 03ca 7A020000 		.4byte	.LASF42
  1749 03ce 11       		.uleb128 0x11
  1750 03cf BE000000 		.4byte	.LASF61
  1751 03d3 01       		.byte	0x1
@@ -2123,7 +2123,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1757 03e2 9C       		.byte	0x9c
  1758 03e3 45040000 		.4byte	0x445
  1759 03e7 0A       		.uleb128 0xa
- 1760 03e8 14020000 		.4byte	.LASF43
+ 1760 03e8 54020000 		.4byte	.LASF43
  1761 03ec 01       		.byte	0x1
  1762 03ed C4       		.byte	0xc4
  1763 03ee 89000000 		.4byte	0x89
@@ -2150,7 +2150,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1784 0417 91       		.byte	0x91
  1785 0418 62       		.sleb128 -30
  1786 0419 0A       		.uleb128 0xa
- 1787 041a EB000000 		.4byte	.LASF32
+ 1787 041a 33010000 		.4byte	.LASF32
  1788 041e 01       		.byte	0x1
  1789 041f D9       		.byte	0xd9
  1790 0420 A2000000 		.4byte	0xa2
@@ -2158,10 +2158,10 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1792 0425 91       		.byte	0x91
  1793 0426 60       		.sleb128 -32
  1794 0427 0A       		.uleb128 0xa
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 37
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 37
 
 
- 1795 0428 C8010000 		.4byte	.LASF33
+ 1795 0428 08020000 		.4byte	.LASF33
  1796 042c 01       		.byte	0x1
  1797 042d D9       		.byte	0xd9
  1798 042e A2000000 		.4byte	0xa2
@@ -2169,7 +2169,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1800 0433 91       		.byte	0x91
  1801 0434 5E       		.sleb128 -34
  1802 0435 0A       		.uleb128 0xa
- 1803 0436 75020000 		.4byte	.LASF44
+ 1803 0436 74020000 		.4byte	.LASF44
  1804 043a 01       		.byte	0x1
  1805 043b FC       		.byte	0xfc
  1806 043c 89000000 		.4byte	0x89
@@ -2179,7 +2179,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1810 0443 00       		.byte	0
  1811 0444 00       		.byte	0
  1812 0445 0A       		.uleb128 0xa
- 1813 0446 32010000 		.4byte	.LASF45
+ 1813 0446 7A010000 		.4byte	.LASF45
  1814 044a 01       		.byte	0x1
  1815 044b 30       		.byte	0x30
  1816 044c 97000000 		.4byte	0x97
@@ -2187,7 +2187,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1818 0451 03       		.byte	0x3
  1819 0452 00000000 		.4byte	sen1_on_line
  1820 0456 0A       		.uleb128 0xa
- 1821 0457 5E010000 		.4byte	.LASF46
+ 1821 0457 A6010000 		.4byte	.LASF46
  1822 045b 01       		.byte	0x1
  1823 045c 30       		.byte	0x30
  1824 045d 97000000 		.4byte	0x97
@@ -2195,7 +2195,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1826 0462 03       		.byte	0x3
  1827 0463 01000000 		.4byte	sen2_on_line
  1828 0467 0A       		.uleb128 0xa
- 1829 0468 76010000 		.4byte	.LASF47
+ 1829 0468 BE010000 		.4byte	.LASF47
  1830 046c 01       		.byte	0x1
  1831 046d 30       		.byte	0x30
  1832 046e 97000000 		.4byte	0x97
@@ -2203,7 +2203,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1834 0473 03       		.byte	0x3
  1835 0474 02000000 		.4byte	sen3_on_line
  1836 0478 0A       		.uleb128 0xa
- 1837 0479 AE010000 		.4byte	.LASF48
+ 1837 0479 EE010000 		.4byte	.LASF48
  1838 047d 01       		.byte	0x1
  1839 047e 31       		.byte	0x31
  1840 047f 97000000 		.4byte	0x97
@@ -2211,18 +2211,18 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1842 0484 03       		.byte	0x3
  1843 0485 03000000 		.4byte	sen4_on_line
  1844 0489 0A       		.uleb128 0xa
- 1845 048a D7010000 		.4byte	.LASF49
+ 1845 048a 17020000 		.4byte	.LASF49
  1846 048e 01       		.byte	0x1
  1847 048f 31       		.byte	0x31
  1848 0490 97000000 		.4byte	0x97
  1849 0494 05       		.uleb128 0x5
  1850 0495 03       		.byte	0x3
  1851 0496 04000000 		.4byte	sen5_on_line
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 38
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 38
 
 
  1852 049a 0A       		.uleb128 0xa
- 1853 049b FF010000 		.4byte	.LASF50
+ 1853 049b 3F020000 		.4byte	.LASF50
  1854 049f 01       		.byte	0x1
  1855 04a0 31       		.byte	0x31
  1856 04a1 97000000 		.4byte	0x97
@@ -2230,7 +2230,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1858 04a6 03       		.byte	0x3
  1859 04a7 05000000 		.4byte	sen6_on_line
  1860 04ab 0A       		.uleb128 0xa
- 1861 04ac 28030000 		.4byte	.LASF51
+ 1861 04ac 27030000 		.4byte	.LASF51
  1862 04b0 01       		.byte	0x1
  1863 04b1 34       		.byte	0x34
  1864 04b2 E6000000 		.4byte	0xe6
@@ -2238,7 +2238,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1866 04b7 03       		.byte	0x3
  1867 04b8 06000000 		.4byte	g_direction
  1868 04bc 0A       		.uleb128 0xa
- 1869 04bd 6B010000 		.4byte	.LASF52
+ 1869 04bd B3010000 		.4byte	.LASF52
  1870 04c1 01       		.byte	0x1
  1871 04c2 35       		.byte	0x35
  1872 04c3 E6000000 		.4byte	0xe6
@@ -2246,7 +2246,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1874 04c8 03       		.byte	0x3
  1875 04c9 07000000 		.4byte	g_stop_now
  1876 04cd 0A       		.uleb128 0xa
- 1877 04ce 42030000 		.4byte	.LASF53
+ 1877 04ce 41030000 		.4byte	.LASF53
  1878 04d2 01       		.byte	0x1
  1879 04d3 36       		.byte	0x36
  1880 04d4 DE040000 		.4byte	0x4de
@@ -2256,7 +2256,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1884 04de 05       		.uleb128 0x5
  1885 04df AD000000 		.4byte	0xad
  1886 04e3 0A       		.uleb128 0xa
- 1887 04e4 9B020000 		.4byte	.LASF54
+ 1887 04e4 9A020000 		.4byte	.LASF54
  1888 04e8 01       		.byte	0x1
  1889 04e9 39       		.byte	0x39
  1890 04ea A2000000 		.4byte	0xa2
@@ -2272,13 +2272,13 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1900 0500 03       		.byte	0x3
  1901 0501 0E000000 		.4byte	dir_latched_side
  1902 0505 13       		.uleb128 0x13
- 1903 0506 4C030000 		.4byte	.LASF62
+ 1903 0506 4B030000 		.4byte	.LASF62
  1904 050a 04       		.byte	0x4
  1905 050b 1207     		.2byte	0x712
  1906 050d DE040000 		.4byte	0x4de
  1907 0511 00       		.byte	0
  1908              		.section	.debug_abbrev,"",%progbits
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 39
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 39
 
 
  1909              	.Ldebug_abbrev0:
@@ -2338,7 +2338,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  1963 0035 00       		.byte	0
  1964 0036 05       		.uleb128 0x5
  1965 0037 35       		.uleb128 0x35
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 40
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 40
 
 
  1966 0038 00       		.byte	0
@@ -2398,7 +2398,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  2020 006e 0E       		.uleb128 0xe
  2021 006f 3A       		.uleb128 0x3a
  2022 0070 0B       		.uleb128 0xb
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 41
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 41
 
 
  2023 0071 3B       		.uleb128 0x3b
@@ -2458,7 +2458,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  2077 00a8 0B       		.uleb128 0xb
  2078 00a9 27       		.uleb128 0x27
  2079 00aa 19       		.uleb128 0x19
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 42
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 42
 
 
  2080 00ab 49       		.uleb128 0x49
@@ -2518,7 +2518,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  2134 00e3 00       		.byte	0
  2135 00e4 03       		.uleb128 0x3
  2136 00e5 0E       		.uleb128 0xe
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 43
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 43
 
 
  2137 00e6 3A       		.uleb128 0x3a
@@ -2578,7 +2578,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  2191 011d 00       		.byte	0
  2192 011e 13       		.uleb128 0x13
  2193 011f 34       		.uleb128 0x34
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 44
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 44
 
 
  2194 0120 00       		.byte	0
@@ -2638,7 +2638,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  2248              		.section	.debug_line,"",%progbits
  2249              	.Ldebug_line0:
  2250 0000 8E030000 		.section	.debug_str,"MS",%progbits,1
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 45
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 45
 
 
  2250      02003F01 
@@ -2698,232 +2698,232 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
  2274 00de 72617732 		.ascii	"raw2\000"
  2274      00
  2275              	.LASF29:
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 46
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 46
 
 
  2276 00e3 646D6D5F 		.ascii	"dmm_abs\000"
  2276      61627300 
- 2277              	.LASF32:
- 2278 00eb 56355F70 		.ascii	"V5_pp\000"
- 2278      7000
- 2279              	.LASF17:
- 2280 00f1 666C6F61 		.ascii	"float\000"
- 2280      7400
- 2281              	.LASF10:
- 2282 00f7 6C6F6E67 		.ascii	"long long int\000"
- 2282      206C6F6E 
- 2282      6720696E 
- 2282      7400
- 2283              	.LASF19:
- 2284 0105 63686172 		.ascii	"char\000"
- 2284      00
- 2285              	.LASF23:
- 2286 010a 70695F74 		.ascii	"pi_t\000"
- 2286      00
- 2287              	.LASF7:
- 2288 010f 6C6F6E67 		.ascii	"long int\000"
- 2288      20696E74 
- 2288      00
- 2289              	.LASF9:
- 2290 0118 5F5F696E 		.ascii	"__int64_t\000"
- 2290      7436345F 
- 2290      7400
- 2291              	.LASF39:
- 2292 0122 755F7261 		.ascii	"u_raw\000"
- 2292      7700
- 2293              	.LASF3:
- 2294 0128 5F5F7569 		.ascii	"__uint8_t\000"
- 2294      6E74385F 
- 2294      7400
- 2295              	.LASF45:
- 2296 0132 73656E31 		.ascii	"sen1_on_line\000"
- 2296      5F6F6E5F 
- 2296      6C696E65 
- 2296      00
- 2297              	.LASF1:
- 2298 013f 756E7369 		.ascii	"unsigned char\000"
- 2298      676E6564 
- 2298      20636861 
- 2298      7200
- 2299              	.LASF24:
- 2300 014d 72617731 		.ascii	"raw1\000"
- 2300      00
- 2301              	.LASF20:
- 2302 0152 6C6F6E67 		.ascii	"long double\000"
- 2302      20646F75 
- 2302      626C6500 
- 2303              	.LASF46:
- 2304 015e 73656E32 		.ascii	"sen2_on_line\000"
- 2304      5F6F6E5F 
- 2304      6C696E65 
- 2304      00
- 2305              	.LASF52:
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 47
+ 2277              	.LASF58:
+ 2278 00eb 433A5C55 		.ascii	"C:\\Users\\yram171\\Downloads\\Compsys-301-CODE\\YA"
+ 2278      73657273 
+ 2278      5C797261 
+ 2278      6D313731 
+ 2278      5C446F77 
+ 2279 0119 53482043 		.ascii	"SH Code\\CS301_Class.cydsn\000"
+ 2279      6F64655C 
+ 2279      43533330 
+ 2279      315F436C 
+ 2279      6173732E 
+ 2280              	.LASF32:
+ 2281 0133 56355F70 		.ascii	"V5_pp\000"
+ 2281      7000
+ 2282              	.LASF17:
+ 2283 0139 666C6F61 		.ascii	"float\000"
+ 2283      7400
+ 2284              	.LASF10:
+ 2285 013f 6C6F6E67 		.ascii	"long long int\000"
+ 2285      206C6F6E 
+ 2285      6720696E 
+ 2285      7400
+ 2286              	.LASF19:
+ 2287 014d 63686172 		.ascii	"char\000"
+ 2287      00
+ 2288              	.LASF23:
+ 2289 0152 70695F74 		.ascii	"pi_t\000"
+ 2289      00
+ 2290              	.LASF7:
+ 2291 0157 6C6F6E67 		.ascii	"long int\000"
+ 2291      20696E74 
+ 2291      00
+ 2292              	.LASF9:
+ 2293 0160 5F5F696E 		.ascii	"__int64_t\000"
+ 2293      7436345F 
+ 2293      7400
+ 2294              	.LASF39:
+ 2295 016a 755F7261 		.ascii	"u_raw\000"
+ 2295      7700
+ 2296              	.LASF3:
+ 2297 0170 5F5F7569 		.ascii	"__uint8_t\000"
+ 2297      6E74385F 
+ 2297      7400
+ 2298              	.LASF45:
+ 2299 017a 73656E31 		.ascii	"sen1_on_line\000"
+ 2299      5F6F6E5F 
+ 2299      6C696E65 
+ 2299      00
+ 2300              	.LASF1:
+ 2301 0187 756E7369 		.ascii	"unsigned char\000"
+ 2301      676E6564 
+ 2301      20636861 
+ 2301      7200
+ 2302              	.LASF24:
+ 2303 0195 72617731 		.ascii	"raw1\000"
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 47
 
 
- 2306 016b 675F7374 		.ascii	"g_stop_now\000"
- 2306      6F705F6E 
- 2306      6F7700
- 2307              	.LASF47:
- 2308 0176 73656E33 		.ascii	"sen3_on_line\000"
- 2308      5F6F6E5F 
- 2308      6C696E65 
- 2308      00
- 2309              	.LASF0:
- 2310 0183 7369676E 		.ascii	"signed char\000"
- 2310      65642063 
- 2310      68617200 
- 2311              	.LASF15:
- 2312 018f 696E7433 		.ascii	"int32_t\000"
- 2312      325F7400 
- 2313              	.LASF11:
- 2314 0197 6C6F6E67 		.ascii	"long long unsigned int\000"
- 2314      206C6F6E 
- 2314      6720756E 
- 2314      7369676E 
- 2314      65642069 
- 2315              	.LASF48:
- 2316 01ae 73656E34 		.ascii	"sen4_on_line\000"
- 2316      5F6F6E5F 
- 2316      6C696E65 
- 2316      00
- 2317              	.LASF12:
- 2318 01bb 756E7369 		.ascii	"unsigned int\000"
- 2318      676E6564 
- 2318      20696E74 
- 2318      00
- 2319              	.LASF33:
- 2320 01c8 56365F70 		.ascii	"V6_pp\000"
- 2320      7000
- 2321              	.LASF14:
- 2322 01ce 75696E74 		.ascii	"uint16_t\000"
- 2322      31365F74 
- 2322      00
- 2323              	.LASF49:
- 2324 01d7 73656E35 		.ascii	"sen5_on_line\000"
- 2324      5F6F6E5F 
- 2324      6C696E65 
- 2324      00
- 2325              	.LASF35:
- 2326 01e4 5F636C61 		.ascii	"_clampf\000"
- 2326      6D706600 
- 2327              	.LASF5:
- 2328 01ec 73686F72 		.ascii	"short unsigned int\000"
- 2328      7420756E 
- 2328      7369676E 
- 2328      65642069 
- 2328      6E7400
- 2329              	.LASF50:
- 2330 01ff 73656E36 		.ascii	"sen6_on_line\000"
- 2330      5F6F6E5F 
- 2330      6C696E65 
- 2330      00
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 48
+ 2303      00
+ 2304              	.LASF20:
+ 2305 019a 6C6F6E67 		.ascii	"long double\000"
+ 2305      20646F75 
+ 2305      626C6500 
+ 2306              	.LASF46:
+ 2307 01a6 73656E32 		.ascii	"sen2_on_line\000"
+ 2307      5F6F6E5F 
+ 2307      6C696E65 
+ 2307      00
+ 2308              	.LASF52:
+ 2309 01b3 675F7374 		.ascii	"g_stop_now\000"
+ 2309      6F705F6E 
+ 2309      6F7700
+ 2310              	.LASF47:
+ 2311 01be 73656E33 		.ascii	"sen3_on_line\000"
+ 2311      5F6F6E5F 
+ 2311      6C696E65 
+ 2311      00
+ 2312              	.LASF0:
+ 2313 01cb 7369676E 		.ascii	"signed char\000"
+ 2313      65642063 
+ 2313      68617200 
+ 2314              	.LASF11:
+ 2315 01d7 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 2315      206C6F6E 
+ 2315      6720756E 
+ 2315      7369676E 
+ 2315      65642069 
+ 2316              	.LASF48:
+ 2317 01ee 73656E34 		.ascii	"sen4_on_line\000"
+ 2317      5F6F6E5F 
+ 2317      6C696E65 
+ 2317      00
+ 2318              	.LASF12:
+ 2319 01fb 756E7369 		.ascii	"unsigned int\000"
+ 2319      676E6564 
+ 2319      20696E74 
+ 2319      00
+ 2320              	.LASF33:
+ 2321 0208 56365F70 		.ascii	"V6_pp\000"
+ 2321      7000
+ 2322              	.LASF14:
+ 2323 020e 75696E74 		.ascii	"uint16_t\000"
+ 2323      31365F74 
+ 2323      00
+ 2324              	.LASF49:
+ 2325 0217 73656E35 		.ascii	"sen5_on_line\000"
+ 2325      5F6F6E5F 
+ 2325      6C696E65 
+ 2325      00
+ 2326              	.LASF35:
+ 2327 0224 5F636C61 		.ascii	"_clampf\000"
+ 2327      6D706600 
+ 2328              	.LASF5:
+ 2329 022c 73686F72 		.ascii	"short unsigned int\000"
+ 2329      7420756E 
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 48
 
 
- 2331              	.LASF28:
- 2332 020c 6E756D5F 		.ascii	"num_abs\000"
- 2332      61627300 
- 2333              	.LASF43:
- 2334 0214 63656E74 		.ascii	"center_duty_est\000"
- 2334      65725F64 
- 2334      7574795F 
- 2334      65737400 
- 2335              	.LASF58:
- 2336 0224 433A5C55 		.ascii	"C:\\Users\\yram171\\Downloads\\Yukyung CODE\\psoc_c"
- 2336      73657273 
- 2336      5C797261 
- 2336      6D313731 
- 2336      5C446F77 
- 2337 0252 6F64655F 		.ascii	"ode_base\\CS301_Class.cydsn\000"
- 2337      62617365 
- 2337      5C435333 
- 2337      30315F43 
- 2337      6C617373 
+ 2329      7369676E 
+ 2329      65642069 
+ 2329      6E7400
+ 2330              	.LASF50:
+ 2331 023f 73656E36 		.ascii	"sen6_on_line\000"
+ 2331      5F6F6E5F 
+ 2331      6C696E65 
+ 2331      00
+ 2332              	.LASF28:
+ 2333 024c 6E756D5F 		.ascii	"num_abs\000"
+ 2333      61627300 
+ 2334              	.LASF43:
+ 2335 0254 63656E74 		.ascii	"center_duty_est\000"
+ 2335      65725F64 
+ 2335      7574795F 
+ 2335      65737400 
+ 2336              	.LASF15:
+ 2337 0264 696E7433 		.ascii	"int32_t\000"
+ 2337      325F7400 
  2338              	.LASF36:
- 2339 026d 70695F73 		.ascii	"pi_step\000"
+ 2339 026c 70695F73 		.ascii	"pi_step\000"
  2339      74657000 
  2340              	.LASF44:
- 2341 0275 73746565 		.ascii	"steer\000"
+ 2341 0274 73746565 		.ascii	"steer\000"
  2341      7200
  2342              	.LASF42:
- 2343 027b 5F426F6F 		.ascii	"_Bool\000"
+ 2343 027a 5F426F6F 		.ascii	"_Bool\000"
  2343      6C00
  2344              	.LASF59:
- 2345 0281 6973725F 		.ascii	"isr_qd_Handler\000"
+ 2345 0280 6973725F 		.ascii	"isr_qd_Handler\000"
  2345      71645F48 
  2345      616E646C 
  2345      657200
  2346              	.LASF30:
- 2347 0290 646D6D5F 		.ascii	"dmm_signed\000"
+ 2347 028f 646D6D5F 		.ascii	"dmm_signed\000"
  2347      7369676E 
  2347      656400
  2348              	.LASF54:
- 2349 029b 6469725F 		.ascii	"dir_delay_ticks\000"
+ 2349 029a 6469725F 		.ascii	"dir_delay_ticks\000"
  2349      64656C61 
  2349      795F7469 
  2349      636B7300 
  2350              	.LASF38:
- 2351 02ab 695F6E65 		.ascii	"i_next\000"
+ 2351 02aa 695F6E65 		.ascii	"i_next\000"
  2351      787400
  2352              	.LASF57:
- 2353 02b2 6D61696E 		.ascii	"main.c\000"
+ 2353 02b1 6D61696E 		.ascii	"main.c\000"
  2353      2E6300
  2354              	.LASF8:
- 2355 02b9 6C6F6E67 		.ascii	"long unsigned int\000"
+ 2355 02b8 6C6F6E67 		.ascii	"long unsigned int\000"
  2355      20756E73 
  2355      69676E65 
  2355      6420696E 
  2355      7400
  2356              	.LASF27:
- 2357 02cb 64617667 		.ascii	"davg_sign\000"
+ 2357 02ca 64617667 		.ascii	"davg_sign\000"
  2357      5F736967 
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 49
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccshrK1t.s 			page 49
 
 
  2357      6E00
  2358              	.LASF60:
- 2359 02d5 6C696768 		.ascii	"light_sensors_update_and_maybe_request_turn\000"
+ 2359 02d4 6C696768 		.ascii	"light_sensors_update_and_maybe_request_turn\000"
  2359      745F7365 
  2359      6E736F72 
  2359      735F7570 
  2359      64617465 
  2360              	.LASF40:
- 2361 0301 7361745F 		.ascii	"sat_hi\000"
+ 2361 0300 7361745F 		.ascii	"sat_hi\000"
  2361      686900
  2362              	.LASF22:
- 2363 0308 745F6C6F 		.ascii	"t_loss\000"
+ 2363 0307 745F6C6F 		.ascii	"t_loss\000"
  2363      737300
  2364              	.LASF6:
- 2365 030f 5F5F696E 		.ascii	"__int32_t\000"
+ 2365 030e 5F5F696E 		.ascii	"__int32_t\000"
  2365      7433325F 
  2365      7400
  2366              	.LASF34:
- 2367 0319 6E6F726D 		.ascii	"norm01_from_pp\000"
+ 2367 0318 6E6F726D 		.ascii	"norm01_from_pp\000"
  2367      30315F66 
  2367      726F6D5F 
  2367      707000
  2368              	.LASF51:
- 2369 0328 675F6469 		.ascii	"g_direction\000"
+ 2369 0327 675F6469 		.ascii	"g_direction\000"
  2369      72656374 
  2369      696F6E00 
  2370              	.LASF41:
- 2371 0334 7361745F 		.ascii	"sat_lo\000"
+ 2371 0333 7361745F 		.ascii	"sat_lo\000"
  2371      6C6F00
  2372              	.LASF18:
- 2373 033b 646F7562 		.ascii	"double\000"
+ 2373 033a 646F7562 		.ascii	"double\000"
  2373      6C6500
  2374              	.LASF53:
- 2375 0342 675F6469 		.ascii	"g_dist_mm\000"
+ 2375 0341 675F6469 		.ascii	"g_dist_mm\000"
  2375      73745F6D 
  2375      6D00
  2376              	.LASF62:
- 2377 034c 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 2377 034b 49544D5F 		.ascii	"ITM_RxBuffer\000"
  2377      52784275 
  2377      66666572 
  2377      00
  2378              	.LASF26:
- 2379 0359 64617667 		.ascii	"davg_abs\000"
+ 2379 0358 64617667 		.ascii	"davg_abs\000"
  2379      5F616273 
  2379      00
  2380              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
