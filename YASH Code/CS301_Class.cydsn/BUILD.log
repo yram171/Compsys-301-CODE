@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 --------------- Build Started: 10/19/2025 22:50:09 Project: CS301_Class, Configuration: ARM GCC 5.4-2016-q2-update Debug ---------------
 The code generation step is up to date.
 arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/main.lst -g -D DEBUG -Wall -ffunction-sections -ffat-lto-objects -O0 -c main.c -o .\CortexM3\ARM_GCC_541\Debug\main.o
@@ -17,6 +18,11 @@ SRAM used: 2629 of 65536 bytes (4.0%). Stack: 2048 bytes. Heap: 128 bytes.
 --------------- Build Started: 10/19/2025 23:38:14 Project: CS301_Class, Configuration: ARM GCC 5.4-2016-q2-update Debug ---------------
 The code generation step is up to date.
 arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/main.lst -g -D DEBUG -Wall -ffunction-sections -ffat-lto-objects -O0 -c main.c -o .\CortexM3\ARM_GCC_541\Debug\main.o
+=======
+--------------- Build Started: 10/19/2025 23:38:14 Project: CS301_Class, Configuration: ARM GCC 5.4-2016-q2-update Debug ---------------
+The code generation step is up to date.
+arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/main.lst -g -D DEBUG -Wall -ffunction-sections -ffat-lto-objects -O0 -c main.c -o .\CortexM3\ARM_GCC_541\Debug\main.o
+>>>>>>> Stashed changes
 main.c:135:0: warning: "STEER_MAX" redefined
  #define STEER_MAX        13
  ^
@@ -97,4 +103,7 @@ directions.c:198:23: error: 'DIR_FINISH' undeclared (first use in this function)
              s_state = DIR_FINISH;
                        ^
 --------------- Build Failed: 10/19/2025 23:38:15 ---------------
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
