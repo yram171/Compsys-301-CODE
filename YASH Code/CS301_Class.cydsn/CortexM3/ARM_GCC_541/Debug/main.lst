@@ -1,0 +1,2929 @@
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"main.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.bss
+  20              	sen1_on_line:
+  21 0000 00       		.space	1
+  22              	sen2_on_line:
+  23 0001 00       		.space	1
+  24              	sen3_on_line:
+  25 0002 00       		.space	1
+  26              	sen4_on_line:
+  27 0003 00       		.space	1
+  28              	sen5_on_line:
+  29 0004 00       		.space	1
+  30              	sen6_on_line:
+  31 0005 00       		.space	1
+  32              	g_direction:
+  33 0006 00       		.space	1
+  34              	g_stop_now:
+  35 0007 00       		.space	1
+  36              		.align	2
+  37              	g_dist_mm:
+  38 0008 00000000 		.space	4
+  39              		.align	1
+  40              	dir_delay_ticks:
+  41 000c 0000     		.space	2
+  42              	dir_latched_side:
+  43 000e 00       		.space	1
+  44              		.global	__aeabi_ldivmod
+  45              		.section	.text.isr_qd_Handler,"ax",%progbits
+  46              		.align	2
+  47              		.global	isr_qd_Handler
+  48              		.thumb
+  49              		.thumb_func
+  50              		.type	isr_qd_Handler, %function
+  51              	isr_qd_Handler:
+  52              	.LFB64:
+  53              		.file 1 "main.c"
+   1:main.c        **** /* ========================= main.c (with PI steering + turn-call delay) =========================
+   2:main.c        ****  * - Keeps straight-line PI active during a short delay after g_direction flips (Option A)
+   3:main.c        ****  * - Then calls Directions_Handle(&g_direction) to run the maneuver
+   4:main.c        ****  * - Resets PI integrator after the turn completes
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 2
+
+
+   5:main.c        ****  * ============================================================================================== *
+   6:main.c        **** 
+   7:main.c        **** #include <project.h>
+   8:main.c        **** #include <stdint.h>
+   9:main.c        **** #include <stdbool.h>
+  10:main.c        **** 
+  11:main.c        **** #include <sensors.h>     // Sensor_ComputePeakToPeak()
+  12:main.c        **** #include "motor_s.h"     // set_motors_*, motor_enable
+  13:main.c        **** #include "directions.h"  // Directions_* turning module
+  14:main.c        **** 
+  15:main.c        **** /* ===== Loop pacing (kept) ===== */
+  16:main.c        **** #define LOOP_DT_MS               8u
+  17:main.c        **** #define DT_S   ( (float)LOOP_DT_MS / 1000.0f )
+  18:main.c        **** 
+  19:main.c        **** /* ===== Cruise speed / distance target (kept) ===== */
+  20:main.c        **** #define VMAX_CONST_MM_S        1000
+  21:main.c        **** #define SPEED_FRAC_PERCENT      25
+  22:main.c        **** #define V_CRUISE_MM_S  ((int32_t)VMAX_CONST_MM_S * (int32_t)SPEED_FRAC_PERCENT / 100)
+  23:main.c        **** #define TARGET_DIST_MM        20000
+  24:main.c        **** 
+  25:main.c        **** /* ===== Encoder → mm conversion (kept) ===== */
+  26:main.c        **** #define QD_SAMPLE_MS             5u
+  27:main.c        **** #define CPR_OUTSHAFT           228u
+  28:main.c        **** #define R_MM                    34
+  29:main.c        **** #define PI_X1000              3142
+  30:main.c        **** #define PERIM_MM_X1000   ((int32_t)(2 * PI_X1000 * R_MM))
+  31:main.c        **** #define MM_PER_COUNT_X1000     ( PERIM_MM_X1000 / CPR_OUTSHAFT )
+  32:main.c        **** #define CALIB_DIST_X1000     1500
+  33:main.c        **** #define APPLY_CALIB_DIST(x)  ( (int32_t)(((int64_t)(x) * CALIB_DIST_X1000 + 500)/1000) )
+  34:main.c        **** 
+  35:main.c        **** /* ===== S1/S2 relaxed detection (kept) ===== */
+  36:main.c        **** #define S_MINC_COUNTS            10
+  37:main.c        **** #define S_MAXC_COUNTS           100
+  38:main.c        **** #define S_HYST_COUNTS           16u
+  39:main.c        **** 
+  40:main.c        **** /* ===== Turn request filtering (kept) ===== */
+  41:main.c        **** #define TURN_DEBOUNCE_TICKS       5u
+  42:main.c        **** #define CLEAR_ARM_TICKS           4u
+  43:main.c        **** 
+  44:main.c        **** #define DIR_CALL_DELAY_MS        (100)  /* wait ~200 ms before starting the maneuver */
+  45:main.c        **** #define DIR_CALL_DELAY_TICKS     ((DIR_CALL_DELAY_MS + LOOP_DT_MS - 1) / LOOP_DT_MS)
+  46:main.c        **** 
+  47:main.c        **** /* ===== Local sensor flags (used for S1/S2 edge) ===== */
+  48:main.c        **** static uint8_t sen1_on_line=0, sen2_on_line=0, sen3_on_line=0;
+  49:main.c        **** static uint8_t sen4_on_line=0, sen5_on_line=0, sen6_on_line=0;
+  50:main.c        **** 
+  51:main.c        **** /* ===== Global state (kept) ===== */
+  52:main.c        **** static volatile uint8_t g_direction = 0;   /* 0=straight, 1=left, 2=right */
+  53:main.c        **** static volatile uint8_t g_stop_now  = 0;
+  54:main.c        **** static volatile int32_t g_dist_mm   = 0;
+  55:main.c        **** 
+  56:main.c        **** /* ===== Option A state ===== */
+  57:main.c        **** static uint16_t dir_delay_ticks = 0;        /* countdown in loop ticks */
+  58:main.c        **** static uint8_t  dir_latched_side = 0;       /* remembers 1 or 2 while waiting */
+  59:main.c        **** 
+  60:main.c        **** /* ------------------------------- 5 ms Timer ISR: accumulate distance (kept) ---------------------
+  61:main.c        **** CY_ISR(isr_qd_Handler)
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 3
+
+
+  62:main.c        **** {
+  54              		.loc 1 62 0
+  55              		.cfi_startproc
+  56              		@ args = 0, pretend = 0, frame = 72
+  57              		@ frame_needed = 1, uses_anonymous_args = 0
+  58 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+  59              		.cfi_def_cfa_offset 36
+  60              		.cfi_offset 4, -36
+  61              		.cfi_offset 5, -32
+  62              		.cfi_offset 6, -28
+  63              		.cfi_offset 7, -24
+  64              		.cfi_offset 8, -20
+  65              		.cfi_offset 9, -16
+  66              		.cfi_offset 10, -12
+  67              		.cfi_offset 11, -8
+  68              		.cfi_offset 14, -4
+  69 0004 93B0     		sub	sp, sp, #76
+  70              		.cfi_def_cfa_offset 112
+  71 0006 00AF     		add	r7, sp, #0
+  72              		.cfi_def_cfa_register 7
+  63:main.c        ****     int32_t raw1 = QuadDec_M1_GetCounter();  QuadDec_M1_SetCounter(0);
+  73              		.loc 1 63 0
+  74 0008 FFF7FEFF 		bl	QuadDec_M1_GetCounter
+  75 000c 0346     		mov	r3, r0
+  76 000e 7B64     		str	r3, [r7, #68]
+  77 0010 0020     		movs	r0, #0
+  78 0012 FFF7FEFF 		bl	QuadDec_M1_SetCounter
+  64:main.c        ****     int32_t raw2 = QuadDec_M2_GetCounter();  QuadDec_M2_SetCounter(0);
+  79              		.loc 1 64 0
+  80 0016 FFF7FEFF 		bl	QuadDec_M2_GetCounter
+  81 001a 0346     		mov	r3, r0
+  82 001c 3B64     		str	r3, [r7, #64]
+  83 001e 0020     		movs	r0, #0
+  84 0020 FFF7FEFF 		bl	QuadDec_M2_SetCounter
+  65:main.c        **** 
+  66:main.c        ****     int32_t d1 = raw1, d2 = raw2;
+  85              		.loc 1 66 0
+  86 0024 7B6C     		ldr	r3, [r7, #68]
+  87 0026 FB63     		str	r3, [r7, #60]
+  88 0028 3B6C     		ldr	r3, [r7, #64]
+  89 002a BB63     		str	r3, [r7, #56]
+  67:main.c        ****     int32_t a1 = (d1 >= 0) ? d1 : -d1;
+  90              		.loc 1 67 0
+  91 002c FB6B     		ldr	r3, [r7, #60]
+  92 002e 002B     		cmp	r3, #0
+  93 0030 B8BF     		it	lt
+  94 0032 5B42     		rsblt	r3, r3, #0
+  95 0034 7B63     		str	r3, [r7, #52]
+  68:main.c        ****     int32_t a2 = (d2 >= 0) ? d2 : -d2;
+  96              		.loc 1 68 0
+  97 0036 BB6B     		ldr	r3, [r7, #56]
+  98 0038 002B     		cmp	r3, #0
+  99 003a B8BF     		it	lt
+ 100 003c 5B42     		rsblt	r3, r3, #0
+ 101 003e 3B63     		str	r3, [r7, #48]
+  69:main.c        ****     int32_t davg_abs  = (a1 + a2) / 2;
+ 102              		.loc 1 69 0
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 4
+
+
+ 103 0040 7A6B     		ldr	r2, [r7, #52]
+ 104 0042 3B6B     		ldr	r3, [r7, #48]
+ 105 0044 1344     		add	r3, r3, r2
+ 106 0046 DA0F     		lsrs	r2, r3, #31
+ 107 0048 1344     		add	r3, r3, r2
+ 108 004a 5B10     		asrs	r3, r3, #1
+ 109 004c FB62     		str	r3, [r7, #44]
+  70:main.c        ****     int32_t davg_sign = ((d1 + d2) >= 0) ? +1 : -1;
+ 110              		.loc 1 70 0
+ 111 004e FA6B     		ldr	r2, [r7, #60]
+ 112 0050 BB6B     		ldr	r3, [r7, #56]
+ 113 0052 1344     		add	r3, r3, r2
+ 114 0054 002B     		cmp	r3, #0
+ 115 0056 01DB     		blt	.L2
+ 116              		.loc 1 70 0 is_stmt 0 discriminator 1
+ 117 0058 0123     		movs	r3, #1
+ 118 005a 01E0     		b	.L3
+ 119              	.L2:
+ 120              		.loc 1 70 0 discriminator 2
+ 121 005c 4FF0FF33 		mov	r3, #-1
+ 122              	.L3:
+ 123              		.loc 1 70 0 discriminator 4
+ 124 0060 BB62     		str	r3, [r7, #40]
+  71:main.c        **** 
+  72:main.c        ****     int64_t num_abs = (int64_t)davg_abs * MM_PER_COUNT_X1000;
+ 125              		.loc 1 72 0 is_stmt 1 discriminator 4
+ 126 0062 FB6A     		ldr	r3, [r7, #44]
+ 127 0064 1946     		mov	r1, r3
+ 128 0066 4FEAE172 		asr	r2, r1, #31
+ 129 006a 0B46     		mov	r3, r1
+ 130 006c 1446     		mov	r4, r2
+ 131 006e DB18     		adds	r3, r3, r3
+ 132 0070 44EB0404 		adc	r4, r4, r4
+ 133 0074 5B18     		adds	r3, r3, r1
+ 134 0076 44EB0204 		adc	r4, r4, r2
+ 135 007a 4FEA8409 		lsl	r9, r4, #2
+ 136 007e 49EA9379 		orr	r9, r9, r3, lsr #30
+ 137 0082 4FEA8308 		lsl	r8, r3, #2
+ 138 0086 4346     		mov	r3, r8
+ 139 0088 4C46     		mov	r4, r9
+ 140 008a 5B18     		adds	r3, r3, r1
+ 141 008c 44EB0204 		adc	r4, r4, r2
+ 142 0090 4FEAC40B 		lsl	fp, r4, #3
+ 143 0094 4BEA537B 		orr	fp, fp, r3, lsr #29
+ 144 0098 4FEAC30A 		lsl	r10, r3, #3
+ 145 009c 13EB0A03 		adds	r3, r3, r10
+ 146 00a0 44EB0B04 		adc	r4, r4, fp
+ 147 00a4 E000     		lsls	r0, r4, #3
+ 148 00a6 7861     		str	r0, [r7, #20]
+ 149 00a8 7869     		ldr	r0, [r7, #20]
+ 150 00aa 40EA5370 		orr	r0, r0, r3, lsr #29
+ 151 00ae 7861     		str	r0, [r7, #20]
+ 152 00b0 DB00     		lsls	r3, r3, #3
+ 153 00b2 3B61     		str	r3, [r7, #16]
+ 154 00b4 D7E90434 		ldrd	r3, [r7, #16]
+ 155 00b8 5B18     		adds	r3, r3, r1
+ 156 00ba 44EB0204 		adc	r4, r4, r2
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 5
+
+
+ 157 00be C7E90834 		strd	r3, [r7, #32]
+  73:main.c        ****     int32_t dmm_abs = (int32_t)((num_abs + 500) / 1000);
+ 158              		.loc 1 73 0 discriminator 4
+ 159 00c2 D7E90834 		ldrd	r3, [r7, #32]
+ 160 00c6 13F5FA70 		adds	r0, r3, #500
+ 161 00ca 44F10001 		adc	r1, r4, #0
+ 162 00ce 4FF47A72 		mov	r2, #1000
+ 163 00d2 4FF00003 		mov	r3, #0
+ 164 00d6 FFF7FEFF 		bl	__aeabi_ldivmod
+ 165 00da 0346     		mov	r3, r0
+ 166 00dc 0C46     		mov	r4, r1
+ 167 00de FB61     		str	r3, [r7, #28]
+  74:main.c        ****     int32_t dmm_signed = APPLY_CALIB_DIST(dmm_abs) * davg_sign;
+ 168              		.loc 1 74 0 discriminator 4
+ 169 00e0 FB69     		ldr	r3, [r7, #28]
+ 170 00e2 1946     		mov	r1, r3
+ 171 00e4 4FEAE172 		asr	r2, r1, #31
+ 172 00e8 0B46     		mov	r3, r1
+ 173 00ea 1446     		mov	r4, r2
+ 174 00ec DB18     		adds	r3, r3, r3
+ 175 00ee 44EB0404 		adc	r4, r4, r4
+ 176 00f2 5B18     		adds	r3, r3, r1
+ 177 00f4 44EB0204 		adc	r4, r4, r2
+ 178 00f8 E000     		lsls	r0, r4, #3
+ 179 00fa F860     		str	r0, [r7, #12]
+ 180 00fc F868     		ldr	r0, [r7, #12]
+ 181 00fe 40EA5370 		orr	r0, r0, r3, lsr #29
+ 182 0102 F860     		str	r0, [r7, #12]
+ 183 0104 DB00     		lsls	r3, r3, #3
+ 184 0106 BB60     		str	r3, [r7, #8]
+ 185 0108 D7E90234 		ldrd	r3, [r7, #8]
+ 186 010c 5B18     		adds	r3, r3, r1
+ 187 010e 44EB0204 		adc	r4, r4, r2
+ 188 0112 2601     		lsls	r6, r4, #4
+ 189 0114 46EA1376 		orr	r6, r6, r3, lsr #28
+ 190 0118 1D01     		lsls	r5, r3, #4
+ 191 011a ED1A     		subs	r5, r5, r3
+ 192 011c 66EB0406 		sbc	r6, r6, r4
+ 193 0120 B300     		lsls	r3, r6, #2
+ 194 0122 7B60     		str	r3, [r7, #4]
+ 195 0124 7B68     		ldr	r3, [r7, #4]
+ 196 0126 43EA9573 		orr	r3, r3, r5, lsr #30
+ 197 012a 7B60     		str	r3, [r7, #4]
+ 198 012c AB00     		lsls	r3, r5, #2
+ 199 012e 3B60     		str	r3, [r7]
+ 200 0130 D7E90056 		ldrd	r5, [r7]
+ 201 0134 2B46     		mov	r3, r5
+ 202 0136 3446     		mov	r4, r6
+ 203 0138 13F5FA70 		adds	r0, r3, #500
+ 204 013c 44F10001 		adc	r1, r4, #0
+ 205 0140 4FF47A72 		mov	r2, #1000
+ 206 0144 4FF00003 		mov	r3, #0
+ 207 0148 FFF7FEFF 		bl	__aeabi_ldivmod
+ 208 014c 0346     		mov	r3, r0
+ 209 014e 0C46     		mov	r4, r1
+ 210 0150 1A46     		mov	r2, r3
+ 211 0152 BB6A     		ldr	r3, [r7, #40]
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 6
+
+
+ 212 0154 03FB02F3 		mul	r3, r3, r2
+ 213 0158 BB61     		str	r3, [r7, #24]
+  75:main.c        **** 
+  76:main.c        ****     g_dist_mm += dmm_signed;
+ 214              		.loc 1 76 0 discriminator 4
+ 215 015a 064B     		ldr	r3, .L4
+ 216 015c 1A68     		ldr	r2, [r3]
+ 217 015e BB69     		ldr	r3, [r7, #24]
+ 218 0160 1344     		add	r3, r3, r2
+ 219 0162 044A     		ldr	r2, .L4
+ 220 0164 1360     		str	r3, [r2]
+  77:main.c        ****     (void)Timer_QD_ReadStatusRegister();     // clear TC
+ 221              		.loc 1 77 0 discriminator 4
+ 222 0166 FFF7FEFF 		bl	Timer_QD_ReadStatusRegister
+  78:main.c        **** }
+ 223              		.loc 1 78 0 discriminator 4
+ 224 016a 00BF     		nop
+ 225 016c 4C37     		adds	r7, r7, #76
+ 226              		.cfi_def_cfa_offset 36
+ 227 016e BD46     		mov	sp, r7
+ 228              		.cfi_def_cfa_register 13
+ 229              		@ sp needed
+ 230 0170 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 231              	.L5:
+ 232              		.align	2
+ 233              	.L4:
+ 234 0174 08000000 		.word	g_dist_mm
+ 235              		.cfi_endproc
+ 236              	.LFE64:
+ 237              		.size	isr_qd_Handler, .-isr_qd_Handler
+ 238              		.global	__aeabi_i2f
+ 239              		.global	__aeabi_fdiv
+ 240              		.section	.text.norm01_from_pp,"ax",%progbits
+ 241              		.align	2
+ 242              		.thumb
+ 243              		.thumb_func
+ 244              		.type	norm01_from_pp, %function
+ 245              	norm01_from_pp:
+ 246              	.LFB65:
+  79:main.c        **** 
+  80:main.c        **** /* Utility: normalize peak-to-peak to [0..1] */
+  81:main.c        **** static inline float norm01_from_pp(uint16_t pp)
+  82:main.c        **** {
+ 247              		.loc 1 82 0
+ 248              		.cfi_startproc
+ 249              		@ args = 0, pretend = 0, frame = 8
+ 250              		@ frame_needed = 1, uses_anonymous_args = 0
+ 251 0000 80B5     		push	{r7, lr}
+ 252              		.cfi_def_cfa_offset 8
+ 253              		.cfi_offset 7, -8
+ 254              		.cfi_offset 14, -4
+ 255 0002 82B0     		sub	sp, sp, #8
+ 256              		.cfi_def_cfa_offset 16
+ 257 0004 00AF     		add	r7, sp, #0
+ 258              		.cfi_def_cfa_register 7
+ 259 0006 0346     		mov	r3, r0
+ 260 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 7
+
+
+  83:main.c        ****     if (pp <= S_MINC_COUNTS) return 0.0f;
+ 261              		.loc 1 83 0
+ 262 000a FB88     		ldrh	r3, [r7, #6]
+ 263 000c 0A2B     		cmp	r3, #10
+ 264 000e 02D8     		bhi	.L7
+ 265              		.loc 1 83 0 is_stmt 0 discriminator 1
+ 266 0010 4FF00003 		mov	r3, #0
+ 267 0014 10E0     		b	.L8
+ 268              	.L7:
+  84:main.c        ****     if (pp >= S_MAXC_COUNTS) return 1.0f;
+ 269              		.loc 1 84 0 is_stmt 1
+ 270 0016 FB88     		ldrh	r3, [r7, #6]
+ 271 0018 632B     		cmp	r3, #99
+ 272 001a 02D9     		bls	.L9
+ 273              		.loc 1 84 0 is_stmt 0 discriminator 1
+ 274 001c 4FF07E53 		mov	r3, #1065353216
+ 275 0020 0AE0     		b	.L8
+ 276              	.L9:
+  85:main.c        ****     return (float)(pp - S_MINC_COUNTS) / (float)(S_MAXC_COUNTS - S_MINC_COUNTS);
+ 277              		.loc 1 85 0 is_stmt 1
+ 278 0022 FB88     		ldrh	r3, [r7, #6]
+ 279 0024 0A3B     		subs	r3, r3, #10
+ 280 0026 1846     		mov	r0, r3
+ 281 0028 FFF7FEFF 		bl	__aeabi_i2f
+ 282 002c 0346     		mov	r3, r0
+ 283 002e 0449     		ldr	r1, .L10
+ 284 0030 1846     		mov	r0, r3
+ 285 0032 FFF7FEFF 		bl	__aeabi_fdiv
+ 286 0036 0346     		mov	r3, r0
+ 287              	.L8:
+  86:main.c        **** }
+ 288              		.loc 1 86 0
+ 289 0038 1846     		mov	r0, r3
+ 290 003a 0837     		adds	r7, r7, #8
+ 291              		.cfi_def_cfa_offset 8
+ 292 003c BD46     		mov	sp, r7
+ 293              		.cfi_def_cfa_register 13
+ 294              		@ sp needed
+ 295 003e 80BD     		pop	{r7, pc}
+ 296              	.L11:
+ 297              		.align	2
+ 298              	.L10:
+ 299 0040 0000B442 		.word	1119092736
+ 300              		.cfi_endproc
+ 301              	.LFE65:
+ 302              		.size	norm01_from_pp, .-norm01_from_pp
+ 303              		.section	.text.light_sensors_update_and_maybe_request_turn,"ax",%progbits
+ 304              		.align	2
+ 305              		.thumb
+ 306              		.thumb_func
+ 307              		.type	light_sensors_update_and_maybe_request_turn, %function
+ 308              	light_sensors_update_and_maybe_request_turn:
+ 309              	.LFB66:
+  87:main.c        **** 
+  88:main.c        **** /* Read sensors and (maybe) request a turn based on S1 / S2 (kept) */
+  89:main.c        **** static void light_sensors_update_and_maybe_request_turn(uint16_t* V4_pp, uint16_t* V5_pp, uint16_t*
+  90:main.c        **** {
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 8
+
+
+ 310              		.loc 1 90 0
+ 311              		.cfi_startproc
+ 312              		@ args = 0, pretend = 0, frame = 32
+ 313              		@ frame_needed = 1, uses_anonymous_args = 0
+ 314 0000 80B5     		push	{r7, lr}
+ 315              		.cfi_def_cfa_offset 8
+ 316              		.cfi_offset 7, -8
+ 317              		.cfi_offset 14, -4
+ 318 0002 88B0     		sub	sp, sp, #32
+ 319              		.cfi_def_cfa_offset 40
+ 320 0004 00AF     		add	r7, sp, #0
+ 321              		.cfi_def_cfa_register 7
+ 322 0006 F860     		str	r0, [r7, #12]
+ 323 0008 B960     		str	r1, [r7, #8]
+ 324 000a 7A60     		str	r2, [r7, #4]
+  91:main.c        ****     uint16_t V1 = Sensor_ComputePeakToPeak(0);
+ 325              		.loc 1 91 0
+ 326 000c 0020     		movs	r0, #0
+ 327 000e FFF7FEFF 		bl	Sensor_ComputePeakToPeak
+ 328 0012 0346     		mov	r3, r0
+ 329 0014 FB83     		strh	r3, [r7, #30]	@ movhi
+  92:main.c        ****     uint16_t V2 = Sensor_ComputePeakToPeak(1);
+ 330              		.loc 1 92 0
+ 331 0016 0120     		movs	r0, #1
+ 332 0018 FFF7FEFF 		bl	Sensor_ComputePeakToPeak
+ 333 001c 0346     		mov	r3, r0
+ 334 001e BB83     		strh	r3, [r7, #28]	@ movhi
+  93:main.c        ****     uint16_t V3 = Sensor_ComputePeakToPeak(2);
+ 335              		.loc 1 93 0
+ 336 0020 0220     		movs	r0, #2
+ 337 0022 FFF7FEFF 		bl	Sensor_ComputePeakToPeak
+ 338 0026 0346     		mov	r3, r0
+ 339 0028 7B83     		strh	r3, [r7, #26]	@ movhi
+  94:main.c        ****     uint16_t V4 = Sensor_ComputePeakToPeak(3);
+ 340              		.loc 1 94 0
+ 341 002a 0320     		movs	r0, #3
+ 342 002c FFF7FEFF 		bl	Sensor_ComputePeakToPeak
+ 343 0030 0346     		mov	r3, r0
+ 344 0032 3B83     		strh	r3, [r7, #24]	@ movhi
+  95:main.c        ****     uint16_t V5 = Sensor_ComputePeakToPeak(4);
+ 345              		.loc 1 95 0
+ 346 0034 0420     		movs	r0, #4
+ 347 0036 FFF7FEFF 		bl	Sensor_ComputePeakToPeak
+ 348 003a 0346     		mov	r3, r0
+ 349 003c FB82     		strh	r3, [r7, #22]	@ movhi
+  96:main.c        ****     uint16_t V6 = Sensor_ComputePeakToPeak(5);
+ 350              		.loc 1 96 0
+ 351 003e 0520     		movs	r0, #5
+ 352 0040 FFF7FEFF 		bl	Sensor_ComputePeakToPeak
+ 353 0044 0346     		mov	r3, r0
+ 354 0046 BB82     		strh	r3, [r7, #20]	@ movhi
+  97:main.c        **** 
+  98:main.c        ****     if (V4_pp) *V4_pp = V4;
+ 355              		.loc 1 98 0
+ 356 0048 FB68     		ldr	r3, [r7, #12]
+ 357 004a 002B     		cmp	r3, #0
+ 358 004c 02D0     		beq	.L13
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 9
+
+
+ 359              		.loc 1 98 0 is_stmt 0 discriminator 1
+ 360 004e FB68     		ldr	r3, [r7, #12]
+ 361 0050 3A8B     		ldrh	r2, [r7, #24]	@ movhi
+ 362 0052 1A80     		strh	r2, [r3]	@ movhi
+ 363              	.L13:
+  99:main.c        ****     if (V5_pp) *V5_pp = V5;
+ 364              		.loc 1 99 0 is_stmt 1
+ 365 0054 BB68     		ldr	r3, [r7, #8]
+ 366 0056 002B     		cmp	r3, #0
+ 367 0058 02D0     		beq	.L14
+ 368              		.loc 1 99 0 is_stmt 0 discriminator 1
+ 369 005a BB68     		ldr	r3, [r7, #8]
+ 370 005c FA8A     		ldrh	r2, [r7, #22]	@ movhi
+ 371 005e 1A80     		strh	r2, [r3]	@ movhi
+ 372              	.L14:
+ 100:main.c        ****     if (V6_pp) *V6_pp = V6;
+ 373              		.loc 1 100 0 is_stmt 1
+ 374 0060 7B68     		ldr	r3, [r7, #4]
+ 375 0062 002B     		cmp	r3, #0
+ 376 0064 02D0     		beq	.L15
+ 377              		.loc 1 100 0 is_stmt 0 discriminator 1
+ 378 0066 7B68     		ldr	r3, [r7, #4]
+ 379 0068 BA8A     		ldrh	r2, [r7, #20]	@ movhi
+ 380 006a 1A80     		strh	r2, [r3]	@ movhi
+ 381              	.L15:
+ 101:main.c        ****     
+ 102:main.c        ****     sen1_on_line = (V1 > 10 && V1 < 100) ? 1u : 0u;
+ 382              		.loc 1 102 0 is_stmt 1
+ 383 006c FB8B     		ldrh	r3, [r7, #30]
+ 384 006e 0A2B     		cmp	r3, #10
+ 385 0070 04D9     		bls	.L16
+ 386              		.loc 1 102 0 is_stmt 0 discriminator 1
+ 387 0072 FB8B     		ldrh	r3, [r7, #30]
+ 388 0074 632B     		cmp	r3, #99
+ 389 0076 01D8     		bhi	.L16
+ 390              		.loc 1 102 0 discriminator 3
+ 391 0078 0122     		movs	r2, #1
+ 392 007a 00E0     		b	.L17
+ 393              	.L16:
+ 394              		.loc 1 102 0 discriminator 4
+ 395 007c 0022     		movs	r2, #0
+ 396              	.L17:
+ 397              		.loc 1 102 0 discriminator 6
+ 398 007e 284B     		ldr	r3, .L31
+ 399 0080 1A70     		strb	r2, [r3]
+ 103:main.c        ****     sen2_on_line = (V2 > 10 && V2 < 100) ? 1u : 0u;
+ 400              		.loc 1 103 0 is_stmt 1 discriminator 6
+ 401 0082 BB8B     		ldrh	r3, [r7, #28]
+ 402 0084 0A2B     		cmp	r3, #10
+ 403 0086 04D9     		bls	.L18
+ 404              		.loc 1 103 0 is_stmt 0 discriminator 1
+ 405 0088 BB8B     		ldrh	r3, [r7, #28]
+ 406 008a 632B     		cmp	r3, #99
+ 407 008c 01D8     		bhi	.L18
+ 408              		.loc 1 103 0 discriminator 3
+ 409 008e 0122     		movs	r2, #1
+ 410 0090 00E0     		b	.L19
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 10
+
+
+ 411              	.L18:
+ 412              		.loc 1 103 0 discriminator 4
+ 413 0092 0022     		movs	r2, #0
+ 414              	.L19:
+ 415              		.loc 1 103 0 discriminator 6
+ 416 0094 234B     		ldr	r3, .L31+4
+ 417 0096 1A70     		strb	r2, [r3]
+ 104:main.c        ****     sen3_on_line = (V3 > 10 && V3 < 100) ? 1u : 0u;
+ 418              		.loc 1 104 0 is_stmt 1 discriminator 6
+ 419 0098 7B8B     		ldrh	r3, [r7, #26]
+ 420 009a 0A2B     		cmp	r3, #10
+ 421 009c 04D9     		bls	.L20
+ 422              		.loc 1 104 0 is_stmt 0 discriminator 1
+ 423 009e 7B8B     		ldrh	r3, [r7, #26]
+ 424 00a0 632B     		cmp	r3, #99
+ 425 00a2 01D8     		bhi	.L20
+ 426              		.loc 1 104 0 discriminator 3
+ 427 00a4 0122     		movs	r2, #1
+ 428 00a6 00E0     		b	.L21
+ 429              	.L20:
+ 430              		.loc 1 104 0 discriminator 4
+ 431 00a8 0022     		movs	r2, #0
+ 432              	.L21:
+ 433              		.loc 1 104 0 discriminator 6
+ 434 00aa 1F4B     		ldr	r3, .L31+8
+ 435 00ac 1A70     		strb	r2, [r3]
+ 105:main.c        ****     sen4_on_line = (V4 > 10 && V4 < 100) ? 1u : 0u;
+ 436              		.loc 1 105 0 is_stmt 1 discriminator 6
+ 437 00ae 3B8B     		ldrh	r3, [r7, #24]
+ 438 00b0 0A2B     		cmp	r3, #10
+ 439 00b2 04D9     		bls	.L22
+ 440              		.loc 1 105 0 is_stmt 0 discriminator 1
+ 441 00b4 3B8B     		ldrh	r3, [r7, #24]
+ 442 00b6 632B     		cmp	r3, #99
+ 443 00b8 01D8     		bhi	.L22
+ 444              		.loc 1 105 0 discriminator 3
+ 445 00ba 0122     		movs	r2, #1
+ 446 00bc 00E0     		b	.L23
+ 447              	.L22:
+ 448              		.loc 1 105 0 discriminator 4
+ 449 00be 0022     		movs	r2, #0
+ 450              	.L23:
+ 451              		.loc 1 105 0 discriminator 6
+ 452 00c0 1A4B     		ldr	r3, .L31+12
+ 453 00c2 1A70     		strb	r2, [r3]
+ 106:main.c        ****     sen5_on_line = (V5 > 10 && V5 < 100) ? 1u : 0u;
+ 454              		.loc 1 106 0 is_stmt 1 discriminator 6
+ 455 00c4 FB8A     		ldrh	r3, [r7, #22]
+ 456 00c6 0A2B     		cmp	r3, #10
+ 457 00c8 04D9     		bls	.L24
+ 458              		.loc 1 106 0 is_stmt 0 discriminator 1
+ 459 00ca FB8A     		ldrh	r3, [r7, #22]
+ 460 00cc 632B     		cmp	r3, #99
+ 461 00ce 01D8     		bhi	.L24
+ 462              		.loc 1 106 0 discriminator 3
+ 463 00d0 0122     		movs	r2, #1
+ 464 00d2 00E0     		b	.L25
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 11
+
+
+ 465              	.L24:
+ 466              		.loc 1 106 0 discriminator 4
+ 467 00d4 0022     		movs	r2, #0
+ 468              	.L25:
+ 469              		.loc 1 106 0 discriminator 6
+ 470 00d6 164B     		ldr	r3, .L31+16
+ 471 00d8 1A70     		strb	r2, [r3]
+ 107:main.c        ****     sen6_on_line = (V6 > 10 && V6 < 100) ? 1u : 0u;
+ 472              		.loc 1 107 0 is_stmt 1 discriminator 6
+ 473 00da BB8A     		ldrh	r3, [r7, #20]
+ 474 00dc 0A2B     		cmp	r3, #10
+ 475 00de 04D9     		bls	.L26
+ 476              		.loc 1 107 0 is_stmt 0 discriminator 1
+ 477 00e0 BB8A     		ldrh	r3, [r7, #20]
+ 478 00e2 632B     		cmp	r3, #99
+ 479 00e4 01D8     		bhi	.L26
+ 480              		.loc 1 107 0 discriminator 3
+ 481 00e6 0122     		movs	r2, #1
+ 482 00e8 00E0     		b	.L27
+ 483              	.L26:
+ 484              		.loc 1 107 0 discriminator 4
+ 485 00ea 0022     		movs	r2, #0
+ 486              	.L27:
+ 487              		.loc 1 107 0 discriminator 6
+ 488 00ec 114B     		ldr	r3, .L31+20
+ 489 00ee 1A70     		strb	r2, [r3]
+ 108:main.c        **** 
+ 109:main.c        ****     if (g_direction == 0u){
+ 490              		.loc 1 109 0 is_stmt 1 discriminator 6
+ 491 00f0 114B     		ldr	r3, .L31+24
+ 492 00f2 1B78     		ldrb	r3, [r3]
+ 493 00f4 DBB2     		uxtb	r3, r3
+ 494 00f6 002B     		cmp	r3, #0
+ 495 00f8 0ED1     		bne	.L30
+ 110:main.c        ****         if (sen1_on_line){
+ 496              		.loc 1 110 0
+ 497 00fa 094B     		ldr	r3, .L31
+ 498 00fc 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 499 00fe 002B     		cmp	r3, #0
+ 500 0100 03D0     		beq	.L29
+ 111:main.c        ****             g_direction = 1;  // LEFT turn
+ 501              		.loc 1 111 0
+ 502 0102 0D4B     		ldr	r3, .L31+24
+ 503 0104 0122     		movs	r2, #1
+ 504 0106 1A70     		strb	r2, [r3]
+ 112:main.c        ****         } else if (sen2_on_line){
+ 113:main.c        ****             g_direction = 2;  // RIGHT turn
+ 114:main.c        ****         }
+ 115:main.c        ****     }
+ 116:main.c        **** }
+ 505              		.loc 1 116 0
+ 506 0108 06E0     		b	.L30
+ 507              	.L29:
+ 112:main.c        ****         } else if (sen2_on_line){
+ 508              		.loc 1 112 0
+ 509 010a 064B     		ldr	r3, .L31+4
+ 510 010c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 12
+
+
+ 511 010e 002B     		cmp	r3, #0
+ 512 0110 02D0     		beq	.L30
+ 113:main.c        ****         }
+ 513              		.loc 1 113 0
+ 514 0112 094B     		ldr	r3, .L31+24
+ 515 0114 0222     		movs	r2, #2
+ 516 0116 1A70     		strb	r2, [r3]
+ 517              	.L30:
+ 518              		.loc 1 116 0
+ 519 0118 00BF     		nop
+ 520 011a 2037     		adds	r7, r7, #32
+ 521              		.cfi_def_cfa_offset 8
+ 522 011c BD46     		mov	sp, r7
+ 523              		.cfi_def_cfa_register 13
+ 524              		@ sp needed
+ 525 011e 80BD     		pop	{r7, pc}
+ 526              	.L32:
+ 527              		.align	2
+ 528              	.L31:
+ 529 0120 00000000 		.word	sen1_on_line
+ 530 0124 01000000 		.word	sen2_on_line
+ 531 0128 02000000 		.word	sen3_on_line
+ 532 012c 03000000 		.word	sen4_on_line
+ 533 0130 04000000 		.word	sen5_on_line
+ 534 0134 05000000 		.word	sen6_on_line
+ 535 0138 06000000 		.word	g_direction
+ 536              		.cfi_endproc
+ 537              	.LFE66:
+ 538              		.size	light_sensors_update_and_maybe_request_turn, .-light_sensors_update_and_maybe_request_turn
+ 539              		.global	__aeabi_fcmplt
+ 540              		.global	__aeabi_fcmpgt
+ 541              		.section	.text._clampf,"ax",%progbits
+ 542              		.align	2
+ 543              		.thumb
+ 544              		.thumb_func
+ 545              		.type	_clampf, %function
+ 546              	_clampf:
+ 547              	.LFB67:
+ 117:main.c        **** 
+ 118:main.c        **** /* ================= PI Controller (same as your current file) ================= */
+ 119:main.c        **** #define STEER_MAX        18
+ 120:main.c        **** #define KP               14.0f
+ 121:main.c        **** #define KI               2.0f
+ 122:main.c        **** #define INT_LIM          30.0f
+ 123:main.c        **** #define LOSS_TIMEOUT_T   0.25f
+ 124:main.c        **** 
+ 125:main.c        **** typedef struct { float i, u, t_loss; } pi_t;
+ 126:main.c        **** static inline float _clampf(float x, float lo, float hi){ return (x<lo?lo:(x>hi?hi:x)); }
+ 548              		.loc 1 126 0
+ 549              		.cfi_startproc
+ 550              		@ args = 0, pretend = 0, frame = 16
+ 551              		@ frame_needed = 1, uses_anonymous_args = 0
+ 552 0000 80B5     		push	{r7, lr}
+ 553              		.cfi_def_cfa_offset 8
+ 554              		.cfi_offset 7, -8
+ 555              		.cfi_offset 14, -4
+ 556 0002 84B0     		sub	sp, sp, #16
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 13
+
+
+ 557              		.cfi_def_cfa_offset 24
+ 558 0004 00AF     		add	r7, sp, #0
+ 559              		.cfi_def_cfa_register 7
+ 560 0006 F860     		str	r0, [r7, #12]	@ float
+ 561 0008 B960     		str	r1, [r7, #8]	@ float
+ 562 000a 7A60     		str	r2, [r7, #4]	@ float
+ 563              		.loc 1 126 0
+ 564 000c B968     		ldr	r1, [r7, #8]	@ float
+ 565 000e F868     		ldr	r0, [r7, #12]	@ float
+ 566 0010 FFF7FEFF 		bl	__aeabi_fcmplt
+ 567 0014 0346     		mov	r3, r0
+ 568 0016 002B     		cmp	r3, #0
+ 569 0018 01D0     		beq	.L43
+ 570              		.loc 1 126 0 is_stmt 0 discriminator 1
+ 571 001a BB68     		ldr	r3, [r7, #8]	@ float
+ 572 001c 09E0     		b	.L40
+ 573              	.L43:
+ 574              		.loc 1 126 0 discriminator 2
+ 575 001e 7968     		ldr	r1, [r7, #4]	@ float
+ 576 0020 F868     		ldr	r0, [r7, #12]	@ float
+ 577 0022 FFF7FEFF 		bl	__aeabi_fcmpgt
+ 578 0026 0346     		mov	r3, r0
+ 579 0028 002B     		cmp	r3, #0
+ 580 002a 01D0     		beq	.L44
+ 581              		.loc 1 126 0 discriminator 4
+ 582 002c 7B68     		ldr	r3, [r7, #4]	@ float
+ 583 002e 00E0     		b	.L40
+ 584              	.L44:
+ 585              		.loc 1 126 0 discriminator 5
+ 586 0030 FB68     		ldr	r3, [r7, #12]	@ float
+ 587              	.L40:
+ 588              		.loc 1 126 0 discriminator 9
+ 589 0032 1846     		mov	r0, r3
+ 590 0034 1037     		adds	r7, r7, #16
+ 591              		.cfi_def_cfa_offset 8
+ 592 0036 BD46     		mov	sp, r7
+ 593              		.cfi_def_cfa_register 13
+ 594              		@ sp needed
+ 595 0038 80BD     		pop	{r7, pc}
+ 596              		.cfi_endproc
+ 597              	.LFE67:
+ 598              		.size	_clampf, .-_clampf
+ 599              		.global	__aeabi_fadd
+ 600              		.global	__aeabi_fmul
+ 601              		.global	__aeabi_fsub
+ 602              		.global	__aeabi_fcmpge
+ 603              		.global	__aeabi_f2iz
+ 604              		.global	__aeabi_fcmple
+ 605 003a 00BF     		.section	.text.pi_step,"ax",%progbits
+ 606              		.align	2
+ 607              		.thumb
+ 608              		.thumb_func
+ 609              		.type	pi_step, %function
+ 610              	pi_step:
+ 611              	.LFB68:
+ 127:main.c        **** 
+ 128:main.c        **** static int pi_step(pi_t* pi, uint16_t V4_pp, uint16_t V5_pp, uint16_t V6_pp)
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 14
+
+
+ 129:main.c        **** {
+ 612              		.loc 1 129 0 is_stmt 1
+ 613              		.cfi_startproc
+ 614              		@ args = 0, pretend = 0, frame = 64
+ 615              		@ frame_needed = 1, uses_anonymous_args = 0
+ 616 0000 90B5     		push	{r4, r7, lr}
+ 617              		.cfi_def_cfa_offset 12
+ 618              		.cfi_offset 4, -12
+ 619              		.cfi_offset 7, -8
+ 620              		.cfi_offset 14, -4
+ 621 0002 91B0     		sub	sp, sp, #68
+ 622              		.cfi_def_cfa_offset 80
+ 623 0004 00AF     		add	r7, sp, #0
+ 624              		.cfi_def_cfa_register 7
+ 625 0006 F860     		str	r0, [r7, #12]
+ 626 0008 0846     		mov	r0, r1
+ 627 000a 1146     		mov	r1, r2
+ 628 000c 1A46     		mov	r2, r3
+ 629 000e 0346     		mov	r3, r0	@ movhi
+ 630 0010 7B81     		strh	r3, [r7, #10]	@ movhi
+ 631 0012 0B46     		mov	r3, r1	@ movhi
+ 632 0014 3B81     		strh	r3, [r7, #8]	@ movhi
+ 633 0016 1346     		mov	r3, r2	@ movhi
+ 634 0018 FB80     		strh	r3, [r7, #6]	@ movhi
+ 130:main.c        ****     float c4 = norm01_from_pp(V4_pp);
+ 635              		.loc 1 130 0
+ 636 001a 7B89     		ldrh	r3, [r7, #10]
+ 637 001c 1846     		mov	r0, r3
+ 638 001e FFF7FEFF 		bl	norm01_from_pp
+ 639 0022 B863     		str	r0, [r7, #56]	@ float
+ 131:main.c        ****     float c5 = norm01_from_pp(V5_pp);
+ 640              		.loc 1 131 0
+ 641 0024 3B89     		ldrh	r3, [r7, #8]
+ 642 0026 1846     		mov	r0, r3
+ 643 0028 FFF7FEFF 		bl	norm01_from_pp
+ 644 002c 7863     		str	r0, [r7, #52]	@ float
+ 132:main.c        ****     float c6 = norm01_from_pp(V6_pp);
+ 645              		.loc 1 132 0
+ 646 002e FB88     		ldrh	r3, [r7, #6]
+ 647 0030 1846     		mov	r0, r3
+ 648 0032 FFF7FEFF 		bl	norm01_from_pp
+ 649 0036 3863     		str	r0, [r7, #48]	@ float
+ 133:main.c        ****     float sum = c4 + c5 + c6;
+ 650              		.loc 1 133 0
+ 651 0038 796B     		ldr	r1, [r7, #52]	@ float
+ 652 003a B86B     		ldr	r0, [r7, #56]	@ float
+ 653 003c FFF7FEFF 		bl	__aeabi_fadd
+ 654 0040 0346     		mov	r3, r0
+ 655 0042 396B     		ldr	r1, [r7, #48]	@ float
+ 656 0044 1846     		mov	r0, r3
+ 657 0046 FFF7FEFF 		bl	__aeabi_fadd
+ 658 004a 0346     		mov	r3, r0
+ 659 004c FB62     		str	r3, [r7, #44]	@ float
+ 134:main.c        ****     bool valid = (sum > 0.08f);
+ 660              		.loc 1 134 0
+ 661 004e 0123     		movs	r3, #1
+ 662 0050 1C46     		mov	r4, r3
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 15
+
+
+ 663 0052 7949     		ldr	r1, .L65
+ 664 0054 F86A     		ldr	r0, [r7, #44]	@ float
+ 665 0056 FFF7FEFF 		bl	__aeabi_fcmpgt
+ 666 005a 0346     		mov	r3, r0
+ 667 005c 002B     		cmp	r3, #0
+ 668 005e 01D1     		bne	.L46
+ 669 0060 0023     		movs	r3, #0
+ 670 0062 1C46     		mov	r4, r3
+ 671              	.L46:
+ 672 0064 87F82B40 		strb	r4, [r7, #43]
+ 135:main.c        **** 
+ 136:main.c        ****     float pos = 0.0f;
+ 673              		.loc 1 136 0
+ 674 0068 4FF00003 		mov	r3, #0
+ 675 006c FB63     		str	r3, [r7, #60]	@ float
+ 137:main.c        ****     if (valid) pos = (-1.0f * c4 + 0.0f * c5 + 1.0f * c6) / sum;
+ 676              		.loc 1 137 0
+ 677 006e 97F82B30 		ldrb	r3, [r7, #43]	@ zero_extendqisi2
+ 678 0072 002B     		cmp	r3, #0
+ 679 0074 15D0     		beq	.L47
+ 680              		.loc 1 137 0 is_stmt 0 discriminator 1
+ 681 0076 4FF00001 		mov	r1, #0
+ 682 007a 786B     		ldr	r0, [r7, #52]	@ float
+ 683 007c FFF7FEFF 		bl	__aeabi_fmul
+ 684 0080 0346     		mov	r3, r0
+ 685 0082 B96B     		ldr	r1, [r7, #56]	@ float
+ 686 0084 1846     		mov	r0, r3
+ 687 0086 FFF7FEFF 		bl	__aeabi_fsub
+ 688 008a 0346     		mov	r3, r0
+ 689 008c 396B     		ldr	r1, [r7, #48]	@ float
+ 690 008e 1846     		mov	r0, r3
+ 691 0090 FFF7FEFF 		bl	__aeabi_fadd
+ 692 0094 0346     		mov	r3, r0
+ 693 0096 F96A     		ldr	r1, [r7, #44]	@ float
+ 694 0098 1846     		mov	r0, r3
+ 695 009a FFF7FEFF 		bl	__aeabi_fdiv
+ 696 009e 0346     		mov	r3, r0
+ 697 00a0 FB63     		str	r3, [r7, #60]	@ float
+ 698              	.L47:
+ 138:main.c        **** 
+ 139:main.c        ****     float e = pos;
+ 699              		.loc 1 139 0 is_stmt 1
+ 700 00a2 FB6B     		ldr	r3, [r7, #60]	@ float
+ 701 00a4 7B62     		str	r3, [r7, #36]	@ float
+ 140:main.c        **** 
+ 141:main.c        ****     if (!valid) {
+ 702              		.loc 1 141 0
+ 703 00a6 97F82B30 		ldrb	r3, [r7, #43]
+ 704 00aa 83F00103 		eor	r3, r3, #1
+ 705 00ae DBB2     		uxtb	r3, r3
+ 706 00b0 002B     		cmp	r3, #0
+ 707 00b2 2AD0     		beq	.L48
+ 142:main.c        ****         pi->t_loss += DT_S;
+ 708              		.loc 1 142 0
+ 709 00b4 FB68     		ldr	r3, [r7, #12]
+ 710 00b6 9B68     		ldr	r3, [r3, #8]	@ float
+ 711 00b8 6049     		ldr	r1, .L65+4
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 16
+
+
+ 712 00ba 1846     		mov	r0, r3
+ 713 00bc FFF7FEFF 		bl	__aeabi_fadd
+ 714 00c0 0346     		mov	r3, r0
+ 715 00c2 1A46     		mov	r2, r3
+ 716 00c4 FB68     		ldr	r3, [r7, #12]
+ 717 00c6 9A60     		str	r2, [r3, #8]	@ float
+ 143:main.c        ****         if (pi->t_loss >= LOSS_TIMEOUT_T) pi->i *= 0.92f;
+ 718              		.loc 1 143 0
+ 719 00c8 FB68     		ldr	r3, [r7, #12]
+ 720 00ca 9B68     		ldr	r3, [r3, #8]	@ float
+ 721 00cc 4FF07A51 		mov	r1, #1048576000
+ 722 00d0 1846     		mov	r0, r3
+ 723 00d2 FFF7FEFF 		bl	__aeabi_fcmpge
+ 724 00d6 0346     		mov	r3, r0
+ 725 00d8 002B     		cmp	r3, #0
+ 726 00da 09D0     		beq	.L49
+ 727              		.loc 1 143 0 is_stmt 0 discriminator 1
+ 728 00dc FB68     		ldr	r3, [r7, #12]
+ 729 00de 1B68     		ldr	r3, [r3]	@ float
+ 730 00e0 5749     		ldr	r1, .L65+8
+ 731 00e2 1846     		mov	r0, r3
+ 732 00e4 FFF7FEFF 		bl	__aeabi_fmul
+ 733 00e8 0346     		mov	r3, r0
+ 734 00ea 1A46     		mov	r2, r3
+ 735 00ec FB68     		ldr	r3, [r7, #12]
+ 736 00ee 1A60     		str	r2, [r3]	@ float
+ 737              	.L49:
+ 144:main.c        ****         return (int)_clampf(pi->u, -(float)STEER_MAX, (float)STEER_MAX);
+ 738              		.loc 1 144 0 is_stmt 1
+ 739 00f0 FB68     		ldr	r3, [r7, #12]
+ 740 00f2 5B68     		ldr	r3, [r3, #4]	@ float
+ 741 00f4 534A     		ldr	r2, .L65+12
+ 742 00f6 5449     		ldr	r1, .L65+16
+ 743 00f8 1846     		mov	r0, r3
+ 744 00fa FFF7FEFF 		bl	_clampf
+ 745 00fe 0346     		mov	r3, r0
+ 746 0100 1846     		mov	r0, r3
+ 747 0102 FFF7FEFF 		bl	__aeabi_f2iz
+ 748 0106 0346     		mov	r3, r0
+ 749 0108 91E0     		b	.L51
+ 750              	.L48:
+ 145:main.c        ****     }
+ 146:main.c        ****     pi->t_loss = 0.0f;
+ 751              		.loc 1 146 0
+ 752 010a FB68     		ldr	r3, [r7, #12]
+ 753 010c 4FF00002 		mov	r2, #0
+ 754 0110 9A60     		str	r2, [r3, #8]	@ float
+ 147:main.c        **** 
+ 148:main.c        ****     float i_next = _clampf(pi->i + e * DT_S, -INT_LIM, +INT_LIM);
+ 755              		.loc 1 148 0
+ 756 0112 FB68     		ldr	r3, [r7, #12]
+ 757 0114 1C68     		ldr	r4, [r3]	@ float
+ 758 0116 4949     		ldr	r1, .L65+4
+ 759 0118 786A     		ldr	r0, [r7, #36]	@ float
+ 760 011a FFF7FEFF 		bl	__aeabi_fmul
+ 761 011e 0346     		mov	r3, r0
+ 762 0120 1946     		mov	r1, r3
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 17
+
+
+ 763 0122 2046     		mov	r0, r4
+ 764 0124 FFF7FEFF 		bl	__aeabi_fadd
+ 765 0128 0346     		mov	r3, r0
+ 766 012a 484A     		ldr	r2, .L65+20
+ 767 012c 4849     		ldr	r1, .L65+24
+ 768 012e 1846     		mov	r0, r3
+ 769 0130 FFF7FEFF 		bl	_clampf
+ 770 0134 3862     		str	r0, [r7, #32]	@ float
+ 149:main.c        ****     float u_raw  = KP * e + KI * i_next;
+ 771              		.loc 1 149 0
+ 772 0136 4749     		ldr	r1, .L65+28
+ 773 0138 786A     		ldr	r0, [r7, #36]	@ float
+ 774 013a FFF7FEFF 		bl	__aeabi_fmul
+ 775 013e 0346     		mov	r3, r0
+ 776 0140 1C46     		mov	r4, r3
+ 777 0142 3B6A     		ldr	r3, [r7, #32]	@ float
+ 778 0144 1946     		mov	r1, r3
+ 779 0146 1846     		mov	r0, r3
+ 780 0148 FFF7FEFF 		bl	__aeabi_fadd
+ 781 014c 0346     		mov	r3, r0
+ 782 014e 1946     		mov	r1, r3
+ 783 0150 2046     		mov	r0, r4
+ 784 0152 FFF7FEFF 		bl	__aeabi_fadd
+ 785 0156 0346     		mov	r3, r0
+ 786 0158 FB61     		str	r3, [r7, #28]	@ float
+ 150:main.c        ****     float u      = _clampf(u_raw, -(float)STEER_MAX, (float)STEER_MAX);
+ 787              		.loc 1 150 0
+ 788 015a 3A4A     		ldr	r2, .L65+12
+ 789 015c 3A49     		ldr	r1, .L65+16
+ 790 015e F869     		ldr	r0, [r7, #28]	@ float
+ 791 0160 FFF7FEFF 		bl	_clampf
+ 792 0164 B861     		str	r0, [r7, #24]	@ float
+ 151:main.c        **** 
+ 152:main.c        ****     bool sat_hi = (u >=  (float)STEER_MAX - 1e-3f);
+ 793              		.loc 1 152 0
+ 794 0166 0123     		movs	r3, #1
+ 795 0168 1C46     		mov	r4, r3
+ 796 016a 3B49     		ldr	r1, .L65+32
+ 797 016c B869     		ldr	r0, [r7, #24]	@ float
+ 798 016e FFF7FEFF 		bl	__aeabi_fcmpge
+ 799 0172 0346     		mov	r3, r0
+ 800 0174 002B     		cmp	r3, #0
+ 801 0176 01D1     		bne	.L52
+ 802 0178 0023     		movs	r3, #0
+ 803 017a 1C46     		mov	r4, r3
+ 804              	.L52:
+ 805 017c FC75     		strb	r4, [r7, #23]
+ 153:main.c        ****     bool sat_lo = (u <= -(float)STEER_MAX + 1e-3f);
+ 806              		.loc 1 153 0
+ 807 017e 0123     		movs	r3, #1
+ 808 0180 1C46     		mov	r4, r3
+ 809 0182 3649     		ldr	r1, .L65+36
+ 810 0184 B869     		ldr	r0, [r7, #24]	@ float
+ 811 0186 FFF7FEFF 		bl	__aeabi_fcmple
+ 812 018a 0346     		mov	r3, r0
+ 813 018c 002B     		cmp	r3, #0
+ 814 018e 01D1     		bne	.L53
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 18
+
+
+ 815 0190 0023     		movs	r3, #0
+ 816 0192 1C46     		mov	r4, r3
+ 817              	.L53:
+ 818 0194 BC75     		strb	r4, [r7, #22]
+ 154:main.c        **** 
+ 155:main.c        ****     if ((sat_hi && (KI * i_next > KI * pi->i)) ||
+ 819              		.loc 1 155 0
+ 820 0196 FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 821 0198 002B     		cmp	r3, #0
+ 822 019a 14D0     		beq	.L54
+ 823              		.loc 1 155 0 is_stmt 0 discriminator 1
+ 824 019c 3B6A     		ldr	r3, [r7, #32]	@ float
+ 825 019e 1946     		mov	r1, r3
+ 826 01a0 1846     		mov	r0, r3
+ 827 01a2 FFF7FEFF 		bl	__aeabi_fadd
+ 828 01a6 0346     		mov	r3, r0
+ 829 01a8 1C46     		mov	r4, r3
+ 830 01aa FB68     		ldr	r3, [r7, #12]
+ 831 01ac 1B68     		ldr	r3, [r3]	@ float
+ 832 01ae 1946     		mov	r1, r3
+ 833 01b0 1846     		mov	r0, r3
+ 834 01b2 FFF7FEFF 		bl	__aeabi_fadd
+ 835 01b6 0346     		mov	r3, r0
+ 836 01b8 1946     		mov	r1, r3
+ 837 01ba 2046     		mov	r0, r4
+ 838 01bc FFF7FEFF 		bl	__aeabi_fcmpgt
+ 839 01c0 0346     		mov	r3, r0
+ 840 01c2 002B     		cmp	r3, #0
+ 841 01c4 1AD1     		bne	.L56
+ 842              	.L54:
+ 843              		.loc 1 155 0 discriminator 3
+ 844 01c6 BB7D     		ldrb	r3, [r7, #22]	@ zero_extendqisi2
+ 845 01c8 002B     		cmp	r3, #0
+ 846 01ca 14D0     		beq	.L57
+ 156:main.c        ****         (sat_lo && (KI * i_next < KI * pi->i))) {
+ 847              		.loc 1 156 0 is_stmt 1
+ 848 01cc 3B6A     		ldr	r3, [r7, #32]	@ float
+ 849 01ce 1946     		mov	r1, r3
+ 850 01d0 1846     		mov	r0, r3
+ 851 01d2 FFF7FEFF 		bl	__aeabi_fadd
+ 852 01d6 0346     		mov	r3, r0
+ 853 01d8 1C46     		mov	r4, r3
+ 854 01da FB68     		ldr	r3, [r7, #12]
+ 855 01dc 1B68     		ldr	r3, [r3]	@ float
+ 856 01de 1946     		mov	r1, r3
+ 857 01e0 1846     		mov	r0, r3
+ 858 01e2 FFF7FEFF 		bl	__aeabi_fadd
+ 859 01e6 0346     		mov	r3, r0
+ 860 01e8 1946     		mov	r1, r3
+ 861 01ea 2046     		mov	r0, r4
+ 862 01ec FFF7FEFF 		bl	__aeabi_fcmplt
+ 863 01f0 0346     		mov	r3, r0
+ 864 01f2 002B     		cmp	r3, #0
+ 865 01f4 02D1     		bne	.L56
+ 866              	.L57:
+ 157:main.c        ****         /* don’t integrate further into saturation */
+ 158:main.c        ****     } else {
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 19
+
+
+ 159:main.c        ****         pi->i = i_next;
+ 867              		.loc 1 159 0
+ 868 01f6 FB68     		ldr	r3, [r7, #12]
+ 869 01f8 3A6A     		ldr	r2, [r7, #32]	@ float
+ 870 01fa 1A60     		str	r2, [r3]	@ float
+ 871              	.L56:
+ 160:main.c        ****     }
+ 161:main.c        **** 
+ 162:main.c        ****     pi->u = u;
+ 872              		.loc 1 162 0
+ 873 01fc FB68     		ldr	r3, [r7, #12]
+ 874 01fe BA69     		ldr	r2, [r7, #24]	@ float
+ 875 0200 5A60     		str	r2, [r3, #4]	@ float
+ 163:main.c        ****     return (int)(u + (u>=0?0.5f:-0.5f));
+ 876              		.loc 1 163 0
+ 877 0202 4FF00001 		mov	r1, #0
+ 878 0206 B869     		ldr	r0, [r7, #24]	@ float
+ 879 0208 FFF7FEFF 		bl	__aeabi_fcmpge
+ 880 020c 0346     		mov	r3, r0
+ 881 020e 002B     		cmp	r3, #0
+ 882 0210 02D0     		beq	.L64
+ 883              		.loc 1 163 0 is_stmt 0 discriminator 1
+ 884 0212 4FF07C53 		mov	r3, #1056964608
+ 885 0216 01E0     		b	.L61
+ 886              	.L64:
+ 887              		.loc 1 163 0 discriminator 2
+ 888 0218 4FF03F43 		mov	r3, #-1090519040
+ 889              	.L61:
+ 890              		.loc 1 163 0 discriminator 4
+ 891 021c B969     		ldr	r1, [r7, #24]	@ float
+ 892 021e 1846     		mov	r0, r3
+ 893 0220 FFF7FEFF 		bl	__aeabi_fadd
+ 894 0224 0346     		mov	r3, r0
+ 895 0226 1846     		mov	r0, r3
+ 896 0228 FFF7FEFF 		bl	__aeabi_f2iz
+ 897 022c 0346     		mov	r3, r0
+ 898              	.L51:
+ 164:main.c        **** }
+ 899              		.loc 1 164 0 is_stmt 1
+ 900 022e 1846     		mov	r0, r3
+ 901 0230 4437     		adds	r7, r7, #68
+ 902              		.cfi_def_cfa_offset 12
+ 903 0232 BD46     		mov	sp, r7
+ 904              		.cfi_def_cfa_register 13
+ 905              		@ sp needed
+ 906 0234 90BD     		pop	{r4, r7, pc}
+ 907              	.L66:
+ 908 0236 00BF     		.align	2
+ 909              	.L65:
+ 910 0238 0AD7A33D 		.word	1034147594
+ 911 023c 6F12033C 		.word	1006834287
+ 912 0240 1F856B3F 		.word	1064011039
+ 913 0244 00009041 		.word	1099956224
+ 914 0248 000090C1 		.word	-1047527424
+ 915 024c 0000F041 		.word	1106247680
+ 916 0250 0000F0C1 		.word	-1041235968
+ 917 0254 00006041 		.word	1096810496
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 20
+
+
+ 918 0258 F4FD8F41 		.word	1099955700
+ 919 025c F4FD8FC1 		.word	-1047527948
+ 920              		.cfi_endproc
+ 921              	.LFE68:
+ 922              		.size	pi_step, .-pi_step
+ 923              		.section	.text.main,"ax",%progbits
+ 924              		.align	2
+ 925              		.global	main
+ 926              		.thumb
+ 927              		.thumb_func
+ 928              		.type	main, %function
+ 929              	main:
+ 930              	.LFB69:
+ 165:main.c        **** 
+ 166:main.c        **** int main(void)
+ 167:main.c        **** {
+ 931              		.loc 1 167 0
+ 932              		.cfi_startproc
+ 933              		@ args = 0, pretend = 0, frame = 32
+ 934              		@ frame_needed = 1, uses_anonymous_args = 0
+ 935 0000 80B5     		push	{r7, lr}
+ 936              		.cfi_def_cfa_offset 8
+ 937              		.cfi_offset 7, -8
+ 938              		.cfi_offset 14, -4
+ 939 0002 88B0     		sub	sp, sp, #32
+ 940              		.cfi_def_cfa_offset 40
+ 941 0004 00AF     		add	r7, sp, #0
+ 942              		.cfi_def_cfa_register 7
+ 168:main.c        ****     motor_enable(1u, 1u);
+ 943              		.loc 1 168 0
+ 944 0006 0121     		movs	r1, #1
+ 945 0008 0120     		movs	r0, #1
+ 946 000a FFF7FEFF 		bl	motor_enable
+ 169:main.c        ****     CyGlobalIntEnable;
+ 947              		.loc 1 169 0
+ 948              		.syntax unified
+ 949              	@ 169 "main.c" 1
+ 950 000e 62B6     		CPSIE   i
+ 951              	@ 0 "" 2
+ 170:main.c        **** 
+ 171:main.c        ****     /* ADC for sensors */
+ 172:main.c        ****     ADC_Start();
+ 952              		.loc 1 172 0
+ 953              		.thumb
+ 954              		.syntax unified
+ 955 0010 FFF7FEFF 		bl	ADC_Start
+ 173:main.c        ****     CyDelay(10);
+ 956              		.loc 1 173 0
+ 957 0014 0A20     		movs	r0, #10
+ 958 0016 FFF7FEFF 		bl	CyDelay
+ 174:main.c        **** 
+ 175:main.c        ****     /* Encoders + 5 ms tick (distance only) */
+ 176:main.c        ****     Clock_QENC_Start();
+ 959              		.loc 1 176 0
+ 960 001a FFF7FEFF 		bl	Clock_QENC_Start
+ 177:main.c        ****     QuadDec_M1_Start(); QuadDec_M2_Start();
+ 961              		.loc 1 177 0
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 21
+
+
+ 962 001e FFF7FEFF 		bl	QuadDec_M1_Start
+ 963 0022 FFF7FEFF 		bl	QuadDec_M2_Start
+ 178:main.c        ****     QuadDec_M1_SetCounter(0); QuadDec_M2_SetCounter(0);
+ 964              		.loc 1 178 0
+ 965 0026 0020     		movs	r0, #0
+ 966 0028 FFF7FEFF 		bl	QuadDec_M1_SetCounter
+ 967 002c 0020     		movs	r0, #0
+ 968 002e FFF7FEFF 		bl	QuadDec_M2_SetCounter
+ 179:main.c        ****     Clock_QD_Start();
+ 969              		.loc 1 179 0
+ 970 0032 FFF7FEFF 		bl	Clock_QD_Start
+ 180:main.c        ****     Timer_QD_Start();                  // 5 ms period in TopDesign
+ 971              		.loc 1 180 0
+ 972 0036 FFF7FEFF 		bl	Timer_QD_Start
+ 181:main.c        ****     isr_qd_StartEx(isr_qd_Handler);
+ 973              		.loc 1 181 0
+ 974 003a 6148     		ldr	r0, .L83
+ 975 003c FFF7FEFF 		bl	isr_qd_StartEx
+ 182:main.c        **** 
+ 183:main.c        ****     /* PWM & motor driver */
+ 184:main.c        ****     Clock_PWM_Start();
+ 976              		.loc 1 184 0
+ 977 0040 FFF7FEFF 		bl	Clock_PWM_Start
+ 185:main.c        ****     PWM_1_Start(); PWM_2_Start();
+ 978              		.loc 1 185 0
+ 979 0044 FFF7FEFF 		bl	PWM_1_Start
+ 980 0048 FFF7FEFF 		bl	PWM_2_Start
+ 186:main.c        ****     PWM_1_WritePeriod(PWM_PERIOD);
+ 981              		.loc 1 186 0
+ 982 004c C820     		movs	r0, #200
+ 983 004e FFF7FEFF 		bl	PWM_1_WritePeriod
+ 187:main.c        ****     PWM_2_WritePeriod(PWM_PERIOD);
+ 984              		.loc 1 187 0
+ 985 0052 C820     		movs	r0, #200
+ 986 0054 FFF7FEFF 		bl	PWM_2_WritePeriod
+ 188:main.c        ****     set_motors_symmetric(0);
+ 987              		.loc 1 188 0
+ 988 0058 0020     		movs	r0, #0
+ 989 005a FFF7FEFF 		bl	set_motors_symmetric
+ 189:main.c        ****     motor_enable(0u, 0u);
+ 990              		.loc 1 189 0
+ 991 005e 0021     		movs	r1, #0
+ 992 0060 0020     		movs	r0, #0
+ 993 0062 FFF7FEFF 		bl	motor_enable
+ 190:main.c        **** 
+ 191:main.c        ****     /* Directions module */
+ 192:main.c        ****     Directions_Init();
+ 994              		.loc 1 192 0
+ 995 0066 FFF7FEFF 		bl	Directions_Init
+ 193:main.c        ****     g_direction = 0u;
+ 996              		.loc 1 193 0
+ 997 006a 564B     		ldr	r3, .L83+4
+ 998 006c 0022     		movs	r2, #0
+ 999 006e 1A70     		strb	r2, [r3]
+ 194:main.c        **** 
+ 195:main.c        ****     /* Feed-forward cruise duty (kept) */
+ 196:main.c        ****     int center_duty_est = (int)((V_CRUISE_MM_S * 100) / VMAX_CONST_MM_S);
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 22
+
+
+ 1000              		.loc 1 196 0
+ 1001 0070 1923     		movs	r3, #25
+ 1002 0072 FB61     		str	r3, [r7, #28]
+ 197:main.c        ****     if (center_duty_est < 0) center_duty_est = 0;
+ 1003              		.loc 1 197 0
+ 1004 0074 FB69     		ldr	r3, [r7, #28]
+ 1005 0076 002B     		cmp	r3, #0
+ 1006 0078 01DA     		bge	.L68
+ 1007              		.loc 1 197 0 is_stmt 0 discriminator 1
+ 1008 007a 0023     		movs	r3, #0
+ 1009 007c FB61     		str	r3, [r7, #28]
+ 1010              	.L68:
+ 198:main.c        ****     if (center_duty_est > 100) center_duty_est = 100;
+ 1011              		.loc 1 198 0 is_stmt 1
+ 1012 007e FB69     		ldr	r3, [r7, #28]
+ 1013 0080 642B     		cmp	r3, #100
+ 1014 0082 01DD     		ble	.L69
+ 1015              		.loc 1 198 0 is_stmt 0 discriminator 1
+ 1016 0084 6423     		movs	r3, #100
+ 1017 0086 FB61     		str	r3, [r7, #28]
+ 1018              	.L69:
+ 199:main.c        **** 
+ 200:main.c        ****     /* PI state */
+ 201:main.c        ****     pi_t pi = { .i = 0.0f, .u = 0.0f, .t_loss = 0.0f };
+ 1019              		.loc 1 201 0 is_stmt 1
+ 1020 0088 4FF00003 		mov	r3, #0
+ 1021 008c FB60     		str	r3, [r7, #12]	@ float
+ 1022 008e 4FF00003 		mov	r3, #0
+ 1023 0092 3B61     		str	r3, [r7, #16]	@ float
+ 1024 0094 4FF00003 		mov	r3, #0
+ 1025 0098 7B61     		str	r3, [r7, #20]	@ float
+ 202:main.c        ****     
+ 203:main.c        ****     CyDelay(1000);  // So the motors don't jump
+ 1026              		.loc 1 203 0
+ 1027 009a 4FF47A70 		mov	r0, #1000
+ 1028 009e FFF7FEFF 		bl	CyDelay
+ 1029              	.L82:
+ 1030              	.LBB2:
+ 204:main.c        **** 
+ 205:main.c        ****     for(;;){
+ 206:main.c        ****         /* Distance stop */
+ 207:main.c        ****         g_stop_now = (g_dist_mm >= TARGET_DIST_MM) ? 1u : 0u;
+ 1031              		.loc 1 207 0
+ 1032 00a2 494B     		ldr	r3, .L83+8
+ 1033 00a4 1B68     		ldr	r3, [r3]
+ 1034 00a6 44F61F62 		movw	r2, #19999
+ 1035 00aa 9342     		cmp	r3, r2
+ 1036 00ac 01DD     		ble	.L70
+ 1037              		.loc 1 207 0 is_stmt 0 discriminator 1
+ 1038 00ae 0122     		movs	r2, #1
+ 1039 00b0 00E0     		b	.L71
+ 1040              	.L70:
+ 1041              		.loc 1 207 0 discriminator 2
+ 1042 00b2 0022     		movs	r2, #0
+ 1043              	.L71:
+ 1044              		.loc 1 207 0 discriminator 4
+ 1045 00b4 454B     		ldr	r3, .L83+12
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 23
+
+
+ 1046 00b6 1A70     		strb	r2, [r3]
+ 208:main.c        ****         if (g_stop_now) {
+ 1047              		.loc 1 208 0 is_stmt 1 discriminator 4
+ 1048 00b8 444B     		ldr	r3, .L83+12
+ 1049 00ba 1B78     		ldrb	r3, [r3]
+ 1050 00bc DBB2     		uxtb	r3, r3
+ 1051 00be 002B     		cmp	r3, #0
+ 1052 00c0 0DD0     		beq	.L72
+ 209:main.c        ****             set_motors_symmetric(0);
+ 1053              		.loc 1 209 0
+ 1054 00c2 0020     		movs	r0, #0
+ 1055 00c4 FFF7FEFF 		bl	set_motors_symmetric
+ 210:main.c        ****             motor_enable(1u, 1u);
+ 1056              		.loc 1 210 0
+ 1057 00c8 0121     		movs	r1, #1
+ 1058 00ca 0120     		movs	r0, #1
+ 1059 00cc FFF7FEFF 		bl	motor_enable
+ 211:main.c        ****             g_direction = 0u;
+ 1060              		.loc 1 211 0
+ 1061 00d0 3C4B     		ldr	r3, .L83+4
+ 1062 00d2 0022     		movs	r2, #0
+ 1063 00d4 1A70     		strb	r2, [r3]
+ 212:main.c        ****             CyDelay(LOOP_DT_MS);
+ 1064              		.loc 1 212 0
+ 1065 00d6 0820     		movs	r0, #8
+ 1066 00d8 FFF7FEFF 		bl	CyDelay
+ 213:main.c        ****             continue;
+ 1067              		.loc 1 213 0
+ 1068 00dc 6EE0     		b	.L81
+ 1069              	.L72:
+ 214:main.c        ****         }
+ 215:main.c        **** 
+ 216:main.c        ****         /* Read sensors + maybe request turn */
+ 217:main.c        ****         uint16_t V4_pp=0, V5_pp=0, V6_pp=0;
+ 1070              		.loc 1 217 0
+ 1071 00de 0023     		movs	r3, #0
+ 1072 00e0 7B81     		strh	r3, [r7, #10]	@ movhi
+ 1073 00e2 0023     		movs	r3, #0
+ 1074 00e4 3B81     		strh	r3, [r7, #8]	@ movhi
+ 1075 00e6 0023     		movs	r3, #0
+ 1076 00e8 FB80     		strh	r3, [r7, #6]	@ movhi
+ 218:main.c        ****         light_sensors_update_and_maybe_request_turn(&V4_pp, &V5_pp, &V6_pp);
+ 1077              		.loc 1 218 0
+ 1078 00ea BA1D     		adds	r2, r7, #6
+ 1079 00ec 07F10801 		add	r1, r7, #8
+ 1080 00f0 07F10A03 		add	r3, r7, #10
+ 1081 00f4 1846     		mov	r0, r3
+ 1082 00f6 FFF7FEFF 		bl	light_sensors_update_and_maybe_request_turn
+ 219:main.c        **** 
+ 220:main.c        ****         /* ---------------- Turn handling with arming delay (Option A) ---------------- */
+ 221:main.c        ****         /* Arm once on the first detection (edge 0 -> 1/2) */
+ 222:main.c        ****         if ((g_direction == 1u || g_direction == 2u) && dir_latched_side == 0){
+ 1083              		.loc 1 222 0
+ 1084 00fa 324B     		ldr	r3, .L83+4
+ 1085 00fc 1B78     		ldrb	r3, [r3]
+ 1086 00fe DBB2     		uxtb	r3, r3
+ 1087 0100 012B     		cmp	r3, #1
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 24
+
+
+ 1088 0102 04D0     		beq	.L74
+ 1089              		.loc 1 222 0 is_stmt 0 discriminator 2
+ 1090 0104 2F4B     		ldr	r3, .L83+4
+ 1091 0106 1B78     		ldrb	r3, [r3]
+ 1092 0108 DBB2     		uxtb	r3, r3
+ 1093 010a 022B     		cmp	r3, #2
+ 1094 010c 0BD1     		bne	.L75
+ 1095              	.L74:
+ 1096              		.loc 1 222 0 discriminator 3
+ 1097 010e 304B     		ldr	r3, .L83+16
+ 1098 0110 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1099 0112 002B     		cmp	r3, #0
+ 1100 0114 07D1     		bne	.L75
+ 223:main.c        ****             dir_latched_side = g_direction;          /* remember side */
+ 1101              		.loc 1 223 0 is_stmt 1
+ 1102 0116 2B4B     		ldr	r3, .L83+4
+ 1103 0118 1B78     		ldrb	r3, [r3]
+ 1104 011a DAB2     		uxtb	r2, r3
+ 1105 011c 2C4B     		ldr	r3, .L83+16
+ 1106 011e 1A70     		strb	r2, [r3]
+ 224:main.c        ****             dir_delay_ticks  = DIR_CALL_DELAY_TICKS; /* start countdown */
+ 1107              		.loc 1 224 0
+ 1108 0120 2C4B     		ldr	r3, .L83+20
+ 1109 0122 0D22     		movs	r2, #13
+ 1110 0124 1A80     		strh	r2, [r3]	@ movhi
+ 1111              	.L75:
+ 225:main.c        ****         }
+ 226:main.c        ****         /* If request cleared during delay, cancel gracefully */
+ 227:main.c        ****         if (g_direction == 0u && dir_latched_side != 0){
+ 1112              		.loc 1 227 0
+ 1113 0126 274B     		ldr	r3, .L83+4
+ 1114 0128 1B78     		ldrb	r3, [r3]
+ 1115 012a DBB2     		uxtb	r3, r3
+ 1116 012c 002B     		cmp	r3, #0
+ 1117 012e 09D1     		bne	.L76
+ 1118              		.loc 1 227 0 is_stmt 0 discriminator 1
+ 1119 0130 274B     		ldr	r3, .L83+16
+ 1120 0132 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1121 0134 002B     		cmp	r3, #0
+ 1122 0136 05D0     		beq	.L76
+ 228:main.c        ****             dir_latched_side = 0;
+ 1123              		.loc 1 228 0 is_stmt 1
+ 1124 0138 254B     		ldr	r3, .L83+16
+ 1125 013a 0022     		movs	r2, #0
+ 1126 013c 1A70     		strb	r2, [r3]
+ 229:main.c        ****             dir_delay_ticks  = 0;
+ 1127              		.loc 1 229 0
+ 1128 013e 254B     		ldr	r3, .L83+20
+ 1129 0140 0022     		movs	r2, #0
+ 1130 0142 1A80     		strh	r2, [r3]	@ movhi
+ 1131              	.L76:
+ 230:main.c        ****         }
+ 231:main.c        **** 
+ 232:main.c        ****         if (g_direction == 1u || g_direction == 2u){
+ 1132              		.loc 1 232 0
+ 1133 0144 1F4B     		ldr	r3, .L83+4
+ 1134 0146 1B78     		ldrb	r3, [r3]
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 25
+
+
+ 1135 0148 DBB2     		uxtb	r3, r3
+ 1136 014a 012B     		cmp	r3, #1
+ 1137 014c 04D0     		beq	.L77
+ 1138              		.loc 1 232 0 is_stmt 0 discriminator 1
+ 1139 014e 1D4B     		ldr	r3, .L83+4
+ 1140 0150 1B78     		ldrb	r3, [r3]
+ 1141 0152 DBB2     		uxtb	r3, r3
+ 1142 0154 022B     		cmp	r3, #2
+ 1143 0156 22D1     		bne	.L78
+ 1144              	.L77:
+ 233:main.c        ****             if (dir_delay_ticks > 0){
+ 1145              		.loc 1 233 0 is_stmt 1
+ 1146 0158 1E4B     		ldr	r3, .L83+20
+ 1147 015a 1B88     		ldrh	r3, [r3]
+ 1148 015c 002B     		cmp	r3, #0
+ 1149 015e 06D0     		beq	.L79
+ 234:main.c        ****                 /* Still delaying: keep doing normal straight PI */
+ 235:main.c        ****                 dir_delay_ticks--;
+ 1150              		.loc 1 235 0
+ 1151 0160 1C4B     		ldr	r3, .L83+20
+ 1152 0162 1B88     		ldrh	r3, [r3]
+ 1153 0164 013B     		subs	r3, r3, #1
+ 1154 0166 9AB2     		uxth	r2, r3
+ 1155 0168 1A4B     		ldr	r3, .L83+20
+ 1156 016a 1A80     		strh	r2, [r3]	@ movhi
+ 1157 016c 17E0     		b	.L78
+ 1158              	.L79:
+ 236:main.c        ****             } else {
+ 237:main.c        ****                 /* Delay elapsed: perform the maneuver */
+ 238:main.c        ****                 Directions_Handle(&g_direction);
+ 1159              		.loc 1 238 0
+ 1160 016e 1548     		ldr	r0, .L83+4
+ 1161 0170 FFF7FEFF 		bl	Directions_Handle
+ 239:main.c        **** 
+ 240:main.c        ****                 /* When turn completes, Directions sets g_direction back to 0 */
+ 241:main.c        ****                 if (g_direction == 0u){
+ 1162              		.loc 1 241 0
+ 1163 0174 134B     		ldr	r3, .L83+4
+ 1164 0176 1B78     		ldrb	r3, [r3]
+ 1165 0178 DBB2     		uxtb	r3, r3
+ 1166 017a 002B     		cmp	r3, #0
+ 1167 017c 0BD1     		bne	.L80
+ 242:main.c        ****                     pi.i = 0.0f; pi.u = 0.0f; pi.t_loss = 0.0f;  /* clear bias */
+ 1168              		.loc 1 242 0
+ 1169 017e 4FF00003 		mov	r3, #0
+ 1170 0182 FB60     		str	r3, [r7, #12]	@ float
+ 1171 0184 4FF00003 		mov	r3, #0
+ 1172 0188 3B61     		str	r3, [r7, #16]	@ float
+ 1173 018a 4FF00003 		mov	r3, #0
+ 1174 018e 7B61     		str	r3, [r7, #20]	@ float
+ 243:main.c        ****                     dir_latched_side = 0;                        /* ready next time */
+ 1175              		.loc 1 243 0
+ 1176 0190 0F4B     		ldr	r3, .L83+16
+ 1177 0192 0022     		movs	r2, #0
+ 1178 0194 1A70     		strb	r2, [r3]
+ 1179              	.L80:
+ 244:main.c        ****                 }
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 26
+
+
+ 245:main.c        ****                 CyDelay(LOOP_DT_MS);
+ 1180              		.loc 1 245 0
+ 1181 0196 0820     		movs	r0, #8
+ 1182 0198 FFF7FEFF 		bl	CyDelay
+ 246:main.c        ****                 continue;  /* skip the rest this tick */
+ 1183              		.loc 1 246 0
+ 1184 019c 0EE0     		b	.L81
+ 1185              	.L78:
+ 247:main.c        ****             }
+ 248:main.c        ****         }
+ 249:main.c        ****         /* ---------------- end turn handling with delay ---------------- */
+ 250:main.c        **** 
+ 251:main.c        ****         /* Straight run with PI steering */
+ 252:main.c        ****         int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
+ 1186              		.loc 1 252 0
+ 1187 019e 7989     		ldrh	r1, [r7, #10]
+ 1188 01a0 3A89     		ldrh	r2, [r7, #8]
+ 1189 01a2 FB88     		ldrh	r3, [r7, #6]
+ 1190 01a4 07F10C00 		add	r0, r7, #12
+ 1191 01a8 FFF7FEFF 		bl	pi_step
+ 1192 01ac B861     		str	r0, [r7, #24]
+ 253:main.c        ****         set_motors_with_trim_and_steer(center_duty_est, steer);
+ 1193              		.loc 1 253 0
+ 1194 01ae B969     		ldr	r1, [r7, #24]
+ 1195 01b0 F869     		ldr	r0, [r7, #28]
+ 1196 01b2 FFF7FEFF 		bl	set_motors_with_trim_and_steer
+ 254:main.c        **** 
+ 255:main.c        ****         CyDelay(LOOP_DT_MS);
+ 1197              		.loc 1 255 0
+ 1198 01b6 0820     		movs	r0, #8
+ 1199 01b8 FFF7FEFF 		bl	CyDelay
+ 1200              	.L81:
+ 1201              	.LBE2:
+ 256:main.c        ****     }
+ 1202              		.loc 1 256 0 discriminator 1
+ 1203 01bc 71E7     		b	.L82
+ 1204              	.L84:
+ 1205 01be 00BF     		.align	2
+ 1206              	.L83:
+ 1207 01c0 00000000 		.word	isr_qd_Handler
+ 1208 01c4 06000000 		.word	g_direction
+ 1209 01c8 08000000 		.word	g_dist_mm
+ 1210 01cc 07000000 		.word	g_stop_now
+ 1211 01d0 0E000000 		.word	dir_latched_side
+ 1212 01d4 0C000000 		.word	dir_delay_ticks
+ 1213              		.cfi_endproc
+ 1214              	.LFE69:
+ 1215              		.size	main, .-main
+ 1216              		.text
+ 1217              	.Letext0:
+ 1218              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 1219              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 1220              		.file 4 "Generated_Source\\PSoC5/core_cm3.h"
+ 1221              		.section	.debug_info,"",%progbits
+ 1222              	.Ldebug_info0:
+ 1223 0000 0E050000 		.4byte	0x50e
+ 1224 0004 0400     		.2byte	0x4
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 27
+
+
+ 1225 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 1226 000a 04       		.byte	0x4
+ 1227 000b 01       		.uleb128 0x1
+ 1228 000c 30000000 		.4byte	.LASF56
+ 1229 0010 0C       		.byte	0xc
+ 1230 0011 B2020000 		.4byte	.LASF57
+ 1231 0015 24020000 		.4byte	.LASF58
+ 1232 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 1233 001d 00000000 		.4byte	0
+ 1234 0021 00000000 		.4byte	.Ldebug_line0
+ 1235 0025 02       		.uleb128 0x2
+ 1236 0026 01       		.byte	0x1
+ 1237 0027 06       		.byte	0x6
+ 1238 0028 83010000 		.4byte	.LASF0
+ 1239 002c 03       		.uleb128 0x3
+ 1240 002d 28010000 		.4byte	.LASF3
+ 1241 0031 02       		.byte	0x2
+ 1242 0032 1D       		.byte	0x1d
+ 1243 0033 37000000 		.4byte	0x37
+ 1244 0037 02       		.uleb128 0x2
+ 1245 0038 01       		.byte	0x1
+ 1246 0039 08       		.byte	0x8
+ 1247 003a 3F010000 		.4byte	.LASF1
+ 1248 003e 02       		.uleb128 0x2
+ 1249 003f 02       		.byte	0x2
+ 1250 0040 05       		.byte	0x5
+ 1251 0041 1D000000 		.4byte	.LASF2
+ 1252 0045 03       		.uleb128 0x3
+ 1253 0046 C3000000 		.4byte	.LASF4
+ 1254 004a 02       		.byte	0x2
+ 1255 004b 2B       		.byte	0x2b
+ 1256 004c 50000000 		.4byte	0x50
+ 1257 0050 02       		.uleb128 0x2
+ 1258 0051 02       		.byte	0x2
+ 1259 0052 07       		.byte	0x7
+ 1260 0053 EC010000 		.4byte	.LASF5
+ 1261 0057 03       		.uleb128 0x3
+ 1262 0058 0F030000 		.4byte	.LASF6
+ 1263 005c 02       		.byte	0x2
+ 1264 005d 3F       		.byte	0x3f
+ 1265 005e 62000000 		.4byte	0x62
+ 1266 0062 02       		.uleb128 0x2
+ 1267 0063 04       		.byte	0x4
+ 1268 0064 05       		.byte	0x5
+ 1269 0065 0F010000 		.4byte	.LASF7
+ 1270 0069 02       		.uleb128 0x2
+ 1271 006a 04       		.byte	0x4
+ 1272 006b 07       		.byte	0x7
+ 1273 006c B9020000 		.4byte	.LASF8
+ 1274 0070 03       		.uleb128 0x3
+ 1275 0071 18010000 		.4byte	.LASF9
+ 1276 0075 02       		.byte	0x2
+ 1277 0076 59       		.byte	0x59
+ 1278 0077 7B000000 		.4byte	0x7b
+ 1279 007b 02       		.uleb128 0x2
+ 1280 007c 08       		.byte	0x8
+ 1281 007d 05       		.byte	0x5
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 28
+
+
+ 1282 007e F7000000 		.4byte	.LASF10
+ 1283 0082 02       		.uleb128 0x2
+ 1284 0083 08       		.byte	0x8
+ 1285 0084 07       		.byte	0x7
+ 1286 0085 97010000 		.4byte	.LASF11
+ 1287 0089 04       		.uleb128 0x4
+ 1288 008a 04       		.byte	0x4
+ 1289 008b 05       		.byte	0x5
+ 1290 008c 696E7400 		.ascii	"int\000"
+ 1291 0090 02       		.uleb128 0x2
+ 1292 0091 04       		.byte	0x4
+ 1293 0092 07       		.byte	0x7
+ 1294 0093 BB010000 		.4byte	.LASF12
+ 1295 0097 03       		.uleb128 0x3
+ 1296 0098 D6000000 		.4byte	.LASF13
+ 1297 009c 03       		.byte	0x3
+ 1298 009d 18       		.byte	0x18
+ 1299 009e 2C000000 		.4byte	0x2c
+ 1300 00a2 03       		.uleb128 0x3
+ 1301 00a3 CE010000 		.4byte	.LASF14
+ 1302 00a7 03       		.byte	0x3
+ 1303 00a8 24       		.byte	0x24
+ 1304 00a9 45000000 		.4byte	0x45
+ 1305 00ad 03       		.uleb128 0x3
+ 1306 00ae 8F010000 		.4byte	.LASF15
+ 1307 00b2 03       		.byte	0x3
+ 1308 00b3 2C       		.byte	0x2c
+ 1309 00b4 57000000 		.4byte	0x57
+ 1310 00b8 03       		.uleb128 0x3
+ 1311 00b9 CE000000 		.4byte	.LASF16
+ 1312 00bd 03       		.byte	0x3
+ 1313 00be 38       		.byte	0x38
+ 1314 00bf 70000000 		.4byte	0x70
+ 1315 00c3 02       		.uleb128 0x2
+ 1316 00c4 04       		.byte	0x4
+ 1317 00c5 04       		.byte	0x4
+ 1318 00c6 F1000000 		.4byte	.LASF17
+ 1319 00ca 02       		.uleb128 0x2
+ 1320 00cb 08       		.byte	0x8
+ 1321 00cc 04       		.byte	0x4
+ 1322 00cd 3B030000 		.4byte	.LASF18
+ 1323 00d1 02       		.uleb128 0x2
+ 1324 00d2 01       		.byte	0x1
+ 1325 00d3 08       		.byte	0x8
+ 1326 00d4 05010000 		.4byte	.LASF19
+ 1327 00d8 02       		.uleb128 0x2
+ 1328 00d9 08       		.byte	0x8
+ 1329 00da 04       		.byte	0x4
+ 1330 00db 52010000 		.4byte	.LASF20
+ 1331 00df 02       		.uleb128 0x2
+ 1332 00e0 04       		.byte	0x4
+ 1333 00e1 07       		.byte	0x7
+ 1334 00e2 27000000 		.4byte	.LASF21
+ 1335 00e6 05       		.uleb128 0x5
+ 1336 00e7 97000000 		.4byte	0x97
+ 1337 00eb 06       		.uleb128 0x6
+ 1338 00ec 0C       		.byte	0xc
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 29
+
+
+ 1339 00ed 01       		.byte	0x1
+ 1340 00ee 7D       		.byte	0x7d
+ 1341 00ef 14010000 		.4byte	0x114
+ 1342 00f3 07       		.uleb128 0x7
+ 1343 00f4 6900     		.ascii	"i\000"
+ 1344 00f6 01       		.byte	0x1
+ 1345 00f7 7D       		.byte	0x7d
+ 1346 00f8 C3000000 		.4byte	0xc3
+ 1347 00fc 00       		.byte	0
+ 1348 00fd 07       		.uleb128 0x7
+ 1349 00fe 7500     		.ascii	"u\000"
+ 1350 0100 01       		.byte	0x1
+ 1351 0101 7D       		.byte	0x7d
+ 1352 0102 C3000000 		.4byte	0xc3
+ 1353 0106 04       		.byte	0x4
+ 1354 0107 08       		.uleb128 0x8
+ 1355 0108 08030000 		.4byte	.LASF22
+ 1356 010c 01       		.byte	0x1
+ 1357 010d 7D       		.byte	0x7d
+ 1358 010e C3000000 		.4byte	0xc3
+ 1359 0112 08       		.byte	0x8
+ 1360 0113 00       		.byte	0
+ 1361 0114 03       		.uleb128 0x3
+ 1362 0115 0A010000 		.4byte	.LASF23
+ 1363 0119 01       		.byte	0x1
+ 1364 011a 7D       		.byte	0x7d
+ 1365 011b EB000000 		.4byte	0xeb
+ 1366 011f 09       		.uleb128 0x9
+ 1367 0120 81020000 		.4byte	.LASF59
+ 1368 0124 01       		.byte	0x1
+ 1369 0125 3D       		.byte	0x3d
+ 1370 0126 00000000 		.4byte	.LFB64
+ 1371 012a 78010000 		.4byte	.LFE64-.LFB64
+ 1372 012e 01       		.uleb128 0x1
+ 1373 012f 9C       		.byte	0x9c
+ 1374 0130 D0010000 		.4byte	0x1d0
+ 1375 0134 0A       		.uleb128 0xa
+ 1376 0135 4D010000 		.4byte	.LASF24
+ 1377 0139 01       		.byte	0x1
+ 1378 013a 3F       		.byte	0x3f
+ 1379 013b AD000000 		.4byte	0xad
+ 1380 013f 02       		.uleb128 0x2
+ 1381 0140 91       		.byte	0x91
+ 1382 0141 54       		.sleb128 -44
+ 1383 0142 0A       		.uleb128 0xa
+ 1384 0143 DE000000 		.4byte	.LASF25
+ 1385 0147 01       		.byte	0x1
+ 1386 0148 40       		.byte	0x40
+ 1387 0149 AD000000 		.4byte	0xad
+ 1388 014d 02       		.uleb128 0x2
+ 1389 014e 91       		.byte	0x91
+ 1390 014f 50       		.sleb128 -48
+ 1391 0150 0B       		.uleb128 0xb
+ 1392 0151 643100   		.ascii	"d1\000"
+ 1393 0154 01       		.byte	0x1
+ 1394 0155 42       		.byte	0x42
+ 1395 0156 AD000000 		.4byte	0xad
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 30
+
+
+ 1396 015a 02       		.uleb128 0x2
+ 1397 015b 91       		.byte	0x91
+ 1398 015c 4C       		.sleb128 -52
+ 1399 015d 0B       		.uleb128 0xb
+ 1400 015e 643200   		.ascii	"d2\000"
+ 1401 0161 01       		.byte	0x1
+ 1402 0162 42       		.byte	0x42
+ 1403 0163 AD000000 		.4byte	0xad
+ 1404 0167 02       		.uleb128 0x2
+ 1405 0168 91       		.byte	0x91
+ 1406 0169 48       		.sleb128 -56
+ 1407 016a 0B       		.uleb128 0xb
+ 1408 016b 613100   		.ascii	"a1\000"
+ 1409 016e 01       		.byte	0x1
+ 1410 016f 43       		.byte	0x43
+ 1411 0170 AD000000 		.4byte	0xad
+ 1412 0174 02       		.uleb128 0x2
+ 1413 0175 91       		.byte	0x91
+ 1414 0176 44       		.sleb128 -60
+ 1415 0177 0B       		.uleb128 0xb
+ 1416 0178 613200   		.ascii	"a2\000"
+ 1417 017b 01       		.byte	0x1
+ 1418 017c 44       		.byte	0x44
+ 1419 017d AD000000 		.4byte	0xad
+ 1420 0181 02       		.uleb128 0x2
+ 1421 0182 91       		.byte	0x91
+ 1422 0183 40       		.sleb128 -64
+ 1423 0184 0A       		.uleb128 0xa
+ 1424 0185 59030000 		.4byte	.LASF26
+ 1425 0189 01       		.byte	0x1
+ 1426 018a 45       		.byte	0x45
+ 1427 018b AD000000 		.4byte	0xad
+ 1428 018f 03       		.uleb128 0x3
+ 1429 0190 91       		.byte	0x91
+ 1430 0191 BC7F     		.sleb128 -68
+ 1431 0193 0A       		.uleb128 0xa
+ 1432 0194 CB020000 		.4byte	.LASF27
+ 1433 0198 01       		.byte	0x1
+ 1434 0199 46       		.byte	0x46
+ 1435 019a AD000000 		.4byte	0xad
+ 1436 019e 03       		.uleb128 0x3
+ 1437 019f 91       		.byte	0x91
+ 1438 01a0 B87F     		.sleb128 -72
+ 1439 01a2 0A       		.uleb128 0xa
+ 1440 01a3 0C020000 		.4byte	.LASF28
+ 1441 01a7 01       		.byte	0x1
+ 1442 01a8 48       		.byte	0x48
+ 1443 01a9 B8000000 		.4byte	0xb8
+ 1444 01ad 03       		.uleb128 0x3
+ 1445 01ae 91       		.byte	0x91
+ 1446 01af B07F     		.sleb128 -80
+ 1447 01b1 0A       		.uleb128 0xa
+ 1448 01b2 E3000000 		.4byte	.LASF29
+ 1449 01b6 01       		.byte	0x1
+ 1450 01b7 49       		.byte	0x49
+ 1451 01b8 AD000000 		.4byte	0xad
+ 1452 01bc 03       		.uleb128 0x3
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 31
+
+
+ 1453 01bd 91       		.byte	0x91
+ 1454 01be AC7F     		.sleb128 -84
+ 1455 01c0 0A       		.uleb128 0xa
+ 1456 01c1 90020000 		.4byte	.LASF30
+ 1457 01c5 01       		.byte	0x1
+ 1458 01c6 4A       		.byte	0x4a
+ 1459 01c7 AD000000 		.4byte	0xad
+ 1460 01cb 03       		.uleb128 0x3
+ 1461 01cc 91       		.byte	0x91
+ 1462 01cd A87F     		.sleb128 -88
+ 1463 01cf 00       		.byte	0
+ 1464 01d0 0C       		.uleb128 0xc
+ 1465 01d1 19030000 		.4byte	.LASF34
+ 1466 01d5 01       		.byte	0x1
+ 1467 01d6 51       		.byte	0x51
+ 1468 01d7 C3000000 		.4byte	0xc3
+ 1469 01db 00000000 		.4byte	.LFB65
+ 1470 01df 44000000 		.4byte	.LFE65-.LFB65
+ 1471 01e3 01       		.uleb128 0x1
+ 1472 01e4 9C       		.byte	0x9c
+ 1473 01e5 F7010000 		.4byte	0x1f7
+ 1474 01e9 0D       		.uleb128 0xd
+ 1475 01ea 707000   		.ascii	"pp\000"
+ 1476 01ed 01       		.byte	0x1
+ 1477 01ee 51       		.byte	0x51
+ 1478 01ef A2000000 		.4byte	0xa2
+ 1479 01f3 02       		.uleb128 0x2
+ 1480 01f4 91       		.byte	0x91
+ 1481 01f5 76       		.sleb128 -10
+ 1482 01f6 00       		.byte	0
+ 1483 01f7 0E       		.uleb128 0xe
+ 1484 01f8 D5020000 		.4byte	.LASF60
+ 1485 01fc 01       		.byte	0x1
+ 1486 01fd 59       		.byte	0x59
+ 1487 01fe 00000000 		.4byte	.LFB66
+ 1488 0202 3C010000 		.4byte	.LFE66-.LFB66
+ 1489 0206 01       		.uleb128 0x1
+ 1490 0207 9C       		.byte	0x9c
+ 1491 0208 85020000 		.4byte	0x285
+ 1492 020c 0F       		.uleb128 0xf
+ 1493 020d 17000000 		.4byte	.LASF31
+ 1494 0211 01       		.byte	0x1
+ 1495 0212 59       		.byte	0x59
+ 1496 0213 85020000 		.4byte	0x285
+ 1497 0217 02       		.uleb128 0x2
+ 1498 0218 91       		.byte	0x91
+ 1499 0219 64       		.sleb128 -28
+ 1500 021a 0F       		.uleb128 0xf
+ 1501 021b EB000000 		.4byte	.LASF32
+ 1502 021f 01       		.byte	0x1
+ 1503 0220 59       		.byte	0x59
+ 1504 0221 85020000 		.4byte	0x285
+ 1505 0225 02       		.uleb128 0x2
+ 1506 0226 91       		.byte	0x91
+ 1507 0227 60       		.sleb128 -32
+ 1508 0228 0F       		.uleb128 0xf
+ 1509 0229 C8010000 		.4byte	.LASF33
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 32
+
+
+ 1510 022d 01       		.byte	0x1
+ 1511 022e 59       		.byte	0x59
+ 1512 022f 85020000 		.4byte	0x285
+ 1513 0233 02       		.uleb128 0x2
+ 1514 0234 91       		.byte	0x91
+ 1515 0235 5C       		.sleb128 -36
+ 1516 0236 0B       		.uleb128 0xb
+ 1517 0237 563100   		.ascii	"V1\000"
+ 1518 023a 01       		.byte	0x1
+ 1519 023b 5B       		.byte	0x5b
+ 1520 023c A2000000 		.4byte	0xa2
+ 1521 0240 02       		.uleb128 0x2
+ 1522 0241 91       		.byte	0x91
+ 1523 0242 76       		.sleb128 -10
+ 1524 0243 0B       		.uleb128 0xb
+ 1525 0244 563200   		.ascii	"V2\000"
+ 1526 0247 01       		.byte	0x1
+ 1527 0248 5C       		.byte	0x5c
+ 1528 0249 A2000000 		.4byte	0xa2
+ 1529 024d 02       		.uleb128 0x2
+ 1530 024e 91       		.byte	0x91
+ 1531 024f 74       		.sleb128 -12
+ 1532 0250 0B       		.uleb128 0xb
+ 1533 0251 563300   		.ascii	"V3\000"
+ 1534 0254 01       		.byte	0x1
+ 1535 0255 5D       		.byte	0x5d
+ 1536 0256 A2000000 		.4byte	0xa2
+ 1537 025a 02       		.uleb128 0x2
+ 1538 025b 91       		.byte	0x91
+ 1539 025c 72       		.sleb128 -14
+ 1540 025d 0B       		.uleb128 0xb
+ 1541 025e 563400   		.ascii	"V4\000"
+ 1542 0261 01       		.byte	0x1
+ 1543 0262 5E       		.byte	0x5e
+ 1544 0263 A2000000 		.4byte	0xa2
+ 1545 0267 02       		.uleb128 0x2
+ 1546 0268 91       		.byte	0x91
+ 1547 0269 70       		.sleb128 -16
+ 1548 026a 0B       		.uleb128 0xb
+ 1549 026b 563500   		.ascii	"V5\000"
+ 1550 026e 01       		.byte	0x1
+ 1551 026f 5F       		.byte	0x5f
+ 1552 0270 A2000000 		.4byte	0xa2
+ 1553 0274 02       		.uleb128 0x2
+ 1554 0275 91       		.byte	0x91
+ 1555 0276 6E       		.sleb128 -18
+ 1556 0277 0B       		.uleb128 0xb
+ 1557 0278 563600   		.ascii	"V6\000"
+ 1558 027b 01       		.byte	0x1
+ 1559 027c 60       		.byte	0x60
+ 1560 027d A2000000 		.4byte	0xa2
+ 1561 0281 02       		.uleb128 0x2
+ 1562 0282 91       		.byte	0x91
+ 1563 0283 6C       		.sleb128 -20
+ 1564 0284 00       		.byte	0
+ 1565 0285 10       		.uleb128 0x10
+ 1566 0286 04       		.byte	0x4
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 33
+
+
+ 1567 0287 A2000000 		.4byte	0xa2
+ 1568 028b 0C       		.uleb128 0xc
+ 1569 028c E4010000 		.4byte	.LASF35
+ 1570 0290 01       		.byte	0x1
+ 1571 0291 7E       		.byte	0x7e
+ 1572 0292 C3000000 		.4byte	0xc3
+ 1573 0296 00000000 		.4byte	.LFB67
+ 1574 029a 3A000000 		.4byte	.LFE67-.LFB67
+ 1575 029e 01       		.uleb128 0x1
+ 1576 029f 9C       		.byte	0x9c
+ 1577 02a0 CB020000 		.4byte	0x2cb
+ 1578 02a4 0D       		.uleb128 0xd
+ 1579 02a5 7800     		.ascii	"x\000"
+ 1580 02a7 01       		.byte	0x1
+ 1581 02a8 7E       		.byte	0x7e
+ 1582 02a9 C3000000 		.4byte	0xc3
+ 1583 02ad 02       		.uleb128 0x2
+ 1584 02ae 91       		.byte	0x91
+ 1585 02af 74       		.sleb128 -12
+ 1586 02b0 0D       		.uleb128 0xd
+ 1587 02b1 6C6F00   		.ascii	"lo\000"
+ 1588 02b4 01       		.byte	0x1
+ 1589 02b5 7E       		.byte	0x7e
+ 1590 02b6 C3000000 		.4byte	0xc3
+ 1591 02ba 02       		.uleb128 0x2
+ 1592 02bb 91       		.byte	0x91
+ 1593 02bc 70       		.sleb128 -16
+ 1594 02bd 0D       		.uleb128 0xd
+ 1595 02be 686900   		.ascii	"hi\000"
+ 1596 02c1 01       		.byte	0x1
+ 1597 02c2 7E       		.byte	0x7e
+ 1598 02c3 C3000000 		.4byte	0xc3
+ 1599 02c7 02       		.uleb128 0x2
+ 1600 02c8 91       		.byte	0x91
+ 1601 02c9 6C       		.sleb128 -20
+ 1602 02ca 00       		.byte	0
+ 1603 02cb 0C       		.uleb128 0xc
+ 1604 02cc 6D020000 		.4byte	.LASF36
+ 1605 02d0 01       		.byte	0x1
+ 1606 02d1 80       		.byte	0x80
+ 1607 02d2 89000000 		.4byte	0x89
+ 1608 02d6 00000000 		.4byte	.LFB68
+ 1609 02da 60020000 		.4byte	.LFE68-.LFB68
+ 1610 02de 01       		.uleb128 0x1
+ 1611 02df 9C       		.byte	0x9c
+ 1612 02e0 C1030000 		.4byte	0x3c1
+ 1613 02e4 0D       		.uleb128 0xd
+ 1614 02e5 706900   		.ascii	"pi\000"
+ 1615 02e8 01       		.byte	0x1
+ 1616 02e9 80       		.byte	0x80
+ 1617 02ea C1030000 		.4byte	0x3c1
+ 1618 02ee 03       		.uleb128 0x3
+ 1619 02ef 91       		.byte	0x91
+ 1620 02f0 BC7F     		.sleb128 -68
+ 1621 02f2 0F       		.uleb128 0xf
+ 1622 02f3 17000000 		.4byte	.LASF31
+ 1623 02f7 01       		.byte	0x1
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 34
+
+
+ 1624 02f8 80       		.byte	0x80
+ 1625 02f9 A2000000 		.4byte	0xa2
+ 1626 02fd 03       		.uleb128 0x3
+ 1627 02fe 91       		.byte	0x91
+ 1628 02ff BA7F     		.sleb128 -70
+ 1629 0301 0F       		.uleb128 0xf
+ 1630 0302 EB000000 		.4byte	.LASF32
+ 1631 0306 01       		.byte	0x1
+ 1632 0307 80       		.byte	0x80
+ 1633 0308 A2000000 		.4byte	0xa2
+ 1634 030c 03       		.uleb128 0x3
+ 1635 030d 91       		.byte	0x91
+ 1636 030e B87F     		.sleb128 -72
+ 1637 0310 0F       		.uleb128 0xf
+ 1638 0311 C8010000 		.4byte	.LASF33
+ 1639 0315 01       		.byte	0x1
+ 1640 0316 80       		.byte	0x80
+ 1641 0317 A2000000 		.4byte	0xa2
+ 1642 031b 03       		.uleb128 0x3
+ 1643 031c 91       		.byte	0x91
+ 1644 031d B67F     		.sleb128 -74
+ 1645 031f 0B       		.uleb128 0xb
+ 1646 0320 633400   		.ascii	"c4\000"
+ 1647 0323 01       		.byte	0x1
+ 1648 0324 82       		.byte	0x82
+ 1649 0325 C3000000 		.4byte	0xc3
+ 1650 0329 02       		.uleb128 0x2
+ 1651 032a 91       		.byte	0x91
+ 1652 032b 68       		.sleb128 -24
+ 1653 032c 0B       		.uleb128 0xb
+ 1654 032d 633500   		.ascii	"c5\000"
+ 1655 0330 01       		.byte	0x1
+ 1656 0331 83       		.byte	0x83
+ 1657 0332 C3000000 		.4byte	0xc3
+ 1658 0336 02       		.uleb128 0x2
+ 1659 0337 91       		.byte	0x91
+ 1660 0338 64       		.sleb128 -28
+ 1661 0339 0B       		.uleb128 0xb
+ 1662 033a 633600   		.ascii	"c6\000"
+ 1663 033d 01       		.byte	0x1
+ 1664 033e 84       		.byte	0x84
+ 1665 033f C3000000 		.4byte	0xc3
+ 1666 0343 02       		.uleb128 0x2
+ 1667 0344 91       		.byte	0x91
+ 1668 0345 60       		.sleb128 -32
+ 1669 0346 0B       		.uleb128 0xb
+ 1670 0347 73756D00 		.ascii	"sum\000"
+ 1671 034b 01       		.byte	0x1
+ 1672 034c 85       		.byte	0x85
+ 1673 034d C3000000 		.4byte	0xc3
+ 1674 0351 02       		.uleb128 0x2
+ 1675 0352 91       		.byte	0x91
+ 1676 0353 5C       		.sleb128 -36
+ 1677 0354 0A       		.uleb128 0xa
+ 1678 0355 00000000 		.4byte	.LASF37
+ 1679 0359 01       		.byte	0x1
+ 1680 035a 86       		.byte	0x86
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 35
+
+
+ 1681 035b C7030000 		.4byte	0x3c7
+ 1682 035f 02       		.uleb128 0x2
+ 1683 0360 91       		.byte	0x91
+ 1684 0361 5B       		.sleb128 -37
+ 1685 0362 0B       		.uleb128 0xb
+ 1686 0363 706F7300 		.ascii	"pos\000"
+ 1687 0367 01       		.byte	0x1
+ 1688 0368 88       		.byte	0x88
+ 1689 0369 C3000000 		.4byte	0xc3
+ 1690 036d 02       		.uleb128 0x2
+ 1691 036e 91       		.byte	0x91
+ 1692 036f 6C       		.sleb128 -20
+ 1693 0370 0B       		.uleb128 0xb
+ 1694 0371 6500     		.ascii	"e\000"
+ 1695 0373 01       		.byte	0x1
+ 1696 0374 8B       		.byte	0x8b
+ 1697 0375 C3000000 		.4byte	0xc3
+ 1698 0379 02       		.uleb128 0x2
+ 1699 037a 91       		.byte	0x91
+ 1700 037b 54       		.sleb128 -44
+ 1701 037c 0A       		.uleb128 0xa
+ 1702 037d AB020000 		.4byte	.LASF38
+ 1703 0381 01       		.byte	0x1
+ 1704 0382 94       		.byte	0x94
+ 1705 0383 C3000000 		.4byte	0xc3
+ 1706 0387 02       		.uleb128 0x2
+ 1707 0388 91       		.byte	0x91
+ 1708 0389 50       		.sleb128 -48
+ 1709 038a 0A       		.uleb128 0xa
+ 1710 038b 22010000 		.4byte	.LASF39
+ 1711 038f 01       		.byte	0x1
+ 1712 0390 95       		.byte	0x95
+ 1713 0391 C3000000 		.4byte	0xc3
+ 1714 0395 02       		.uleb128 0x2
+ 1715 0396 91       		.byte	0x91
+ 1716 0397 4C       		.sleb128 -52
+ 1717 0398 0B       		.uleb128 0xb
+ 1718 0399 7500     		.ascii	"u\000"
+ 1719 039b 01       		.byte	0x1
+ 1720 039c 96       		.byte	0x96
+ 1721 039d C3000000 		.4byte	0xc3
+ 1722 03a1 02       		.uleb128 0x2
+ 1723 03a2 91       		.byte	0x91
+ 1724 03a3 48       		.sleb128 -56
+ 1725 03a4 0A       		.uleb128 0xa
+ 1726 03a5 01030000 		.4byte	.LASF40
+ 1727 03a9 01       		.byte	0x1
+ 1728 03aa 98       		.byte	0x98
+ 1729 03ab C7030000 		.4byte	0x3c7
+ 1730 03af 02       		.uleb128 0x2
+ 1731 03b0 91       		.byte	0x91
+ 1732 03b1 47       		.sleb128 -57
+ 1733 03b2 0A       		.uleb128 0xa
+ 1734 03b3 34030000 		.4byte	.LASF41
+ 1735 03b7 01       		.byte	0x1
+ 1736 03b8 99       		.byte	0x99
+ 1737 03b9 C7030000 		.4byte	0x3c7
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 36
+
+
+ 1738 03bd 02       		.uleb128 0x2
+ 1739 03be 91       		.byte	0x91
+ 1740 03bf 46       		.sleb128 -58
+ 1741 03c0 00       		.byte	0
+ 1742 03c1 10       		.uleb128 0x10
+ 1743 03c2 04       		.byte	0x4
+ 1744 03c3 14010000 		.4byte	0x114
+ 1745 03c7 02       		.uleb128 0x2
+ 1746 03c8 01       		.byte	0x1
+ 1747 03c9 02       		.byte	0x2
+ 1748 03ca 7B020000 		.4byte	.LASF42
+ 1749 03ce 11       		.uleb128 0x11
+ 1750 03cf BE000000 		.4byte	.LASF61
+ 1751 03d3 01       		.byte	0x1
+ 1752 03d4 A6       		.byte	0xa6
+ 1753 03d5 89000000 		.4byte	0x89
+ 1754 03d9 00000000 		.4byte	.LFB69
+ 1755 03dd D8010000 		.4byte	.LFE69-.LFB69
+ 1756 03e1 01       		.uleb128 0x1
+ 1757 03e2 9C       		.byte	0x9c
+ 1758 03e3 45040000 		.4byte	0x445
+ 1759 03e7 0A       		.uleb128 0xa
+ 1760 03e8 14020000 		.4byte	.LASF43
+ 1761 03ec 01       		.byte	0x1
+ 1762 03ed C4       		.byte	0xc4
+ 1763 03ee 89000000 		.4byte	0x89
+ 1764 03f2 02       		.uleb128 0x2
+ 1765 03f3 91       		.byte	0x91
+ 1766 03f4 74       		.sleb128 -12
+ 1767 03f5 0B       		.uleb128 0xb
+ 1768 03f6 706900   		.ascii	"pi\000"
+ 1769 03f9 01       		.byte	0x1
+ 1770 03fa C9       		.byte	0xc9
+ 1771 03fb 14010000 		.4byte	0x114
+ 1772 03ff 02       		.uleb128 0x2
+ 1773 0400 91       		.byte	0x91
+ 1774 0401 64       		.sleb128 -28
+ 1775 0402 12       		.uleb128 0x12
+ 1776 0403 A2000000 		.4byte	.LBB2
+ 1777 0407 1A010000 		.4byte	.LBE2-.LBB2
+ 1778 040b 0A       		.uleb128 0xa
+ 1779 040c 17000000 		.4byte	.LASF31
+ 1780 0410 01       		.byte	0x1
+ 1781 0411 D9       		.byte	0xd9
+ 1782 0412 A2000000 		.4byte	0xa2
+ 1783 0416 02       		.uleb128 0x2
+ 1784 0417 91       		.byte	0x91
+ 1785 0418 62       		.sleb128 -30
+ 1786 0419 0A       		.uleb128 0xa
+ 1787 041a EB000000 		.4byte	.LASF32
+ 1788 041e 01       		.byte	0x1
+ 1789 041f D9       		.byte	0xd9
+ 1790 0420 A2000000 		.4byte	0xa2
+ 1791 0424 02       		.uleb128 0x2
+ 1792 0425 91       		.byte	0x91
+ 1793 0426 60       		.sleb128 -32
+ 1794 0427 0A       		.uleb128 0xa
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 37
+
+
+ 1795 0428 C8010000 		.4byte	.LASF33
+ 1796 042c 01       		.byte	0x1
+ 1797 042d D9       		.byte	0xd9
+ 1798 042e A2000000 		.4byte	0xa2
+ 1799 0432 02       		.uleb128 0x2
+ 1800 0433 91       		.byte	0x91
+ 1801 0434 5E       		.sleb128 -34
+ 1802 0435 0A       		.uleb128 0xa
+ 1803 0436 75020000 		.4byte	.LASF44
+ 1804 043a 01       		.byte	0x1
+ 1805 043b FC       		.byte	0xfc
+ 1806 043c 89000000 		.4byte	0x89
+ 1807 0440 02       		.uleb128 0x2
+ 1808 0441 91       		.byte	0x91
+ 1809 0442 70       		.sleb128 -16
+ 1810 0443 00       		.byte	0
+ 1811 0444 00       		.byte	0
+ 1812 0445 0A       		.uleb128 0xa
+ 1813 0446 32010000 		.4byte	.LASF45
+ 1814 044a 01       		.byte	0x1
+ 1815 044b 30       		.byte	0x30
+ 1816 044c 97000000 		.4byte	0x97
+ 1817 0450 05       		.uleb128 0x5
+ 1818 0451 03       		.byte	0x3
+ 1819 0452 00000000 		.4byte	sen1_on_line
+ 1820 0456 0A       		.uleb128 0xa
+ 1821 0457 5E010000 		.4byte	.LASF46
+ 1822 045b 01       		.byte	0x1
+ 1823 045c 30       		.byte	0x30
+ 1824 045d 97000000 		.4byte	0x97
+ 1825 0461 05       		.uleb128 0x5
+ 1826 0462 03       		.byte	0x3
+ 1827 0463 01000000 		.4byte	sen2_on_line
+ 1828 0467 0A       		.uleb128 0xa
+ 1829 0468 76010000 		.4byte	.LASF47
+ 1830 046c 01       		.byte	0x1
+ 1831 046d 30       		.byte	0x30
+ 1832 046e 97000000 		.4byte	0x97
+ 1833 0472 05       		.uleb128 0x5
+ 1834 0473 03       		.byte	0x3
+ 1835 0474 02000000 		.4byte	sen3_on_line
+ 1836 0478 0A       		.uleb128 0xa
+ 1837 0479 AE010000 		.4byte	.LASF48
+ 1838 047d 01       		.byte	0x1
+ 1839 047e 31       		.byte	0x31
+ 1840 047f 97000000 		.4byte	0x97
+ 1841 0483 05       		.uleb128 0x5
+ 1842 0484 03       		.byte	0x3
+ 1843 0485 03000000 		.4byte	sen4_on_line
+ 1844 0489 0A       		.uleb128 0xa
+ 1845 048a D7010000 		.4byte	.LASF49
+ 1846 048e 01       		.byte	0x1
+ 1847 048f 31       		.byte	0x31
+ 1848 0490 97000000 		.4byte	0x97
+ 1849 0494 05       		.uleb128 0x5
+ 1850 0495 03       		.byte	0x3
+ 1851 0496 04000000 		.4byte	sen5_on_line
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 38
+
+
+ 1852 049a 0A       		.uleb128 0xa
+ 1853 049b FF010000 		.4byte	.LASF50
+ 1854 049f 01       		.byte	0x1
+ 1855 04a0 31       		.byte	0x31
+ 1856 04a1 97000000 		.4byte	0x97
+ 1857 04a5 05       		.uleb128 0x5
+ 1858 04a6 03       		.byte	0x3
+ 1859 04a7 05000000 		.4byte	sen6_on_line
+ 1860 04ab 0A       		.uleb128 0xa
+ 1861 04ac 28030000 		.4byte	.LASF51
+ 1862 04b0 01       		.byte	0x1
+ 1863 04b1 34       		.byte	0x34
+ 1864 04b2 E6000000 		.4byte	0xe6
+ 1865 04b6 05       		.uleb128 0x5
+ 1866 04b7 03       		.byte	0x3
+ 1867 04b8 06000000 		.4byte	g_direction
+ 1868 04bc 0A       		.uleb128 0xa
+ 1869 04bd 6B010000 		.4byte	.LASF52
+ 1870 04c1 01       		.byte	0x1
+ 1871 04c2 35       		.byte	0x35
+ 1872 04c3 E6000000 		.4byte	0xe6
+ 1873 04c7 05       		.uleb128 0x5
+ 1874 04c8 03       		.byte	0x3
+ 1875 04c9 07000000 		.4byte	g_stop_now
+ 1876 04cd 0A       		.uleb128 0xa
+ 1877 04ce 42030000 		.4byte	.LASF53
+ 1878 04d2 01       		.byte	0x1
+ 1879 04d3 36       		.byte	0x36
+ 1880 04d4 DE040000 		.4byte	0x4de
+ 1881 04d8 05       		.uleb128 0x5
+ 1882 04d9 03       		.byte	0x3
+ 1883 04da 08000000 		.4byte	g_dist_mm
+ 1884 04de 05       		.uleb128 0x5
+ 1885 04df AD000000 		.4byte	0xad
+ 1886 04e3 0A       		.uleb128 0xa
+ 1887 04e4 9B020000 		.4byte	.LASF54
+ 1888 04e8 01       		.byte	0x1
+ 1889 04e9 39       		.byte	0x39
+ 1890 04ea A2000000 		.4byte	0xa2
+ 1891 04ee 05       		.uleb128 0x5
+ 1892 04ef 03       		.byte	0x3
+ 1893 04f0 0C000000 		.4byte	dir_delay_ticks
+ 1894 04f4 0A       		.uleb128 0xa
+ 1895 04f5 06000000 		.4byte	.LASF55
+ 1896 04f9 01       		.byte	0x1
+ 1897 04fa 3A       		.byte	0x3a
+ 1898 04fb 97000000 		.4byte	0x97
+ 1899 04ff 05       		.uleb128 0x5
+ 1900 0500 03       		.byte	0x3
+ 1901 0501 0E000000 		.4byte	dir_latched_side
+ 1902 0505 13       		.uleb128 0x13
+ 1903 0506 4C030000 		.4byte	.LASF62
+ 1904 050a 04       		.byte	0x4
+ 1905 050b 1207     		.2byte	0x712
+ 1906 050d DE040000 		.4byte	0x4de
+ 1907 0511 00       		.byte	0
+ 1908              		.section	.debug_abbrev,"",%progbits
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 39
+
+
+ 1909              	.Ldebug_abbrev0:
+ 1910 0000 01       		.uleb128 0x1
+ 1911 0001 11       		.uleb128 0x11
+ 1912 0002 01       		.byte	0x1
+ 1913 0003 25       		.uleb128 0x25
+ 1914 0004 0E       		.uleb128 0xe
+ 1915 0005 13       		.uleb128 0x13
+ 1916 0006 0B       		.uleb128 0xb
+ 1917 0007 03       		.uleb128 0x3
+ 1918 0008 0E       		.uleb128 0xe
+ 1919 0009 1B       		.uleb128 0x1b
+ 1920 000a 0E       		.uleb128 0xe
+ 1921 000b 55       		.uleb128 0x55
+ 1922 000c 17       		.uleb128 0x17
+ 1923 000d 11       		.uleb128 0x11
+ 1924 000e 01       		.uleb128 0x1
+ 1925 000f 10       		.uleb128 0x10
+ 1926 0010 17       		.uleb128 0x17
+ 1927 0011 00       		.byte	0
+ 1928 0012 00       		.byte	0
+ 1929 0013 02       		.uleb128 0x2
+ 1930 0014 24       		.uleb128 0x24
+ 1931 0015 00       		.byte	0
+ 1932 0016 0B       		.uleb128 0xb
+ 1933 0017 0B       		.uleb128 0xb
+ 1934 0018 3E       		.uleb128 0x3e
+ 1935 0019 0B       		.uleb128 0xb
+ 1936 001a 03       		.uleb128 0x3
+ 1937 001b 0E       		.uleb128 0xe
+ 1938 001c 00       		.byte	0
+ 1939 001d 00       		.byte	0
+ 1940 001e 03       		.uleb128 0x3
+ 1941 001f 16       		.uleb128 0x16
+ 1942 0020 00       		.byte	0
+ 1943 0021 03       		.uleb128 0x3
+ 1944 0022 0E       		.uleb128 0xe
+ 1945 0023 3A       		.uleb128 0x3a
+ 1946 0024 0B       		.uleb128 0xb
+ 1947 0025 3B       		.uleb128 0x3b
+ 1948 0026 0B       		.uleb128 0xb
+ 1949 0027 49       		.uleb128 0x49
+ 1950 0028 13       		.uleb128 0x13
+ 1951 0029 00       		.byte	0
+ 1952 002a 00       		.byte	0
+ 1953 002b 04       		.uleb128 0x4
+ 1954 002c 24       		.uleb128 0x24
+ 1955 002d 00       		.byte	0
+ 1956 002e 0B       		.uleb128 0xb
+ 1957 002f 0B       		.uleb128 0xb
+ 1958 0030 3E       		.uleb128 0x3e
+ 1959 0031 0B       		.uleb128 0xb
+ 1960 0032 03       		.uleb128 0x3
+ 1961 0033 08       		.uleb128 0x8
+ 1962 0034 00       		.byte	0
+ 1963 0035 00       		.byte	0
+ 1964 0036 05       		.uleb128 0x5
+ 1965 0037 35       		.uleb128 0x35
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 40
+
+
+ 1966 0038 00       		.byte	0
+ 1967 0039 49       		.uleb128 0x49
+ 1968 003a 13       		.uleb128 0x13
+ 1969 003b 00       		.byte	0
+ 1970 003c 00       		.byte	0
+ 1971 003d 06       		.uleb128 0x6
+ 1972 003e 13       		.uleb128 0x13
+ 1973 003f 01       		.byte	0x1
+ 1974 0040 0B       		.uleb128 0xb
+ 1975 0041 0B       		.uleb128 0xb
+ 1976 0042 3A       		.uleb128 0x3a
+ 1977 0043 0B       		.uleb128 0xb
+ 1978 0044 3B       		.uleb128 0x3b
+ 1979 0045 0B       		.uleb128 0xb
+ 1980 0046 01       		.uleb128 0x1
+ 1981 0047 13       		.uleb128 0x13
+ 1982 0048 00       		.byte	0
+ 1983 0049 00       		.byte	0
+ 1984 004a 07       		.uleb128 0x7
+ 1985 004b 0D       		.uleb128 0xd
+ 1986 004c 00       		.byte	0
+ 1987 004d 03       		.uleb128 0x3
+ 1988 004e 08       		.uleb128 0x8
+ 1989 004f 3A       		.uleb128 0x3a
+ 1990 0050 0B       		.uleb128 0xb
+ 1991 0051 3B       		.uleb128 0x3b
+ 1992 0052 0B       		.uleb128 0xb
+ 1993 0053 49       		.uleb128 0x49
+ 1994 0054 13       		.uleb128 0x13
+ 1995 0055 38       		.uleb128 0x38
+ 1996 0056 0B       		.uleb128 0xb
+ 1997 0057 00       		.byte	0
+ 1998 0058 00       		.byte	0
+ 1999 0059 08       		.uleb128 0x8
+ 2000 005a 0D       		.uleb128 0xd
+ 2001 005b 00       		.byte	0
+ 2002 005c 03       		.uleb128 0x3
+ 2003 005d 0E       		.uleb128 0xe
+ 2004 005e 3A       		.uleb128 0x3a
+ 2005 005f 0B       		.uleb128 0xb
+ 2006 0060 3B       		.uleb128 0x3b
+ 2007 0061 0B       		.uleb128 0xb
+ 2008 0062 49       		.uleb128 0x49
+ 2009 0063 13       		.uleb128 0x13
+ 2010 0064 38       		.uleb128 0x38
+ 2011 0065 0B       		.uleb128 0xb
+ 2012 0066 00       		.byte	0
+ 2013 0067 00       		.byte	0
+ 2014 0068 09       		.uleb128 0x9
+ 2015 0069 2E       		.uleb128 0x2e
+ 2016 006a 01       		.byte	0x1
+ 2017 006b 3F       		.uleb128 0x3f
+ 2018 006c 19       		.uleb128 0x19
+ 2019 006d 03       		.uleb128 0x3
+ 2020 006e 0E       		.uleb128 0xe
+ 2021 006f 3A       		.uleb128 0x3a
+ 2022 0070 0B       		.uleb128 0xb
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 41
+
+
+ 2023 0071 3B       		.uleb128 0x3b
+ 2024 0072 0B       		.uleb128 0xb
+ 2025 0073 27       		.uleb128 0x27
+ 2026 0074 19       		.uleb128 0x19
+ 2027 0075 11       		.uleb128 0x11
+ 2028 0076 01       		.uleb128 0x1
+ 2029 0077 12       		.uleb128 0x12
+ 2030 0078 06       		.uleb128 0x6
+ 2031 0079 40       		.uleb128 0x40
+ 2032 007a 18       		.uleb128 0x18
+ 2033 007b 9642     		.uleb128 0x2116
+ 2034 007d 19       		.uleb128 0x19
+ 2035 007e 01       		.uleb128 0x1
+ 2036 007f 13       		.uleb128 0x13
+ 2037 0080 00       		.byte	0
+ 2038 0081 00       		.byte	0
+ 2039 0082 0A       		.uleb128 0xa
+ 2040 0083 34       		.uleb128 0x34
+ 2041 0084 00       		.byte	0
+ 2042 0085 03       		.uleb128 0x3
+ 2043 0086 0E       		.uleb128 0xe
+ 2044 0087 3A       		.uleb128 0x3a
+ 2045 0088 0B       		.uleb128 0xb
+ 2046 0089 3B       		.uleb128 0x3b
+ 2047 008a 0B       		.uleb128 0xb
+ 2048 008b 49       		.uleb128 0x49
+ 2049 008c 13       		.uleb128 0x13
+ 2050 008d 02       		.uleb128 0x2
+ 2051 008e 18       		.uleb128 0x18
+ 2052 008f 00       		.byte	0
+ 2053 0090 00       		.byte	0
+ 2054 0091 0B       		.uleb128 0xb
+ 2055 0092 34       		.uleb128 0x34
+ 2056 0093 00       		.byte	0
+ 2057 0094 03       		.uleb128 0x3
+ 2058 0095 08       		.uleb128 0x8
+ 2059 0096 3A       		.uleb128 0x3a
+ 2060 0097 0B       		.uleb128 0xb
+ 2061 0098 3B       		.uleb128 0x3b
+ 2062 0099 0B       		.uleb128 0xb
+ 2063 009a 49       		.uleb128 0x49
+ 2064 009b 13       		.uleb128 0x13
+ 2065 009c 02       		.uleb128 0x2
+ 2066 009d 18       		.uleb128 0x18
+ 2067 009e 00       		.byte	0
+ 2068 009f 00       		.byte	0
+ 2069 00a0 0C       		.uleb128 0xc
+ 2070 00a1 2E       		.uleb128 0x2e
+ 2071 00a2 01       		.byte	0x1
+ 2072 00a3 03       		.uleb128 0x3
+ 2073 00a4 0E       		.uleb128 0xe
+ 2074 00a5 3A       		.uleb128 0x3a
+ 2075 00a6 0B       		.uleb128 0xb
+ 2076 00a7 3B       		.uleb128 0x3b
+ 2077 00a8 0B       		.uleb128 0xb
+ 2078 00a9 27       		.uleb128 0x27
+ 2079 00aa 19       		.uleb128 0x19
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 42
+
+
+ 2080 00ab 49       		.uleb128 0x49
+ 2081 00ac 13       		.uleb128 0x13
+ 2082 00ad 11       		.uleb128 0x11
+ 2083 00ae 01       		.uleb128 0x1
+ 2084 00af 12       		.uleb128 0x12
+ 2085 00b0 06       		.uleb128 0x6
+ 2086 00b1 40       		.uleb128 0x40
+ 2087 00b2 18       		.uleb128 0x18
+ 2088 00b3 9642     		.uleb128 0x2116
+ 2089 00b5 19       		.uleb128 0x19
+ 2090 00b6 01       		.uleb128 0x1
+ 2091 00b7 13       		.uleb128 0x13
+ 2092 00b8 00       		.byte	0
+ 2093 00b9 00       		.byte	0
+ 2094 00ba 0D       		.uleb128 0xd
+ 2095 00bb 05       		.uleb128 0x5
+ 2096 00bc 00       		.byte	0
+ 2097 00bd 03       		.uleb128 0x3
+ 2098 00be 08       		.uleb128 0x8
+ 2099 00bf 3A       		.uleb128 0x3a
+ 2100 00c0 0B       		.uleb128 0xb
+ 2101 00c1 3B       		.uleb128 0x3b
+ 2102 00c2 0B       		.uleb128 0xb
+ 2103 00c3 49       		.uleb128 0x49
+ 2104 00c4 13       		.uleb128 0x13
+ 2105 00c5 02       		.uleb128 0x2
+ 2106 00c6 18       		.uleb128 0x18
+ 2107 00c7 00       		.byte	0
+ 2108 00c8 00       		.byte	0
+ 2109 00c9 0E       		.uleb128 0xe
+ 2110 00ca 2E       		.uleb128 0x2e
+ 2111 00cb 01       		.byte	0x1
+ 2112 00cc 03       		.uleb128 0x3
+ 2113 00cd 0E       		.uleb128 0xe
+ 2114 00ce 3A       		.uleb128 0x3a
+ 2115 00cf 0B       		.uleb128 0xb
+ 2116 00d0 3B       		.uleb128 0x3b
+ 2117 00d1 0B       		.uleb128 0xb
+ 2118 00d2 27       		.uleb128 0x27
+ 2119 00d3 19       		.uleb128 0x19
+ 2120 00d4 11       		.uleb128 0x11
+ 2121 00d5 01       		.uleb128 0x1
+ 2122 00d6 12       		.uleb128 0x12
+ 2123 00d7 06       		.uleb128 0x6
+ 2124 00d8 40       		.uleb128 0x40
+ 2125 00d9 18       		.uleb128 0x18
+ 2126 00da 9642     		.uleb128 0x2116
+ 2127 00dc 19       		.uleb128 0x19
+ 2128 00dd 01       		.uleb128 0x1
+ 2129 00de 13       		.uleb128 0x13
+ 2130 00df 00       		.byte	0
+ 2131 00e0 00       		.byte	0
+ 2132 00e1 0F       		.uleb128 0xf
+ 2133 00e2 05       		.uleb128 0x5
+ 2134 00e3 00       		.byte	0
+ 2135 00e4 03       		.uleb128 0x3
+ 2136 00e5 0E       		.uleb128 0xe
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 43
+
+
+ 2137 00e6 3A       		.uleb128 0x3a
+ 2138 00e7 0B       		.uleb128 0xb
+ 2139 00e8 3B       		.uleb128 0x3b
+ 2140 00e9 0B       		.uleb128 0xb
+ 2141 00ea 49       		.uleb128 0x49
+ 2142 00eb 13       		.uleb128 0x13
+ 2143 00ec 02       		.uleb128 0x2
+ 2144 00ed 18       		.uleb128 0x18
+ 2145 00ee 00       		.byte	0
+ 2146 00ef 00       		.byte	0
+ 2147 00f0 10       		.uleb128 0x10
+ 2148 00f1 0F       		.uleb128 0xf
+ 2149 00f2 00       		.byte	0
+ 2150 00f3 0B       		.uleb128 0xb
+ 2151 00f4 0B       		.uleb128 0xb
+ 2152 00f5 49       		.uleb128 0x49
+ 2153 00f6 13       		.uleb128 0x13
+ 2154 00f7 00       		.byte	0
+ 2155 00f8 00       		.byte	0
+ 2156 00f9 11       		.uleb128 0x11
+ 2157 00fa 2E       		.uleb128 0x2e
+ 2158 00fb 01       		.byte	0x1
+ 2159 00fc 3F       		.uleb128 0x3f
+ 2160 00fd 19       		.uleb128 0x19
+ 2161 00fe 03       		.uleb128 0x3
+ 2162 00ff 0E       		.uleb128 0xe
+ 2163 0100 3A       		.uleb128 0x3a
+ 2164 0101 0B       		.uleb128 0xb
+ 2165 0102 3B       		.uleb128 0x3b
+ 2166 0103 0B       		.uleb128 0xb
+ 2167 0104 27       		.uleb128 0x27
+ 2168 0105 19       		.uleb128 0x19
+ 2169 0106 49       		.uleb128 0x49
+ 2170 0107 13       		.uleb128 0x13
+ 2171 0108 11       		.uleb128 0x11
+ 2172 0109 01       		.uleb128 0x1
+ 2173 010a 12       		.uleb128 0x12
+ 2174 010b 06       		.uleb128 0x6
+ 2175 010c 40       		.uleb128 0x40
+ 2176 010d 18       		.uleb128 0x18
+ 2177 010e 9642     		.uleb128 0x2116
+ 2178 0110 19       		.uleb128 0x19
+ 2179 0111 01       		.uleb128 0x1
+ 2180 0112 13       		.uleb128 0x13
+ 2181 0113 00       		.byte	0
+ 2182 0114 00       		.byte	0
+ 2183 0115 12       		.uleb128 0x12
+ 2184 0116 0B       		.uleb128 0xb
+ 2185 0117 01       		.byte	0x1
+ 2186 0118 11       		.uleb128 0x11
+ 2187 0119 01       		.uleb128 0x1
+ 2188 011a 12       		.uleb128 0x12
+ 2189 011b 06       		.uleb128 0x6
+ 2190 011c 00       		.byte	0
+ 2191 011d 00       		.byte	0
+ 2192 011e 13       		.uleb128 0x13
+ 2193 011f 34       		.uleb128 0x34
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 44
+
+
+ 2194 0120 00       		.byte	0
+ 2195 0121 03       		.uleb128 0x3
+ 2196 0122 0E       		.uleb128 0xe
+ 2197 0123 3A       		.uleb128 0x3a
+ 2198 0124 0B       		.uleb128 0xb
+ 2199 0125 3B       		.uleb128 0x3b
+ 2200 0126 05       		.uleb128 0x5
+ 2201 0127 49       		.uleb128 0x49
+ 2202 0128 13       		.uleb128 0x13
+ 2203 0129 3F       		.uleb128 0x3f
+ 2204 012a 19       		.uleb128 0x19
+ 2205 012b 3C       		.uleb128 0x3c
+ 2206 012c 19       		.uleb128 0x19
+ 2207 012d 00       		.byte	0
+ 2208 012e 00       		.byte	0
+ 2209 012f 00       		.byte	0
+ 2210              		.section	.debug_aranges,"",%progbits
+ 2211 0000 44000000 		.4byte	0x44
+ 2212 0004 0200     		.2byte	0x2
+ 2213 0006 00000000 		.4byte	.Ldebug_info0
+ 2214 000a 04       		.byte	0x4
+ 2215 000b 00       		.byte	0
+ 2216 000c 0000     		.2byte	0
+ 2217 000e 0000     		.2byte	0
+ 2218 0010 00000000 		.4byte	.LFB64
+ 2219 0014 78010000 		.4byte	.LFE64-.LFB64
+ 2220 0018 00000000 		.4byte	.LFB65
+ 2221 001c 44000000 		.4byte	.LFE65-.LFB65
+ 2222 0020 00000000 		.4byte	.LFB66
+ 2223 0024 3C010000 		.4byte	.LFE66-.LFB66
+ 2224 0028 00000000 		.4byte	.LFB67
+ 2225 002c 3A000000 		.4byte	.LFE67-.LFB67
+ 2226 0030 00000000 		.4byte	.LFB68
+ 2227 0034 60020000 		.4byte	.LFE68-.LFB68
+ 2228 0038 00000000 		.4byte	.LFB69
+ 2229 003c D8010000 		.4byte	.LFE69-.LFB69
+ 2230 0040 00000000 		.4byte	0
+ 2231 0044 00000000 		.4byte	0
+ 2232              		.section	.debug_ranges,"",%progbits
+ 2233              	.Ldebug_ranges0:
+ 2234 0000 00000000 		.4byte	.LFB64
+ 2235 0004 78010000 		.4byte	.LFE64
+ 2236 0008 00000000 		.4byte	.LFB65
+ 2237 000c 44000000 		.4byte	.LFE65
+ 2238 0010 00000000 		.4byte	.LFB66
+ 2239 0014 3C010000 		.4byte	.LFE66
+ 2240 0018 00000000 		.4byte	.LFB67
+ 2241 001c 3A000000 		.4byte	.LFE67
+ 2242 0020 00000000 		.4byte	.LFB68
+ 2243 0024 60020000 		.4byte	.LFE68
+ 2244 0028 00000000 		.4byte	.LFB69
+ 2245 002c D8010000 		.4byte	.LFE69
+ 2246 0030 00000000 		.4byte	0
+ 2247 0034 00000000 		.4byte	0
+ 2248              		.section	.debug_line,"",%progbits
+ 2249              	.Ldebug_line0:
+ 2250 0000 8E030000 		.section	.debug_str,"MS",%progbits,1
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 45
+
+
+ 2250      02003F01 
+ 2250      00000201 
+ 2250      FB0E0D00 
+ 2250      01010101 
+ 2251              	.LASF37:
+ 2252 0000 76616C69 		.ascii	"valid\000"
+ 2252      6400
+ 2253              	.LASF55:
+ 2254 0006 6469725F 		.ascii	"dir_latched_side\000"
+ 2254      6C617463 
+ 2254      6865645F 
+ 2254      73696465 
+ 2254      00
+ 2255              	.LASF31:
+ 2256 0017 56345F70 		.ascii	"V4_pp\000"
+ 2256      7000
+ 2257              	.LASF2:
+ 2258 001d 73686F72 		.ascii	"short int\000"
+ 2258      7420696E 
+ 2258      7400
+ 2259              	.LASF21:
+ 2260 0027 73697A65 		.ascii	"sizetype\000"
+ 2260      74797065 
+ 2260      00
+ 2261              	.LASF56:
+ 2262 0030 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 2262      43313120 
+ 2262      352E342E 
+ 2262      31203230 
+ 2262      31363036 
+ 2263 0063 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 2263      20726576 
+ 2263      6973696F 
+ 2263      6E203233 
+ 2263      37373135 
+ 2264 0096 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 2264      66756E63 
+ 2264      74696F6E 
+ 2264      2D736563 
+ 2264      74696F6E 
+ 2265              	.LASF61:
+ 2266 00be 6D61696E 		.ascii	"main\000"
+ 2266      00
+ 2267              	.LASF4:
+ 2268 00c3 5F5F7569 		.ascii	"__uint16_t\000"
+ 2268      6E743136 
+ 2268      5F7400
+ 2269              	.LASF16:
+ 2270 00ce 696E7436 		.ascii	"int64_t\000"
+ 2270      345F7400 
+ 2271              	.LASF13:
+ 2272 00d6 75696E74 		.ascii	"uint8_t\000"
+ 2272      385F7400 
+ 2273              	.LASF25:
+ 2274 00de 72617732 		.ascii	"raw2\000"
+ 2274      00
+ 2275              	.LASF29:
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 46
+
+
+ 2276 00e3 646D6D5F 		.ascii	"dmm_abs\000"
+ 2276      61627300 
+ 2277              	.LASF32:
+ 2278 00eb 56355F70 		.ascii	"V5_pp\000"
+ 2278      7000
+ 2279              	.LASF17:
+ 2280 00f1 666C6F61 		.ascii	"float\000"
+ 2280      7400
+ 2281              	.LASF10:
+ 2282 00f7 6C6F6E67 		.ascii	"long long int\000"
+ 2282      206C6F6E 
+ 2282      6720696E 
+ 2282      7400
+ 2283              	.LASF19:
+ 2284 0105 63686172 		.ascii	"char\000"
+ 2284      00
+ 2285              	.LASF23:
+ 2286 010a 70695F74 		.ascii	"pi_t\000"
+ 2286      00
+ 2287              	.LASF7:
+ 2288 010f 6C6F6E67 		.ascii	"long int\000"
+ 2288      20696E74 
+ 2288      00
+ 2289              	.LASF9:
+ 2290 0118 5F5F696E 		.ascii	"__int64_t\000"
+ 2290      7436345F 
+ 2290      7400
+ 2291              	.LASF39:
+ 2292 0122 755F7261 		.ascii	"u_raw\000"
+ 2292      7700
+ 2293              	.LASF3:
+ 2294 0128 5F5F7569 		.ascii	"__uint8_t\000"
+ 2294      6E74385F 
+ 2294      7400
+ 2295              	.LASF45:
+ 2296 0132 73656E31 		.ascii	"sen1_on_line\000"
+ 2296      5F6F6E5F 
+ 2296      6C696E65 
+ 2296      00
+ 2297              	.LASF1:
+ 2298 013f 756E7369 		.ascii	"unsigned char\000"
+ 2298      676E6564 
+ 2298      20636861 
+ 2298      7200
+ 2299              	.LASF24:
+ 2300 014d 72617731 		.ascii	"raw1\000"
+ 2300      00
+ 2301              	.LASF20:
+ 2302 0152 6C6F6E67 		.ascii	"long double\000"
+ 2302      20646F75 
+ 2302      626C6500 
+ 2303              	.LASF46:
+ 2304 015e 73656E32 		.ascii	"sen2_on_line\000"
+ 2304      5F6F6E5F 
+ 2304      6C696E65 
+ 2304      00
+ 2305              	.LASF52:
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 47
+
+
+ 2306 016b 675F7374 		.ascii	"g_stop_now\000"
+ 2306      6F705F6E 
+ 2306      6F7700
+ 2307              	.LASF47:
+ 2308 0176 73656E33 		.ascii	"sen3_on_line\000"
+ 2308      5F6F6E5F 
+ 2308      6C696E65 
+ 2308      00
+ 2309              	.LASF0:
+ 2310 0183 7369676E 		.ascii	"signed char\000"
+ 2310      65642063 
+ 2310      68617200 
+ 2311              	.LASF15:
+ 2312 018f 696E7433 		.ascii	"int32_t\000"
+ 2312      325F7400 
+ 2313              	.LASF11:
+ 2314 0197 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 2314      206C6F6E 
+ 2314      6720756E 
+ 2314      7369676E 
+ 2314      65642069 
+ 2315              	.LASF48:
+ 2316 01ae 73656E34 		.ascii	"sen4_on_line\000"
+ 2316      5F6F6E5F 
+ 2316      6C696E65 
+ 2316      00
+ 2317              	.LASF12:
+ 2318 01bb 756E7369 		.ascii	"unsigned int\000"
+ 2318      676E6564 
+ 2318      20696E74 
+ 2318      00
+ 2319              	.LASF33:
+ 2320 01c8 56365F70 		.ascii	"V6_pp\000"
+ 2320      7000
+ 2321              	.LASF14:
+ 2322 01ce 75696E74 		.ascii	"uint16_t\000"
+ 2322      31365F74 
+ 2322      00
+ 2323              	.LASF49:
+ 2324 01d7 73656E35 		.ascii	"sen5_on_line\000"
+ 2324      5F6F6E5F 
+ 2324      6C696E65 
+ 2324      00
+ 2325              	.LASF35:
+ 2326 01e4 5F636C61 		.ascii	"_clampf\000"
+ 2326      6D706600 
+ 2327              	.LASF5:
+ 2328 01ec 73686F72 		.ascii	"short unsigned int\000"
+ 2328      7420756E 
+ 2328      7369676E 
+ 2328      65642069 
+ 2328      6E7400
+ 2329              	.LASF50:
+ 2330 01ff 73656E36 		.ascii	"sen6_on_line\000"
+ 2330      5F6F6E5F 
+ 2330      6C696E65 
+ 2330      00
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 48
+
+
+ 2331              	.LASF28:
+ 2332 020c 6E756D5F 		.ascii	"num_abs\000"
+ 2332      61627300 
+ 2333              	.LASF43:
+ 2334 0214 63656E74 		.ascii	"center_duty_est\000"
+ 2334      65725F64 
+ 2334      7574795F 
+ 2334      65737400 
+ 2335              	.LASF58:
+ 2336 0224 433A5C55 		.ascii	"C:\\Users\\yram171\\Downloads\\Yukyung CODE\\psoc_c"
+ 2336      73657273 
+ 2336      5C797261 
+ 2336      6D313731 
+ 2336      5C446F77 
+ 2337 0252 6F64655F 		.ascii	"ode_base\\CS301_Class.cydsn\000"
+ 2337      62617365 
+ 2337      5C435333 
+ 2337      30315F43 
+ 2337      6C617373 
+ 2338              	.LASF36:
+ 2339 026d 70695F73 		.ascii	"pi_step\000"
+ 2339      74657000 
+ 2340              	.LASF44:
+ 2341 0275 73746565 		.ascii	"steer\000"
+ 2341      7200
+ 2342              	.LASF42:
+ 2343 027b 5F426F6F 		.ascii	"_Bool\000"
+ 2343      6C00
+ 2344              	.LASF59:
+ 2345 0281 6973725F 		.ascii	"isr_qd_Handler\000"
+ 2345      71645F48 
+ 2345      616E646C 
+ 2345      657200
+ 2346              	.LASF30:
+ 2347 0290 646D6D5F 		.ascii	"dmm_signed\000"
+ 2347      7369676E 
+ 2347      656400
+ 2348              	.LASF54:
+ 2349 029b 6469725F 		.ascii	"dir_delay_ticks\000"
+ 2349      64656C61 
+ 2349      795F7469 
+ 2349      636B7300 
+ 2350              	.LASF38:
+ 2351 02ab 695F6E65 		.ascii	"i_next\000"
+ 2351      787400
+ 2352              	.LASF57:
+ 2353 02b2 6D61696E 		.ascii	"main.c\000"
+ 2353      2E6300
+ 2354              	.LASF8:
+ 2355 02b9 6C6F6E67 		.ascii	"long unsigned int\000"
+ 2355      20756E73 
+ 2355      69676E65 
+ 2355      6420696E 
+ 2355      7400
+ 2356              	.LASF27:
+ 2357 02cb 64617667 		.ascii	"davg_sign\000"
+ 2357      5F736967 
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccVUMar1.s 			page 49
+
+
+ 2357      6E00
+ 2358              	.LASF60:
+ 2359 02d5 6C696768 		.ascii	"light_sensors_update_and_maybe_request_turn\000"
+ 2359      745F7365 
+ 2359      6E736F72 
+ 2359      735F7570 
+ 2359      64617465 
+ 2360              	.LASF40:
+ 2361 0301 7361745F 		.ascii	"sat_hi\000"
+ 2361      686900
+ 2362              	.LASF22:
+ 2363 0308 745F6C6F 		.ascii	"t_loss\000"
+ 2363      737300
+ 2364              	.LASF6:
+ 2365 030f 5F5F696E 		.ascii	"__int32_t\000"
+ 2365      7433325F 
+ 2365      7400
+ 2366              	.LASF34:
+ 2367 0319 6E6F726D 		.ascii	"norm01_from_pp\000"
+ 2367      30315F66 
+ 2367      726F6D5F 
+ 2367      707000
+ 2368              	.LASF51:
+ 2369 0328 675F6469 		.ascii	"g_direction\000"
+ 2369      72656374 
+ 2369      696F6E00 
+ 2370              	.LASF41:
+ 2371 0334 7361745F 		.ascii	"sat_lo\000"
+ 2371      6C6F00
+ 2372              	.LASF18:
+ 2373 033b 646F7562 		.ascii	"double\000"
+ 2373      6C6500
+ 2374              	.LASF53:
+ 2375 0342 675F6469 		.ascii	"g_dist_mm\000"
+ 2375      73745F6D 
+ 2375      6D00
+ 2376              	.LASF62:
+ 2377 034c 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 2377      52784275 
+ 2377      66666572 
+ 2377      00
+ 2378              	.LASF26:
+ 2379 0359 64617667 		.ascii	"davg_abs\000"
+ 2379      5F616273 
+ 2379      00
+ 2380              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
