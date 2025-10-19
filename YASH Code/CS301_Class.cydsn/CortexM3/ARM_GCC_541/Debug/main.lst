@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cckUzBLk.s 			page 1
+=======
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 1
+>>>>>>> Stashed changes
 
 
    1              		.syntax unified
@@ -55,6 +59,12 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cckUzBLk.s 			page 1
   52              	.LFB64:
   53              		.file 1 "main.c"
    1:main.c        **** /* ========================= main.c (with PI steering + turn-call delay) =========================
+<<<<<<< Updated upstream
+=======
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 2
+
+
+>>>>>>> Stashed changes
    2:main.c        ****  * - Keeps straight-line PI active during a short delay after g_direction flips (Option A)
    3:main.c        ****  * - Then calls Directions_Handle(&g_direction) to run the maneuver
    4:main.c        ****  * - Resets PI integrator after the turn completes
@@ -103,6 +113,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cckUzBLk.s 			page 1
   44:main.c        **** #define DIR_CALL_DELAY_MS        (100)  /* wait ~200 ms before starting the maneuver */
   45:main.c        **** #define DIR_CALL_DELAY_TICKS     ((DIR_CALL_DELAY_MS + LOOP_DT_MS - 1) / LOOP_DT_MS)
   46:main.c        **** 
+<<<<<<< Updated upstream
   47:main.c        **** /* ===== Local sensor flags (used for S1/S2 edge) ===== */
   48:main.c        **** static uint8_t sen1_on_line=0, sen2_on_line=0, sen3_on_line=0;
   49:main.c        **** static uint8_t sen4_on_line=0, sen5_on_line=0, sen6_on_line=0;
@@ -479,6 +490,381 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cckUzBLk.s 			page 1
  357 004a 002B     		cmp	r3, #0
  358 004c 02D0     		beq	.L13
 ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cckUzBLk.s 			page 9
+=======
+  47:main.c        **** 
+  48:main.c        **** // Cooldown after turn to ignore intersection sensors V1 & V2
+  49:main.c        **** #define TURN_COOLDOWN_MS (400)
+  50:main.c        **** #define TURN_COOLDOWN_TICKS ((TURN_COOLDOWN_MS + LOOP_DT_MS - 1) / LOOP_DT_MS
+  51:main.c        **** 
+  52:main.c        **** 
+  53:main.c        **** 
+  54:main.c        **** /* ===== Local sensor flags (used for S1/S2 edge) ===== */
+  55:main.c        **** static uint8_t sen1_on_line=0, sen2_on_line=0, sen3_on_line=0;
+  56:main.c        **** static uint8_t sen4_on_line=0, sen5_on_line=0, sen6_on_line=0;
+  57:main.c        **** 
+  58:main.c        **** /* ===== Global state (kept) ===== */
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 3
+
+
+  59:main.c        **** static volatile uint8_t g_direction = 0;   /* 0=straight, 1=left, 2=right */
+  60:main.c        **** static volatile uint8_t g_stop_now  = 0;
+  61:main.c        **** static volatile int32_t g_dist_mm   = 0;
+  62:main.c        **** 
+  63:main.c        **** /* ===== Option A state ===== */
+  64:main.c        **** static uint16_t dir_delay_ticks = 0;        /* countdown in loop ticks */
+  65:main.c        **** static uint8_t  dir_latched_side = 0;       /* remembers 1 or 2 while waiting */
+  66:main.c        **** 
+  67:main.c        **** 
+  68:main.c        **** static uint16_t turn_cooldown_ticks = 0;
+  69:main.c        **** 
+  70:main.c        **** 
+  71:main.c        **** /* ------------------------------- 5 ms Timer ISR: accumulate distance (kept) ---------------------
+  72:main.c        **** CY_ISR(isr_qd_Handler)
+  73:main.c        **** {
+  57              		.loc 1 73 0
+  58              		.cfi_startproc
+  59              		@ args = 0, pretend = 0, frame = 72
+  60              		@ frame_needed = 1, uses_anonymous_args = 0
+  61 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+  62              		.cfi_def_cfa_offset 36
+  63              		.cfi_offset 4, -36
+  64              		.cfi_offset 5, -32
+  65              		.cfi_offset 6, -28
+  66              		.cfi_offset 7, -24
+  67              		.cfi_offset 8, -20
+  68              		.cfi_offset 9, -16
+  69              		.cfi_offset 10, -12
+  70              		.cfi_offset 11, -8
+  71              		.cfi_offset 14, -4
+  72 0004 93B0     		sub	sp, sp, #76
+  73              		.cfi_def_cfa_offset 112
+  74 0006 00AF     		add	r7, sp, #0
+  75              		.cfi_def_cfa_register 7
+  74:main.c        ****     int32_t raw1 = QuadDec_M1_GetCounter();  QuadDec_M1_SetCounter(0);
+  76              		.loc 1 74 0
+  77 0008 FFF7FEFF 		bl	QuadDec_M1_GetCounter
+  78 000c 0346     		mov	r3, r0
+  79 000e 7B64     		str	r3, [r7, #68]
+  80 0010 0020     		movs	r0, #0
+  81 0012 FFF7FEFF 		bl	QuadDec_M1_SetCounter
+  75:main.c        ****     int32_t raw2 = QuadDec_M2_GetCounter();  QuadDec_M2_SetCounter(0);
+  82              		.loc 1 75 0
+  83 0016 FFF7FEFF 		bl	QuadDec_M2_GetCounter
+  84 001a 0346     		mov	r3, r0
+  85 001c 3B64     		str	r3, [r7, #64]
+  86 001e 0020     		movs	r0, #0
+  87 0020 FFF7FEFF 		bl	QuadDec_M2_SetCounter
+  76:main.c        **** 
+  77:main.c        ****     int32_t d1 = raw1, d2 = raw2;
+  88              		.loc 1 77 0
+  89 0024 7B6C     		ldr	r3, [r7, #68]
+  90 0026 FB63     		str	r3, [r7, #60]
+  91 0028 3B6C     		ldr	r3, [r7, #64]
+  92 002a BB63     		str	r3, [r7, #56]
+  78:main.c        ****     int32_t a1 = (d1 >= 0) ? d1 : -d1;
+  93              		.loc 1 78 0
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 4
+
+
+  94 002c FB6B     		ldr	r3, [r7, #60]
+  95 002e 002B     		cmp	r3, #0
+  96 0030 B8BF     		it	lt
+  97 0032 5B42     		rsblt	r3, r3, #0
+  98 0034 7B63     		str	r3, [r7, #52]
+  79:main.c        ****     int32_t a2 = (d2 >= 0) ? d2 : -d2;
+  99              		.loc 1 79 0
+ 100 0036 BB6B     		ldr	r3, [r7, #56]
+ 101 0038 002B     		cmp	r3, #0
+ 102 003a B8BF     		it	lt
+ 103 003c 5B42     		rsblt	r3, r3, #0
+ 104 003e 3B63     		str	r3, [r7, #48]
+  80:main.c        ****     int32_t davg_abs  = (a1 + a2) / 2;
+ 105              		.loc 1 80 0
+ 106 0040 7A6B     		ldr	r2, [r7, #52]
+ 107 0042 3B6B     		ldr	r3, [r7, #48]
+ 108 0044 1344     		add	r3, r3, r2
+ 109 0046 DA0F     		lsrs	r2, r3, #31
+ 110 0048 1344     		add	r3, r3, r2
+ 111 004a 5B10     		asrs	r3, r3, #1
+ 112 004c FB62     		str	r3, [r7, #44]
+  81:main.c        ****     int32_t davg_sign = ((d1 + d2) >= 0) ? +1 : -1;
+ 113              		.loc 1 81 0
+ 114 004e FA6B     		ldr	r2, [r7, #60]
+ 115 0050 BB6B     		ldr	r3, [r7, #56]
+ 116 0052 1344     		add	r3, r3, r2
+ 117 0054 002B     		cmp	r3, #0
+ 118 0056 01DB     		blt	.L2
+ 119              		.loc 1 81 0 is_stmt 0 discriminator 1
+ 120 0058 0123     		movs	r3, #1
+ 121 005a 01E0     		b	.L3
+ 122              	.L2:
+ 123              		.loc 1 81 0 discriminator 2
+ 124 005c 4FF0FF33 		mov	r3, #-1
+ 125              	.L3:
+ 126              		.loc 1 81 0 discriminator 4
+ 127 0060 BB62     		str	r3, [r7, #40]
+  82:main.c        **** 
+  83:main.c        ****     int64_t num_abs = (int64_t)davg_abs * MM_PER_COUNT_X1000;
+ 128              		.loc 1 83 0 is_stmt 1 discriminator 4
+ 129 0062 FB6A     		ldr	r3, [r7, #44]
+ 130 0064 1946     		mov	r1, r3
+ 131 0066 4FEAE172 		asr	r2, r1, #31
+ 132 006a 0B46     		mov	r3, r1
+ 133 006c 1446     		mov	r4, r2
+ 134 006e DB18     		adds	r3, r3, r3
+ 135 0070 44EB0404 		adc	r4, r4, r4
+ 136 0074 5B18     		adds	r3, r3, r1
+ 137 0076 44EB0204 		adc	r4, r4, r2
+ 138 007a 4FEA8409 		lsl	r9, r4, #2
+ 139 007e 49EA9379 		orr	r9, r9, r3, lsr #30
+ 140 0082 4FEA8308 		lsl	r8, r3, #2
+ 141 0086 4346     		mov	r3, r8
+ 142 0088 4C46     		mov	r4, r9
+ 143 008a 5B18     		adds	r3, r3, r1
+ 144 008c 44EB0204 		adc	r4, r4, r2
+ 145 0090 4FEAC40B 		lsl	fp, r4, #3
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 5
+
+
+ 146 0094 4BEA537B 		orr	fp, fp, r3, lsr #29
+ 147 0098 4FEAC30A 		lsl	r10, r3, #3
+ 148 009c 13EB0A03 		adds	r3, r3, r10
+ 149 00a0 44EB0B04 		adc	r4, r4, fp
+ 150 00a4 E000     		lsls	r0, r4, #3
+ 151 00a6 7861     		str	r0, [r7, #20]
+ 152 00a8 7869     		ldr	r0, [r7, #20]
+ 153 00aa 40EA5370 		orr	r0, r0, r3, lsr #29
+ 154 00ae 7861     		str	r0, [r7, #20]
+ 155 00b0 DB00     		lsls	r3, r3, #3
+ 156 00b2 3B61     		str	r3, [r7, #16]
+ 157 00b4 D7E90434 		ldrd	r3, [r7, #16]
+ 158 00b8 5B18     		adds	r3, r3, r1
+ 159 00ba 44EB0204 		adc	r4, r4, r2
+ 160 00be C7E90834 		strd	r3, [r7, #32]
+  84:main.c        ****     int32_t dmm_abs = (int32_t)((num_abs + 500) / 1000);
+ 161              		.loc 1 84 0 discriminator 4
+ 162 00c2 D7E90834 		ldrd	r3, [r7, #32]
+ 163 00c6 13F5FA70 		adds	r0, r3, #500
+ 164 00ca 44F10001 		adc	r1, r4, #0
+ 165 00ce 4FF47A72 		mov	r2, #1000
+ 166 00d2 4FF00003 		mov	r3, #0
+ 167 00d6 FFF7FEFF 		bl	__aeabi_ldivmod
+ 168 00da 0346     		mov	r3, r0
+ 169 00dc 0C46     		mov	r4, r1
+ 170 00de FB61     		str	r3, [r7, #28]
+  85:main.c        ****     int32_t dmm_signed = APPLY_CALIB_DIST(dmm_abs) * davg_sign;
+ 171              		.loc 1 85 0 discriminator 4
+ 172 00e0 FB69     		ldr	r3, [r7, #28]
+ 173 00e2 1946     		mov	r1, r3
+ 174 00e4 4FEAE172 		asr	r2, r1, #31
+ 175 00e8 0B46     		mov	r3, r1
+ 176 00ea 1446     		mov	r4, r2
+ 177 00ec DB18     		adds	r3, r3, r3
+ 178 00ee 44EB0404 		adc	r4, r4, r4
+ 179 00f2 5B18     		adds	r3, r3, r1
+ 180 00f4 44EB0204 		adc	r4, r4, r2
+ 181 00f8 E000     		lsls	r0, r4, #3
+ 182 00fa F860     		str	r0, [r7, #12]
+ 183 00fc F868     		ldr	r0, [r7, #12]
+ 184 00fe 40EA5370 		orr	r0, r0, r3, lsr #29
+ 185 0102 F860     		str	r0, [r7, #12]
+ 186 0104 DB00     		lsls	r3, r3, #3
+ 187 0106 BB60     		str	r3, [r7, #8]
+ 188 0108 D7E90234 		ldrd	r3, [r7, #8]
+ 189 010c 5B18     		adds	r3, r3, r1
+ 190 010e 44EB0204 		adc	r4, r4, r2
+ 191 0112 2601     		lsls	r6, r4, #4
+ 192 0114 46EA1376 		orr	r6, r6, r3, lsr #28
+ 193 0118 1D01     		lsls	r5, r3, #4
+ 194 011a ED1A     		subs	r5, r5, r3
+ 195 011c 66EB0406 		sbc	r6, r6, r4
+ 196 0120 B300     		lsls	r3, r6, #2
+ 197 0122 7B60     		str	r3, [r7, #4]
+ 198 0124 7B68     		ldr	r3, [r7, #4]
+ 199 0126 43EA9573 		orr	r3, r3, r5, lsr #30
+ 200 012a 7B60     		str	r3, [r7, #4]
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 6
+
+
+ 201 012c AB00     		lsls	r3, r5, #2
+ 202 012e 3B60     		str	r3, [r7]
+ 203 0130 D7E90056 		ldrd	r5, [r7]
+ 204 0134 2B46     		mov	r3, r5
+ 205 0136 3446     		mov	r4, r6
+ 206 0138 13F5FA70 		adds	r0, r3, #500
+ 207 013c 44F10001 		adc	r1, r4, #0
+ 208 0140 4FF47A72 		mov	r2, #1000
+ 209 0144 4FF00003 		mov	r3, #0
+ 210 0148 FFF7FEFF 		bl	__aeabi_ldivmod
+ 211 014c 0346     		mov	r3, r0
+ 212 014e 0C46     		mov	r4, r1
+ 213 0150 1A46     		mov	r2, r3
+ 214 0152 BB6A     		ldr	r3, [r7, #40]
+ 215 0154 03FB02F3 		mul	r3, r3, r2
+ 216 0158 BB61     		str	r3, [r7, #24]
+  86:main.c        **** 
+  87:main.c        ****     g_dist_mm += dmm_signed;
+ 217              		.loc 1 87 0 discriminator 4
+ 218 015a 064B     		ldr	r3, .L4
+ 219 015c 1A68     		ldr	r2, [r3]
+ 220 015e BB69     		ldr	r3, [r7, #24]
+ 221 0160 1344     		add	r3, r3, r2
+ 222 0162 044A     		ldr	r2, .L4
+ 223 0164 1360     		str	r3, [r2]
+  88:main.c        ****     (void)Timer_QD_ReadStatusRegister();     // clear TC
+ 224              		.loc 1 88 0 discriminator 4
+ 225 0166 FFF7FEFF 		bl	Timer_QD_ReadStatusRegister
+  89:main.c        **** }
+ 226              		.loc 1 89 0 discriminator 4
+ 227 016a 00BF     		nop
+ 228 016c 4C37     		adds	r7, r7, #76
+ 229              		.cfi_def_cfa_offset 36
+ 230 016e BD46     		mov	sp, r7
+ 231              		.cfi_def_cfa_register 13
+ 232              		@ sp needed
+ 233 0170 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 234              	.L5:
+ 235              		.align	2
+ 236              	.L4:
+ 237 0174 08000000 		.word	g_dist_mm
+ 238              		.cfi_endproc
+ 239              	.LFE64:
+ 240              		.size	isr_qd_Handler, .-isr_qd_Handler
+ 241              		.global	__aeabi_i2f
+ 242              		.global	__aeabi_fdiv
+ 243              		.section	.text.norm01_from_pp,"ax",%progbits
+ 244              		.align	2
+ 245              		.thumb
+ 246              		.thumb_func
+ 247              		.type	norm01_from_pp, %function
+ 248              	norm01_from_pp:
+ 249              	.LFB65:
+  90:main.c        **** 
+  91:main.c        **** /* Utility: normalize peak-to-peak to [0..1] */
+  92:main.c        **** static inline float norm01_from_pp(uint16_t pp)
+  93:main.c        **** {
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 7
+
+
+ 250              		.loc 1 93 0
+ 251              		.cfi_startproc
+ 252              		@ args = 0, pretend = 0, frame = 8
+ 253              		@ frame_needed = 1, uses_anonymous_args = 0
+ 254 0000 80B5     		push	{r7, lr}
+ 255              		.cfi_def_cfa_offset 8
+ 256              		.cfi_offset 7, -8
+ 257              		.cfi_offset 14, -4
+ 258 0002 82B0     		sub	sp, sp, #8
+ 259              		.cfi_def_cfa_offset 16
+ 260 0004 00AF     		add	r7, sp, #0
+ 261              		.cfi_def_cfa_register 7
+ 262 0006 0346     		mov	r3, r0
+ 263 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+  94:main.c        ****     if (pp <= S_MINC_COUNTS) return 0.0f;
+ 264              		.loc 1 94 0
+ 265 000a FB88     		ldrh	r3, [r7, #6]
+ 266 000c 0A2B     		cmp	r3, #10
+ 267 000e 02D8     		bhi	.L7
+ 268              		.loc 1 94 0 is_stmt 0 discriminator 1
+ 269 0010 4FF00003 		mov	r3, #0
+ 270 0014 10E0     		b	.L8
+ 271              	.L7:
+  95:main.c        ****     if (pp >= S_MAXC_COUNTS) return 1.0f;
+ 272              		.loc 1 95 0 is_stmt 1
+ 273 0016 FB88     		ldrh	r3, [r7, #6]
+ 274 0018 632B     		cmp	r3, #99
+ 275 001a 02D9     		bls	.L9
+ 276              		.loc 1 95 0 is_stmt 0 discriminator 1
+ 277 001c 4FF07E53 		mov	r3, #1065353216
+ 278 0020 0AE0     		b	.L8
+ 279              	.L9:
+  96:main.c        ****     return (float)(pp - S_MINC_COUNTS) / (float)(S_MAXC_COUNTS - S_MINC_COUNTS);
+ 280              		.loc 1 96 0 is_stmt 1
+ 281 0022 FB88     		ldrh	r3, [r7, #6]
+ 282 0024 0A3B     		subs	r3, r3, #10
+ 283 0026 1846     		mov	r0, r3
+ 284 0028 FFF7FEFF 		bl	__aeabi_i2f
+ 285 002c 0346     		mov	r3, r0
+ 286 002e 0449     		ldr	r1, .L10
+ 287 0030 1846     		mov	r0, r3
+ 288 0032 FFF7FEFF 		bl	__aeabi_fdiv
+ 289 0036 0346     		mov	r3, r0
+ 290              	.L8:
+  97:main.c        **** }
+ 291              		.loc 1 97 0
+ 292 0038 1846     		mov	r0, r3
+ 293 003a 0837     		adds	r7, r7, #8
+ 294              		.cfi_def_cfa_offset 8
+ 295 003c BD46     		mov	sp, r7
+ 296              		.cfi_def_cfa_register 13
+ 297              		@ sp needed
+ 298 003e 80BD     		pop	{r7, pc}
+ 299              	.L11:
+ 300              		.align	2
+ 301              	.L10:
+ 302 0040 0000B442 		.word	1119092736
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 8
+
+
+ 303              		.cfi_endproc
+ 304              	.LFE65:
+ 305              		.size	norm01_from_pp, .-norm01_from_pp
+ 306              		.section	.text.light_sensors_update_and_maybe_request_turn,"ax",%progbits
+ 307              		.align	2
+ 308              		.thumb
+ 309              		.thumb_func
+ 310              		.type	light_sensors_update_and_maybe_request_turn, %function
+ 311              	light_sensors_update_and_maybe_request_turn:
+ 312              	.LFB66:
+  98:main.c        **** 
+  99:main.c        **** /* Read sensors and (maybe) request a turn based on S1 / S2 (kept) */
+ 100:main.c        **** static void light_sensors_update_and_maybe_request_turn(uint16_t* V4_pp, uint16_t* V5_pp, uint16_t*
+ 101:main.c        **** {
+ 313              		.loc 1 101 0
+ 314              		.cfi_startproc
+ 315              		@ args = 0, pretend = 0, frame = 32
+ 316              		@ frame_needed = 1, uses_anonymous_args = 0
+ 317 0000 80B5     		push	{r7, lr}
+ 318              		.cfi_def_cfa_offset 8
+ 319              		.cfi_offset 7, -8
+ 320              		.cfi_offset 14, -4
+ 321 0002 88B0     		sub	sp, sp, #32
+ 322              		.cfi_def_cfa_offset 40
+ 323 0004 00AF     		add	r7, sp, #0
+ 324              		.cfi_def_cfa_register 7
+ 325 0006 F860     		str	r0, [r7, #12]
+ 326 0008 B960     		str	r1, [r7, #8]
+ 327 000a 7A60     		str	r2, [r7, #4]
+ 102:main.c        ****     uint16_t V1 = Sensor_ComputePeakToPeak(0);
+ 328              		.loc 1 102 0
+ 329 000c 0020     		movs	r0, #0
+ 330 000e FFF7FEFF 		bl	Sensor_ComputePeakToPeak
+ 331 0012 0346     		mov	r3, r0
+ 332 0014 FB83     		strh	r3, [r7, #30]	@ movhi
+ 103:main.c        ****     uint16_t V2 = Sensor_ComputePeakToPeak(1);
+ 333              		.loc 1 103 0
+ 334 0016 0120     		movs	r0, #1
+ 335 0018 FFF7FEFF 		bl	Sensor_ComputePeakToPeak
+ 336 001c 0346     		mov	r3, r0
+ 337 001e BB83     		strh	r3, [r7, #28]	@ movhi
+ 104:main.c        ****     uint16_t V3 = Sensor_ComputePeakToPeak(2);
+ 338              		.loc 1 104 0
+ 339 0020 0220     		movs	r0, #2
+ 340 0022 FFF7FEFF 		bl	Sensor_ComputePeakToPeak
+ 341 0026 0346     		mov	r3, r0
+ 342 0028 7B83     		strh	r3, [r7, #26]	@ movhi
+ 105:main.c        ****     uint16_t V4 = Sensor_ComputePeakToPeak(3);
+ 343              		.loc 1 105 0
+ 344 002a 0320     		movs	r0, #3
+ 345 002c FFF7FEFF 		bl	Sensor_ComputePeakToPeak
+ 346 0030 0346     		mov	r3, r0
+ 347 0032 3B83     		strh	r3, [r7, #24]	@ movhi
+ 106:main.c        ****     uint16_t V5 = Sensor_ComputePeakToPeak(4);
+ 348              		.loc 1 106 0
+ 349 0034 0420     		movs	r0, #4
+ 350 0036 FFF7FEFF 		bl	Sensor_ComputePeakToPeak
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 9
+>>>>>>> Stashed changes
 
 
  359              		.loc 1 98 0 is_stmt 0 discriminator 1
@@ -628,6 +1014,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cckUzBLk.s 			page 1
  488 00ec 114B     		ldr	r3, .L31+20
  489 00ee 1A70     		strb	r2, [r3]
  108:main.c        **** 
+<<<<<<< Updated upstream
  109:main.c        ****     if (g_direction == 0u){
  490              		.loc 1 109 0 is_stmt 1 discriminator 6
  491 00f0 114B     		ldr	r3, .L31+24
@@ -2956,3 +3343,2558 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cckUzBLk.s 			page 1
  2403      5F616273 
  2403      00
  2404              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
+=======
+ 109:main.c        ****     if (V4_pp) *V4_pp = V4;
+ 358              		.loc 1 109 0
+ 359 0048 FB68     		ldr	r3, [r7, #12]
+ 360 004a 002B     		cmp	r3, #0
+ 361 004c 02D0     		beq	.L13
+ 362              		.loc 1 109 0 is_stmt 0 discriminator 1
+ 363 004e FB68     		ldr	r3, [r7, #12]
+ 364 0050 3A8B     		ldrh	r2, [r7, #24]	@ movhi
+ 365 0052 1A80     		strh	r2, [r3]	@ movhi
+ 366              	.L13:
+ 110:main.c        ****     if (V5_pp) *V5_pp = V5;
+ 367              		.loc 1 110 0 is_stmt 1
+ 368 0054 BB68     		ldr	r3, [r7, #8]
+ 369 0056 002B     		cmp	r3, #0
+ 370 0058 02D0     		beq	.L14
+ 371              		.loc 1 110 0 is_stmt 0 discriminator 1
+ 372 005a BB68     		ldr	r3, [r7, #8]
+ 373 005c FA8A     		ldrh	r2, [r7, #22]	@ movhi
+ 374 005e 1A80     		strh	r2, [r3]	@ movhi
+ 375              	.L14:
+ 111:main.c        ****     if (V6_pp) *V6_pp = V6;
+ 376              		.loc 1 111 0 is_stmt 1
+ 377 0060 7B68     		ldr	r3, [r7, #4]
+ 378 0062 002B     		cmp	r3, #0
+ 379 0064 02D0     		beq	.L15
+ 380              		.loc 1 111 0 is_stmt 0 discriminator 1
+ 381 0066 7B68     		ldr	r3, [r7, #4]
+ 382 0068 BA8A     		ldrh	r2, [r7, #20]	@ movhi
+ 383 006a 1A80     		strh	r2, [r3]	@ movhi
+ 384              	.L15:
+ 112:main.c        ****     
+ 113:main.c        ****     sen1_on_line = (V1 > 10 && V1 < 100) ? 1u : 0u;
+ 385              		.loc 1 113 0 is_stmt 1
+ 386 006c FB8B     		ldrh	r3, [r7, #30]
+ 387 006e 0A2B     		cmp	r3, #10
+ 388 0070 04D9     		bls	.L16
+ 389              		.loc 1 113 0 is_stmt 0 discriminator 1
+ 390 0072 FB8B     		ldrh	r3, [r7, #30]
+ 391 0074 632B     		cmp	r3, #99
+ 392 0076 01D8     		bhi	.L16
+ 393              		.loc 1 113 0 discriminator 3
+ 394 0078 0122     		movs	r2, #1
+ 395 007a 00E0     		b	.L17
+ 396              	.L16:
+ 397              		.loc 1 113 0 discriminator 4
+ 398 007c 0022     		movs	r2, #0
+ 399              	.L17:
+ 400              		.loc 1 113 0 discriminator 6
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 10
+
+
+ 401 007e 2A4B     		ldr	r3, .L31
+ 402 0080 1A70     		strb	r2, [r3]
+ 114:main.c        ****     sen2_on_line = (V2 > 10 && V2 < 100) ? 1u : 0u;
+ 403              		.loc 1 114 0 is_stmt 1 discriminator 6
+ 404 0082 BB8B     		ldrh	r3, [r7, #28]
+ 405 0084 0A2B     		cmp	r3, #10
+ 406 0086 04D9     		bls	.L18
+ 407              		.loc 1 114 0 is_stmt 0 discriminator 1
+ 408 0088 BB8B     		ldrh	r3, [r7, #28]
+ 409 008a 632B     		cmp	r3, #99
+ 410 008c 01D8     		bhi	.L18
+ 411              		.loc 1 114 0 discriminator 3
+ 412 008e 0122     		movs	r2, #1
+ 413 0090 00E0     		b	.L19
+ 414              	.L18:
+ 415              		.loc 1 114 0 discriminator 4
+ 416 0092 0022     		movs	r2, #0
+ 417              	.L19:
+ 418              		.loc 1 114 0 discriminator 6
+ 419 0094 254B     		ldr	r3, .L31+4
+ 420 0096 1A70     		strb	r2, [r3]
+ 115:main.c        ****     sen3_on_line = (V3 > 10 && V3 < 100) ? 1u : 0u;
+ 421              		.loc 1 115 0 is_stmt 1 discriminator 6
+ 422 0098 7B8B     		ldrh	r3, [r7, #26]
+ 423 009a 0A2B     		cmp	r3, #10
+ 424 009c 04D9     		bls	.L20
+ 425              		.loc 1 115 0 is_stmt 0 discriminator 1
+ 426 009e 7B8B     		ldrh	r3, [r7, #26]
+ 427 00a0 632B     		cmp	r3, #99
+ 428 00a2 01D8     		bhi	.L20
+ 429              		.loc 1 115 0 discriminator 3
+ 430 00a4 0122     		movs	r2, #1
+ 431 00a6 00E0     		b	.L21
+ 432              	.L20:
+ 433              		.loc 1 115 0 discriminator 4
+ 434 00a8 0022     		movs	r2, #0
+ 435              	.L21:
+ 436              		.loc 1 115 0 discriminator 6
+ 437 00aa 214B     		ldr	r3, .L31+8
+ 438 00ac 1A70     		strb	r2, [r3]
+ 116:main.c        ****     sen4_on_line = (V4 > 10 && V4 < 100) ? 1u : 0u;
+ 439              		.loc 1 116 0 is_stmt 1 discriminator 6
+ 440 00ae 3B8B     		ldrh	r3, [r7, #24]
+ 441 00b0 0A2B     		cmp	r3, #10
+ 442 00b2 04D9     		bls	.L22
+ 443              		.loc 1 116 0 is_stmt 0 discriminator 1
+ 444 00b4 3B8B     		ldrh	r3, [r7, #24]
+ 445 00b6 632B     		cmp	r3, #99
+ 446 00b8 01D8     		bhi	.L22
+ 447              		.loc 1 116 0 discriminator 3
+ 448 00ba 0122     		movs	r2, #1
+ 449 00bc 00E0     		b	.L23
+ 450              	.L22:
+ 451              		.loc 1 116 0 discriminator 4
+ 452 00be 0022     		movs	r2, #0
+ 453              	.L23:
+ 454              		.loc 1 116 0 discriminator 6
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 11
+
+
+ 455 00c0 1C4B     		ldr	r3, .L31+12
+ 456 00c2 1A70     		strb	r2, [r3]
+ 117:main.c        ****     sen5_on_line = (V5 > 10 && V5 < 100) ? 1u : 0u;
+ 457              		.loc 1 117 0 is_stmt 1 discriminator 6
+ 458 00c4 FB8A     		ldrh	r3, [r7, #22]
+ 459 00c6 0A2B     		cmp	r3, #10
+ 460 00c8 04D9     		bls	.L24
+ 461              		.loc 1 117 0 is_stmt 0 discriminator 1
+ 462 00ca FB8A     		ldrh	r3, [r7, #22]
+ 463 00cc 632B     		cmp	r3, #99
+ 464 00ce 01D8     		bhi	.L24
+ 465              		.loc 1 117 0 discriminator 3
+ 466 00d0 0122     		movs	r2, #1
+ 467 00d2 00E0     		b	.L25
+ 468              	.L24:
+ 469              		.loc 1 117 0 discriminator 4
+ 470 00d4 0022     		movs	r2, #0
+ 471              	.L25:
+ 472              		.loc 1 117 0 discriminator 6
+ 473 00d6 184B     		ldr	r3, .L31+16
+ 474 00d8 1A70     		strb	r2, [r3]
+ 118:main.c        ****     sen6_on_line = (V6 > 10 && V6 < 100) ? 1u : 0u;
+ 475              		.loc 1 118 0 is_stmt 1 discriminator 6
+ 476 00da BB8A     		ldrh	r3, [r7, #20]
+ 477 00dc 0A2B     		cmp	r3, #10
+ 478 00de 04D9     		bls	.L26
+ 479              		.loc 1 118 0 is_stmt 0 discriminator 1
+ 480 00e0 BB8A     		ldrh	r3, [r7, #20]
+ 481 00e2 632B     		cmp	r3, #99
+ 482 00e4 01D8     		bhi	.L26
+ 483              		.loc 1 118 0 discriminator 3
+ 484 00e6 0122     		movs	r2, #1
+ 485 00e8 00E0     		b	.L27
+ 486              	.L26:
+ 487              		.loc 1 118 0 discriminator 4
+ 488 00ea 0022     		movs	r2, #0
+ 489              	.L27:
+ 490              		.loc 1 118 0 discriminator 6
+ 491 00ec 134B     		ldr	r3, .L31+20
+ 492 00ee 1A70     		strb	r2, [r3]
+ 119:main.c        **** 
+ 120:main.c        ****     if (g_direction == 0u && turn_cooldown_ticks == 0u){
+ 493              		.loc 1 120 0 is_stmt 1 discriminator 6
+ 494 00f0 134B     		ldr	r3, .L31+24
+ 495 00f2 1B78     		ldrb	r3, [r3]
+ 496 00f4 DBB2     		uxtb	r3, r3
+ 497 00f6 002B     		cmp	r3, #0
+ 498 00f8 12D1     		bne	.L30
+ 499              		.loc 1 120 0 is_stmt 0 discriminator 1
+ 500 00fa 124B     		ldr	r3, .L31+28
+ 501 00fc 1B88     		ldrh	r3, [r3]
+ 502 00fe 002B     		cmp	r3, #0
+ 503 0100 0ED1     		bne	.L30
+ 121:main.c        ****         if (sen1_on_line){
+ 504              		.loc 1 121 0 is_stmt 1
+ 505 0102 094B     		ldr	r3, .L31
+ 506 0104 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 12
+
+
+ 507 0106 002B     		cmp	r3, #0
+ 508 0108 03D0     		beq	.L29
+ 122:main.c        ****             g_direction = 1;  // LEFT turn
+ 509              		.loc 1 122 0
+ 510 010a 0D4B     		ldr	r3, .L31+24
+ 511 010c 0122     		movs	r2, #1
+ 512 010e 1A70     		strb	r2, [r3]
+ 123:main.c        ****         } else if (sen2_on_line){
+ 124:main.c        ****             g_direction = 2;  // RIGHT turn
+ 125:main.c        ****         }
+ 126:main.c        ****     }
+ 127:main.c        **** }
+ 513              		.loc 1 127 0
+ 514 0110 06E0     		b	.L30
+ 515              	.L29:
+ 123:main.c        ****         } else if (sen2_on_line){
+ 516              		.loc 1 123 0
+ 517 0112 064B     		ldr	r3, .L31+4
+ 518 0114 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 519 0116 002B     		cmp	r3, #0
+ 520 0118 02D0     		beq	.L30
+ 124:main.c        ****         }
+ 521              		.loc 1 124 0
+ 522 011a 094B     		ldr	r3, .L31+24
+ 523 011c 0222     		movs	r2, #2
+ 524 011e 1A70     		strb	r2, [r3]
+ 525              	.L30:
+ 526              		.loc 1 127 0
+ 527 0120 00BF     		nop
+ 528 0122 2037     		adds	r7, r7, #32
+ 529              		.cfi_def_cfa_offset 8
+ 530 0124 BD46     		mov	sp, r7
+ 531              		.cfi_def_cfa_register 13
+ 532              		@ sp needed
+ 533 0126 80BD     		pop	{r7, pc}
+ 534              	.L32:
+ 535              		.align	2
+ 536              	.L31:
+ 537 0128 00000000 		.word	sen1_on_line
+ 538 012c 01000000 		.word	sen2_on_line
+ 539 0130 02000000 		.word	sen3_on_line
+ 540 0134 03000000 		.word	sen4_on_line
+ 541 0138 04000000 		.word	sen5_on_line
+ 542 013c 05000000 		.word	sen6_on_line
+ 543 0140 06000000 		.word	g_direction
+ 544 0144 10000000 		.word	turn_cooldown_ticks
+ 545              		.cfi_endproc
+ 546              	.LFE66:
+ 547              		.size	light_sensors_update_and_maybe_request_turn, .-light_sensors_update_and_maybe_request_turn
+ 548              		.global	__aeabi_fcmplt
+ 549              		.global	__aeabi_fcmpgt
+ 550              		.section	.text._clampf,"ax",%progbits
+ 551              		.align	2
+ 552              		.thumb
+ 553              		.thumb_func
+ 554              		.type	_clampf, %function
+ 555              	_clampf:
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 13
+
+
+ 556              	.LFB67:
+ 128:main.c        **** 
+ 129:main.c        **** /* ================= PI Controller (same as your current file) ================= */
+ 130:main.c        **** 
+ 131:main.c        **** #define STEER_MAX        18
+ 132:main.c        **** #define KP               14.5f
+ 133:main.c        **** #define KI               3.0f
+ 134:main.c        **** 
+ 135:main.c        **** #define STEER_MAX        13
+ 136:main.c        **** #define KP               18.0f
+ 137:main.c        **** #define KI               2.0f
+ 138:main.c        **** 
+ 139:main.c        **** #define INT_LIM          30.0f
+ 140:main.c        **** #define LOSS_TIMEOUT_T   0.25f
+ 141:main.c        **** 
+ 142:main.c        **** typedef struct { float i, u, t_loss; } pi_t;
+ 143:main.c        **** static inline float _clampf(float x, float lo, float hi){ return (x<lo?lo:(x>hi?hi:x)); }
+ 557              		.loc 1 143 0
+ 558              		.cfi_startproc
+ 559              		@ args = 0, pretend = 0, frame = 16
+ 560              		@ frame_needed = 1, uses_anonymous_args = 0
+ 561 0000 80B5     		push	{r7, lr}
+ 562              		.cfi_def_cfa_offset 8
+ 563              		.cfi_offset 7, -8
+ 564              		.cfi_offset 14, -4
+ 565 0002 84B0     		sub	sp, sp, #16
+ 566              		.cfi_def_cfa_offset 24
+ 567 0004 00AF     		add	r7, sp, #0
+ 568              		.cfi_def_cfa_register 7
+ 569 0006 F860     		str	r0, [r7, #12]	@ float
+ 570 0008 B960     		str	r1, [r7, #8]	@ float
+ 571 000a 7A60     		str	r2, [r7, #4]	@ float
+ 572              		.loc 1 143 0
+ 573 000c B968     		ldr	r1, [r7, #8]	@ float
+ 574 000e F868     		ldr	r0, [r7, #12]	@ float
+ 575 0010 FFF7FEFF 		bl	__aeabi_fcmplt
+ 576 0014 0346     		mov	r3, r0
+ 577 0016 002B     		cmp	r3, #0
+ 578 0018 01D0     		beq	.L43
+ 579              		.loc 1 143 0 is_stmt 0 discriminator 1
+ 580 001a BB68     		ldr	r3, [r7, #8]	@ float
+ 581 001c 09E0     		b	.L40
+ 582              	.L43:
+ 583              		.loc 1 143 0 discriminator 2
+ 584 001e 7968     		ldr	r1, [r7, #4]	@ float
+ 585 0020 F868     		ldr	r0, [r7, #12]	@ float
+ 586 0022 FFF7FEFF 		bl	__aeabi_fcmpgt
+ 587 0026 0346     		mov	r3, r0
+ 588 0028 002B     		cmp	r3, #0
+ 589 002a 01D0     		beq	.L44
+ 590              		.loc 1 143 0 discriminator 4
+ 591 002c 7B68     		ldr	r3, [r7, #4]	@ float
+ 592 002e 00E0     		b	.L40
+ 593              	.L44:
+ 594              		.loc 1 143 0 discriminator 5
+ 595 0030 FB68     		ldr	r3, [r7, #12]	@ float
+ 596              	.L40:
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 14
+
+
+ 597              		.loc 1 143 0 discriminator 9
+ 598 0032 1846     		mov	r0, r3
+ 599 0034 1037     		adds	r7, r7, #16
+ 600              		.cfi_def_cfa_offset 8
+ 601 0036 BD46     		mov	sp, r7
+ 602              		.cfi_def_cfa_register 13
+ 603              		@ sp needed
+ 604 0038 80BD     		pop	{r7, pc}
+ 605              		.cfi_endproc
+ 606              	.LFE67:
+ 607              		.size	_clampf, .-_clampf
+ 608              		.global	__aeabi_fadd
+ 609              		.global	__aeabi_fmul
+ 610              		.global	__aeabi_fsub
+ 611              		.global	__aeabi_fcmpge
+ 612              		.global	__aeabi_f2iz
+ 613              		.global	__aeabi_fcmple
+ 614 003a 00BF     		.section	.text.pi_step,"ax",%progbits
+ 615              		.align	2
+ 616              		.thumb
+ 617              		.thumb_func
+ 618              		.type	pi_step, %function
+ 619              	pi_step:
+ 620              	.LFB68:
+ 144:main.c        **** 
+ 145:main.c        **** static int pi_step(pi_t* pi, uint16_t V4_pp, uint16_t V5_pp, uint16_t V6_pp)
+ 146:main.c        **** {
+ 621              		.loc 1 146 0 is_stmt 1
+ 622              		.cfi_startproc
+ 623              		@ args = 0, pretend = 0, frame = 64
+ 624              		@ frame_needed = 1, uses_anonymous_args = 0
+ 625 0000 90B5     		push	{r4, r7, lr}
+ 626              		.cfi_def_cfa_offset 12
+ 627              		.cfi_offset 4, -12
+ 628              		.cfi_offset 7, -8
+ 629              		.cfi_offset 14, -4
+ 630 0002 91B0     		sub	sp, sp, #68
+ 631              		.cfi_def_cfa_offset 80
+ 632 0004 00AF     		add	r7, sp, #0
+ 633              		.cfi_def_cfa_register 7
+ 634 0006 F860     		str	r0, [r7, #12]
+ 635 0008 0846     		mov	r0, r1
+ 636 000a 1146     		mov	r1, r2
+ 637 000c 1A46     		mov	r2, r3
+ 638 000e 0346     		mov	r3, r0	@ movhi
+ 639 0010 7B81     		strh	r3, [r7, #10]	@ movhi
+ 640 0012 0B46     		mov	r3, r1	@ movhi
+ 641 0014 3B81     		strh	r3, [r7, #8]	@ movhi
+ 642 0016 1346     		mov	r3, r2	@ movhi
+ 643 0018 FB80     		strh	r3, [r7, #6]	@ movhi
+ 147:main.c        ****     float c4 = norm01_from_pp(V4_pp) * 2.0f;
+ 644              		.loc 1 147 0
+ 645 001a 7B89     		ldrh	r3, [r7, #10]
+ 646 001c 1846     		mov	r0, r3
+ 647 001e FFF7FEFF 		bl	norm01_from_pp
+ 648 0022 0346     		mov	r3, r0
+ 649 0024 1946     		mov	r1, r3
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 15
+
+
+ 650 0026 1846     		mov	r0, r3
+ 651 0028 FFF7FEFF 		bl	__aeabi_fadd
+ 652 002c 0346     		mov	r3, r0
+ 653 002e BB63     		str	r3, [r7, #56]	@ float
+ 148:main.c        ****     float c5 = norm01_from_pp(V5_pp) * 2.0f;
+ 654              		.loc 1 148 0
+ 655 0030 3B89     		ldrh	r3, [r7, #8]
+ 656 0032 1846     		mov	r0, r3
+ 657 0034 FFF7FEFF 		bl	norm01_from_pp
+ 658 0038 0346     		mov	r3, r0
+ 659 003a 1946     		mov	r1, r3
+ 660 003c 1846     		mov	r0, r3
+ 661 003e FFF7FEFF 		bl	__aeabi_fadd
+ 662 0042 0346     		mov	r3, r0
+ 663 0044 7B63     		str	r3, [r7, #52]	@ float
+ 149:main.c        ****     float c6 = norm01_from_pp(V6_pp) * 2.0f;
+ 664              		.loc 1 149 0
+ 665 0046 FB88     		ldrh	r3, [r7, #6]
+ 666 0048 1846     		mov	r0, r3
+ 667 004a FFF7FEFF 		bl	norm01_from_pp
+ 668 004e 0346     		mov	r3, r0
+ 669 0050 1946     		mov	r1, r3
+ 670 0052 1846     		mov	r0, r3
+ 671 0054 FFF7FEFF 		bl	__aeabi_fadd
+ 672 0058 0346     		mov	r3, r0
+ 673 005a 3B63     		str	r3, [r7, #48]	@ float
+ 150:main.c        ****     float sum = c4 + c5 + c6;
+ 674              		.loc 1 150 0
+ 675 005c 796B     		ldr	r1, [r7, #52]	@ float
+ 676 005e B86B     		ldr	r0, [r7, #56]	@ float
+ 677 0060 FFF7FEFF 		bl	__aeabi_fadd
+ 678 0064 0346     		mov	r3, r0
+ 679 0066 396B     		ldr	r1, [r7, #48]	@ float
+ 680 0068 1846     		mov	r0, r3
+ 681 006a FFF7FEFF 		bl	__aeabi_fadd
+ 682 006e 0346     		mov	r3, r0
+ 683 0070 FB62     		str	r3, [r7, #44]	@ float
+ 151:main.c        ****     bool valid = (sum > 0.08f);
+ 684              		.loc 1 151 0
+ 685 0072 0123     		movs	r3, #1
+ 686 0074 1C46     		mov	r4, r3
+ 687 0076 7949     		ldr	r1, .L65
+ 688 0078 F86A     		ldr	r0, [r7, #44]	@ float
+ 689 007a FFF7FEFF 		bl	__aeabi_fcmpgt
+ 690 007e 0346     		mov	r3, r0
+ 691 0080 002B     		cmp	r3, #0
+ 692 0082 01D1     		bne	.L46
+ 693 0084 0023     		movs	r3, #0
+ 694 0086 1C46     		mov	r4, r3
+ 695              	.L46:
+ 696 0088 87F82B40 		strb	r4, [r7, #43]
+ 152:main.c        **** 
+ 153:main.c        ****     float pos = 0.0f;
+ 697              		.loc 1 153 0
+ 698 008c 4FF00003 		mov	r3, #0
+ 699 0090 FB63     		str	r3, [r7, #60]	@ float
+ 154:main.c        ****     if (valid) pos = (-1.0f * c4 + 0.0f * c5 + 1.0f * c6) / sum;
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 16
+
+
+ 700              		.loc 1 154 0
+ 701 0092 97F82B30 		ldrb	r3, [r7, #43]	@ zero_extendqisi2
+ 702 0096 002B     		cmp	r3, #0
+ 703 0098 15D0     		beq	.L47
+ 704              		.loc 1 154 0 is_stmt 0 discriminator 1
+ 705 009a 4FF00001 		mov	r1, #0
+ 706 009e 786B     		ldr	r0, [r7, #52]	@ float
+ 707 00a0 FFF7FEFF 		bl	__aeabi_fmul
+ 708 00a4 0346     		mov	r3, r0
+ 709 00a6 B96B     		ldr	r1, [r7, #56]	@ float
+ 710 00a8 1846     		mov	r0, r3
+ 711 00aa FFF7FEFF 		bl	__aeabi_fsub
+ 712 00ae 0346     		mov	r3, r0
+ 713 00b0 396B     		ldr	r1, [r7, #48]	@ float
+ 714 00b2 1846     		mov	r0, r3
+ 715 00b4 FFF7FEFF 		bl	__aeabi_fadd
+ 716 00b8 0346     		mov	r3, r0
+ 717 00ba F96A     		ldr	r1, [r7, #44]	@ float
+ 718 00bc 1846     		mov	r0, r3
+ 719 00be FFF7FEFF 		bl	__aeabi_fdiv
+ 720 00c2 0346     		mov	r3, r0
+ 721 00c4 FB63     		str	r3, [r7, #60]	@ float
+ 722              	.L47:
+ 155:main.c        **** 
+ 156:main.c        ****     float e = pos;
+ 723              		.loc 1 156 0 is_stmt 1
+ 724 00c6 FB6B     		ldr	r3, [r7, #60]	@ float
+ 725 00c8 7B62     		str	r3, [r7, #36]	@ float
+ 157:main.c        **** 
+ 158:main.c        ****     if (!valid) {
+ 726              		.loc 1 158 0
+ 727 00ca 97F82B30 		ldrb	r3, [r7, #43]
+ 728 00ce 83F00103 		eor	r3, r3, #1
+ 729 00d2 DBB2     		uxtb	r3, r3
+ 730 00d4 002B     		cmp	r3, #0
+ 731 00d6 2AD0     		beq	.L48
+ 159:main.c        ****         pi->t_loss += DT_S;
+ 732              		.loc 1 159 0
+ 733 00d8 FB68     		ldr	r3, [r7, #12]
+ 734 00da 9B68     		ldr	r3, [r3, #8]	@ float
+ 735 00dc 6049     		ldr	r1, .L65+4
+ 736 00de 1846     		mov	r0, r3
+ 737 00e0 FFF7FEFF 		bl	__aeabi_fadd
+ 738 00e4 0346     		mov	r3, r0
+ 739 00e6 1A46     		mov	r2, r3
+ 740 00e8 FB68     		ldr	r3, [r7, #12]
+ 741 00ea 9A60     		str	r2, [r3, #8]	@ float
+ 160:main.c        ****         if (pi->t_loss >= LOSS_TIMEOUT_T) pi->i *= 0.92f;
+ 742              		.loc 1 160 0
+ 743 00ec FB68     		ldr	r3, [r7, #12]
+ 744 00ee 9B68     		ldr	r3, [r3, #8]	@ float
+ 745 00f0 4FF07A51 		mov	r1, #1048576000
+ 746 00f4 1846     		mov	r0, r3
+ 747 00f6 FFF7FEFF 		bl	__aeabi_fcmpge
+ 748 00fa 0346     		mov	r3, r0
+ 749 00fc 002B     		cmp	r3, #0
+ 750 00fe 09D0     		beq	.L49
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 17
+
+
+ 751              		.loc 1 160 0 is_stmt 0 discriminator 1
+ 752 0100 FB68     		ldr	r3, [r7, #12]
+ 753 0102 1B68     		ldr	r3, [r3]	@ float
+ 754 0104 5749     		ldr	r1, .L65+8
+ 755 0106 1846     		mov	r0, r3
+ 756 0108 FFF7FEFF 		bl	__aeabi_fmul
+ 757 010c 0346     		mov	r3, r0
+ 758 010e 1A46     		mov	r2, r3
+ 759 0110 FB68     		ldr	r3, [r7, #12]
+ 760 0112 1A60     		str	r2, [r3]	@ float
+ 761              	.L49:
+ 161:main.c        ****         return (int)_clampf(pi->u, -(float)STEER_MAX, (float)STEER_MAX);
+ 762              		.loc 1 161 0 is_stmt 1
+ 763 0114 FB68     		ldr	r3, [r7, #12]
+ 764 0116 5B68     		ldr	r3, [r3, #4]	@ float
+ 765 0118 534A     		ldr	r2, .L65+12
+ 766 011a 5449     		ldr	r1, .L65+16
+ 767 011c 1846     		mov	r0, r3
+ 768 011e FFF7FEFF 		bl	_clampf
+ 769 0122 0346     		mov	r3, r0
+ 770 0124 1846     		mov	r0, r3
+ 771 0126 FFF7FEFF 		bl	__aeabi_f2iz
+ 772 012a 0346     		mov	r3, r0
+ 773 012c 91E0     		b	.L51
+ 774              	.L48:
+ 162:main.c        ****     }
+ 163:main.c        ****     pi->t_loss = 0.0f;
+ 775              		.loc 1 163 0
+ 776 012e FB68     		ldr	r3, [r7, #12]
+ 777 0130 4FF00002 		mov	r2, #0
+ 778 0134 9A60     		str	r2, [r3, #8]	@ float
+ 164:main.c        **** 
+ 165:main.c        ****     float i_next = _clampf(pi->i + e * DT_S, -INT_LIM, +INT_LIM);
+ 779              		.loc 1 165 0
+ 780 0136 FB68     		ldr	r3, [r7, #12]
+ 781 0138 1C68     		ldr	r4, [r3]	@ float
+ 782 013a 4949     		ldr	r1, .L65+4
+ 783 013c 786A     		ldr	r0, [r7, #36]	@ float
+ 784 013e FFF7FEFF 		bl	__aeabi_fmul
+ 785 0142 0346     		mov	r3, r0
+ 786 0144 1946     		mov	r1, r3
+ 787 0146 2046     		mov	r0, r4
+ 788 0148 FFF7FEFF 		bl	__aeabi_fadd
+ 789 014c 0346     		mov	r3, r0
+ 790 014e 484A     		ldr	r2, .L65+20
+ 791 0150 4849     		ldr	r1, .L65+24
+ 792 0152 1846     		mov	r0, r3
+ 793 0154 FFF7FEFF 		bl	_clampf
+ 794 0158 3862     		str	r0, [r7, #32]	@ float
+ 166:main.c        ****     float u_raw  = KP * e + KI * i_next;
+ 795              		.loc 1 166 0
+ 796 015a 4749     		ldr	r1, .L65+28
+ 797 015c 786A     		ldr	r0, [r7, #36]	@ float
+ 798 015e FFF7FEFF 		bl	__aeabi_fmul
+ 799 0162 0346     		mov	r3, r0
+ 800 0164 1C46     		mov	r4, r3
+ 801 0166 3B6A     		ldr	r3, [r7, #32]	@ float
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 18
+
+
+ 802 0168 1946     		mov	r1, r3
+ 803 016a 1846     		mov	r0, r3
+ 804 016c FFF7FEFF 		bl	__aeabi_fadd
+ 805 0170 0346     		mov	r3, r0
+ 806 0172 1946     		mov	r1, r3
+ 807 0174 2046     		mov	r0, r4
+ 808 0176 FFF7FEFF 		bl	__aeabi_fadd
+ 809 017a 0346     		mov	r3, r0
+ 810 017c FB61     		str	r3, [r7, #28]	@ float
+ 167:main.c        ****     float u      = _clampf(u_raw, -(float)STEER_MAX, (float)STEER_MAX);
+ 811              		.loc 1 167 0
+ 812 017e 3A4A     		ldr	r2, .L65+12
+ 813 0180 3A49     		ldr	r1, .L65+16
+ 814 0182 F869     		ldr	r0, [r7, #28]	@ float
+ 815 0184 FFF7FEFF 		bl	_clampf
+ 816 0188 B861     		str	r0, [r7, #24]	@ float
+ 168:main.c        **** 
+ 169:main.c        ****     bool sat_hi = (u >=  (float)STEER_MAX - 1e-3f);
+ 817              		.loc 1 169 0
+ 818 018a 0123     		movs	r3, #1
+ 819 018c 1C46     		mov	r4, r3
+ 820 018e 3B49     		ldr	r1, .L65+32
+ 821 0190 B869     		ldr	r0, [r7, #24]	@ float
+ 822 0192 FFF7FEFF 		bl	__aeabi_fcmpge
+ 823 0196 0346     		mov	r3, r0
+ 824 0198 002B     		cmp	r3, #0
+ 825 019a 01D1     		bne	.L52
+ 826 019c 0023     		movs	r3, #0
+ 827 019e 1C46     		mov	r4, r3
+ 828              	.L52:
+ 829 01a0 FC75     		strb	r4, [r7, #23]
+ 170:main.c        ****     bool sat_lo = (u <= -(float)STEER_MAX + 1e-3f);
+ 830              		.loc 1 170 0
+ 831 01a2 0123     		movs	r3, #1
+ 832 01a4 1C46     		mov	r4, r3
+ 833 01a6 3649     		ldr	r1, .L65+36
+ 834 01a8 B869     		ldr	r0, [r7, #24]	@ float
+ 835 01aa FFF7FEFF 		bl	__aeabi_fcmple
+ 836 01ae 0346     		mov	r3, r0
+ 837 01b0 002B     		cmp	r3, #0
+ 838 01b2 01D1     		bne	.L53
+ 839 01b4 0023     		movs	r3, #0
+ 840 01b6 1C46     		mov	r4, r3
+ 841              	.L53:
+ 842 01b8 BC75     		strb	r4, [r7, #22]
+ 171:main.c        **** 
+ 172:main.c        ****     if ((sat_hi && (KI * i_next > KI * pi->i)) ||
+ 843              		.loc 1 172 0
+ 844 01ba FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 845 01bc 002B     		cmp	r3, #0
+ 846 01be 14D0     		beq	.L54
+ 847              		.loc 1 172 0 is_stmt 0 discriminator 1
+ 848 01c0 3B6A     		ldr	r3, [r7, #32]	@ float
+ 849 01c2 1946     		mov	r1, r3
+ 850 01c4 1846     		mov	r0, r3
+ 851 01c6 FFF7FEFF 		bl	__aeabi_fadd
+ 852 01ca 0346     		mov	r3, r0
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 19
+
+
+ 853 01cc 1C46     		mov	r4, r3
+ 854 01ce FB68     		ldr	r3, [r7, #12]
+ 855 01d0 1B68     		ldr	r3, [r3]	@ float
+ 856 01d2 1946     		mov	r1, r3
+ 857 01d4 1846     		mov	r0, r3
+ 858 01d6 FFF7FEFF 		bl	__aeabi_fadd
+ 859 01da 0346     		mov	r3, r0
+ 860 01dc 1946     		mov	r1, r3
+ 861 01de 2046     		mov	r0, r4
+ 862 01e0 FFF7FEFF 		bl	__aeabi_fcmpgt
+ 863 01e4 0346     		mov	r3, r0
+ 864 01e6 002B     		cmp	r3, #0
+ 865 01e8 1AD1     		bne	.L56
+ 866              	.L54:
+ 867              		.loc 1 172 0 discriminator 3
+ 868 01ea BB7D     		ldrb	r3, [r7, #22]	@ zero_extendqisi2
+ 869 01ec 002B     		cmp	r3, #0
+ 870 01ee 14D0     		beq	.L57
+ 173:main.c        ****         (sat_lo && (KI * i_next < KI * pi->i))) {
+ 871              		.loc 1 173 0 is_stmt 1
+ 872 01f0 3B6A     		ldr	r3, [r7, #32]	@ float
+ 873 01f2 1946     		mov	r1, r3
+ 874 01f4 1846     		mov	r0, r3
+ 875 01f6 FFF7FEFF 		bl	__aeabi_fadd
+ 876 01fa 0346     		mov	r3, r0
+ 877 01fc 1C46     		mov	r4, r3
+ 878 01fe FB68     		ldr	r3, [r7, #12]
+ 879 0200 1B68     		ldr	r3, [r3]	@ float
+ 880 0202 1946     		mov	r1, r3
+ 881 0204 1846     		mov	r0, r3
+ 882 0206 FFF7FEFF 		bl	__aeabi_fadd
+ 883 020a 0346     		mov	r3, r0
+ 884 020c 1946     		mov	r1, r3
+ 885 020e 2046     		mov	r0, r4
+ 886 0210 FFF7FEFF 		bl	__aeabi_fcmplt
+ 887 0214 0346     		mov	r3, r0
+ 888 0216 002B     		cmp	r3, #0
+ 889 0218 02D1     		bne	.L56
+ 890              	.L57:
+ 174:main.c        ****         /* don’t integrate further into saturation */
+ 175:main.c        ****     } else {
+ 176:main.c        ****         pi->i = i_next;
+ 891              		.loc 1 176 0
+ 892 021a FB68     		ldr	r3, [r7, #12]
+ 893 021c 3A6A     		ldr	r2, [r7, #32]	@ float
+ 894 021e 1A60     		str	r2, [r3]	@ float
+ 895              	.L56:
+ 177:main.c        ****     }
+ 178:main.c        **** 
+ 179:main.c        ****     pi->u = u;
+ 896              		.loc 1 179 0
+ 897 0220 FB68     		ldr	r3, [r7, #12]
+ 898 0222 BA69     		ldr	r2, [r7, #24]	@ float
+ 899 0224 5A60     		str	r2, [r3, #4]	@ float
+ 180:main.c        ****     return (int)(u + (u>=0?0.5f:-0.5f));
+ 900              		.loc 1 180 0
+ 901 0226 4FF00001 		mov	r1, #0
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 20
+
+
+ 902 022a B869     		ldr	r0, [r7, #24]	@ float
+ 903 022c FFF7FEFF 		bl	__aeabi_fcmpge
+ 904 0230 0346     		mov	r3, r0
+ 905 0232 002B     		cmp	r3, #0
+ 906 0234 02D0     		beq	.L64
+ 907              		.loc 1 180 0 is_stmt 0 discriminator 1
+ 908 0236 4FF07C53 		mov	r3, #1056964608
+ 909 023a 01E0     		b	.L61
+ 910              	.L64:
+ 911              		.loc 1 180 0 discriminator 2
+ 912 023c 4FF03F43 		mov	r3, #-1090519040
+ 913              	.L61:
+ 914              		.loc 1 180 0 discriminator 4
+ 915 0240 B969     		ldr	r1, [r7, #24]	@ float
+ 916 0242 1846     		mov	r0, r3
+ 917 0244 FFF7FEFF 		bl	__aeabi_fadd
+ 918 0248 0346     		mov	r3, r0
+ 919 024a 1846     		mov	r0, r3
+ 920 024c FFF7FEFF 		bl	__aeabi_f2iz
+ 921 0250 0346     		mov	r3, r0
+ 922              	.L51:
+ 181:main.c        **** }
+ 923              		.loc 1 181 0 is_stmt 1
+ 924 0252 1846     		mov	r0, r3
+ 925 0254 4437     		adds	r7, r7, #68
+ 926              		.cfi_def_cfa_offset 12
+ 927 0256 BD46     		mov	sp, r7
+ 928              		.cfi_def_cfa_register 13
+ 929              		@ sp needed
+ 930 0258 90BD     		pop	{r4, r7, pc}
+ 931              	.L66:
+ 932 025a 00BF     		.align	2
+ 933              	.L65:
+ 934 025c 0AD7A33D 		.word	1034147594
+ 935 0260 6F12033C 		.word	1006834287
+ 936 0264 1F856B3F 		.word	1064011039
+ 937 0268 00005041 		.word	1095761920
+ 938 026c 000050C1 		.word	-1051721728
+ 939 0270 0000F041 		.word	1106247680
+ 940 0274 0000F0C1 		.word	-1041235968
+ 941 0278 00009041 		.word	1099956224
+ 942 027c E7FB4F41 		.word	1095760871
+ 943 0280 E7FB4FC1 		.word	-1051722777
+ 944              		.cfi_endproc
+ 945              	.LFE68:
+ 946              		.size	pi_step, .-pi_step
+ 947              		.section	.text.main,"ax",%progbits
+ 948              		.align	2
+ 949              		.global	main
+ 950              		.thumb
+ 951              		.thumb_func
+ 952              		.type	main, %function
+ 953              	main:
+ 954              	.LFB69:
+ 182:main.c        **** 
+ 183:main.c        **** int main(void)
+ 184:main.c        **** {
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 21
+
+
+ 955              		.loc 1 184 0
+ 956              		.cfi_startproc
+ 957              		@ args = 0, pretend = 0, frame = 32
+ 958              		@ frame_needed = 1, uses_anonymous_args = 0
+ 959 0000 80B5     		push	{r7, lr}
+ 960              		.cfi_def_cfa_offset 8
+ 961              		.cfi_offset 7, -8
+ 962              		.cfi_offset 14, -4
+ 963 0002 88B0     		sub	sp, sp, #32
+ 964              		.cfi_def_cfa_offset 40
+ 965 0004 00AF     		add	r7, sp, #0
+ 966              		.cfi_def_cfa_register 7
+ 185:main.c        ****     motor_enable(1u, 1u);
+ 967              		.loc 1 185 0
+ 968 0006 0121     		movs	r1, #1
+ 969 0008 0120     		movs	r0, #1
+ 970 000a FFF7FEFF 		bl	motor_enable
+ 186:main.c        ****     CyGlobalIntEnable;
+ 971              		.loc 1 186 0
+ 972              		.syntax unified
+ 973              	@ 186 "main.c" 1
+ 974 000e 62B6     		CPSIE   i
+ 975              	@ 0 "" 2
+ 187:main.c        **** 
+ 188:main.c        ****     /* ADC for sensors */
+ 189:main.c        ****     ADC_Start();
+ 976              		.loc 1 189 0
+ 977              		.thumb
+ 978              		.syntax unified
+ 979 0010 FFF7FEFF 		bl	ADC_Start
+ 190:main.c        ****     CyDelay(10);
+ 980              		.loc 1 190 0
+ 981 0014 0A20     		movs	r0, #10
+ 982 0016 FFF7FEFF 		bl	CyDelay
+ 191:main.c        **** 
+ 192:main.c        ****     /* Encoders + 5 ms tick (distance only) */
+ 193:main.c        ****     Clock_QENC_Start();
+ 983              		.loc 1 193 0
+ 984 001a FFF7FEFF 		bl	Clock_QENC_Start
+ 194:main.c        ****     QuadDec_M1_Start(); QuadDec_M2_Start();
+ 985              		.loc 1 194 0
+ 986 001e FFF7FEFF 		bl	QuadDec_M1_Start
+ 987 0022 FFF7FEFF 		bl	QuadDec_M2_Start
+ 195:main.c        ****     QuadDec_M1_SetCounter(0); QuadDec_M2_SetCounter(0);
+ 988              		.loc 1 195 0
+ 989 0026 0020     		movs	r0, #0
+ 990 0028 FFF7FEFF 		bl	QuadDec_M1_SetCounter
+ 991 002c 0020     		movs	r0, #0
+ 992 002e FFF7FEFF 		bl	QuadDec_M2_SetCounter
+ 196:main.c        ****     Clock_QD_Start();
+ 993              		.loc 1 196 0
+ 994 0032 FFF7FEFF 		bl	Clock_QD_Start
+ 197:main.c        ****     Timer_QD_Start();                  // 5 ms period in TopDesign
+ 995              		.loc 1 197 0
+ 996 0036 FFF7FEFF 		bl	Timer_QD_Start
+ 198:main.c        ****     isr_qd_StartEx(isr_qd_Handler);
+ 997              		.loc 1 198 0
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 22
+
+
+ 998 003a 6D48     		ldr	r0, .L84
+ 999 003c FFF7FEFF 		bl	isr_qd_StartEx
+ 199:main.c        **** 
+ 200:main.c        ****     /* PWM & motor driver */
+ 201:main.c        ****     Clock_PWM_Start();
+ 1000              		.loc 1 201 0
+ 1001 0040 FFF7FEFF 		bl	Clock_PWM_Start
+ 202:main.c        ****     PWM_1_Start(); PWM_2_Start();
+ 1002              		.loc 1 202 0
+ 1003 0044 FFF7FEFF 		bl	PWM_1_Start
+ 1004 0048 FFF7FEFF 		bl	PWM_2_Start
+ 203:main.c        ****     PWM_1_WritePeriod(PWM_PERIOD);
+ 1005              		.loc 1 203 0
+ 1006 004c C820     		movs	r0, #200
+ 1007 004e FFF7FEFF 		bl	PWM_1_WritePeriod
+ 204:main.c        ****     PWM_2_WritePeriod(PWM_PERIOD);
+ 1008              		.loc 1 204 0
+ 1009 0052 C820     		movs	r0, #200
+ 1010 0054 FFF7FEFF 		bl	PWM_2_WritePeriod
+ 205:main.c        ****     set_motors_symmetric(0);
+ 1011              		.loc 1 205 0
+ 1012 0058 0020     		movs	r0, #0
+ 1013 005a FFF7FEFF 		bl	set_motors_symmetric
+ 206:main.c        ****     motor_enable(0u, 0u);
+ 1014              		.loc 1 206 0
+ 1015 005e 0021     		movs	r1, #0
+ 1016 0060 0020     		movs	r0, #0
+ 1017 0062 FFF7FEFF 		bl	motor_enable
+ 207:main.c        **** 
+ 208:main.c        ****     /* Directions module */
+ 209:main.c        ****     Directions_Init();
+ 1018              		.loc 1 209 0
+ 1019 0066 FFF7FEFF 		bl	Directions_Init
+ 210:main.c        ****     g_direction = 0u;
+ 1020              		.loc 1 210 0
+ 1021 006a 624B     		ldr	r3, .L84+4
+ 1022 006c 0022     		movs	r2, #0
+ 1023 006e 1A70     		strb	r2, [r3]
+ 211:main.c        **** 
+ 212:main.c        ****     /* Feed-forward cruise duty (kept) */
+ 213:main.c        ****     int center_duty_est = (int)((V_CRUISE_MM_S * 100) / VMAX_CONST_MM_S);
+ 1024              		.loc 1 213 0
+ 1025 0070 1923     		movs	r3, #25
+ 1026 0072 FB61     		str	r3, [r7, #28]
+ 214:main.c        ****     if (center_duty_est < 0) center_duty_est = 0;
+ 1027              		.loc 1 214 0
+ 1028 0074 FB69     		ldr	r3, [r7, #28]
+ 1029 0076 002B     		cmp	r3, #0
+ 1030 0078 01DA     		bge	.L68
+ 1031              		.loc 1 214 0 is_stmt 0 discriminator 1
+ 1032 007a 0023     		movs	r3, #0
+ 1033 007c FB61     		str	r3, [r7, #28]
+ 1034              	.L68:
+ 215:main.c        ****     if (center_duty_est > 100) center_duty_est = 100;
+ 1035              		.loc 1 215 0 is_stmt 1
+ 1036 007e FB69     		ldr	r3, [r7, #28]
+ 1037 0080 642B     		cmp	r3, #100
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 23
+
+
+ 1038 0082 01DD     		ble	.L69
+ 1039              		.loc 1 215 0 is_stmt 0 discriminator 1
+ 1040 0084 6423     		movs	r3, #100
+ 1041 0086 FB61     		str	r3, [r7, #28]
+ 1042              	.L69:
+ 216:main.c        **** 
+ 217:main.c        ****     /* PI state */
+ 218:main.c        ****     pi_t pi = { .i = 0.0f, .u = 0.0f, .t_loss = 0.0f };
+ 1043              		.loc 1 218 0 is_stmt 1
+ 1044 0088 4FF00003 		mov	r3, #0
+ 1045 008c FB60     		str	r3, [r7, #12]	@ float
+ 1046 008e 4FF00003 		mov	r3, #0
+ 1047 0092 3B61     		str	r3, [r7, #16]	@ float
+ 1048 0094 4FF00003 		mov	r3, #0
+ 1049 0098 7B61     		str	r3, [r7, #20]	@ float
+ 219:main.c        ****     
+ 220:main.c        ****     CyDelay(1000);  // So the motors don't jump
+ 1050              		.loc 1 220 0
+ 1051 009a 4FF47A70 		mov	r0, #1000
+ 1052 009e FFF7FEFF 		bl	CyDelay
+ 221:main.c        ****     set_motors_with_trim_and_steer(100,-10);
+ 1053              		.loc 1 221 0
+ 1054 00a2 6FF00901 		mvn	r1, #9
+ 1055 00a6 6420     		movs	r0, #100
+ 1056 00a8 FFF7FEFF 		bl	set_motors_with_trim_and_steer
+ 222:main.c        ****     CyDelay(40);
+ 1057              		.loc 1 222 0
+ 1058 00ac 2820     		movs	r0, #40
+ 1059 00ae FFF7FEFF 		bl	CyDelay
+ 223:main.c        ****     set_motors_symmetric(0); 
+ 1060              		.loc 1 223 0
+ 1061 00b2 0020     		movs	r0, #0
+ 1062 00b4 FFF7FEFF 		bl	set_motors_symmetric
+ 1063              	.L83:
+ 1064              	.LBB2:
+ 224:main.c        **** 
+ 225:main.c        ****     for(;;){
+ 226:main.c        ****         /* Distance stop */
+ 227:main.c        ****         g_stop_now = (g_dist_mm >= TARGET_DIST_MM) ? 1u : 0u;
+ 1065              		.loc 1 227 0
+ 1066 00b8 4F4B     		ldr	r3, .L84+8
+ 1067 00ba 1B68     		ldr	r3, [r3]
+ 1068 00bc 44F61F62 		movw	r2, #19999
+ 1069 00c0 9342     		cmp	r3, r2
+ 1070 00c2 01DD     		ble	.L70
+ 1071              		.loc 1 227 0 is_stmt 0 discriminator 1
+ 1072 00c4 0122     		movs	r2, #1
+ 1073 00c6 00E0     		b	.L71
+ 1074              	.L70:
+ 1075              		.loc 1 227 0 discriminator 2
+ 1076 00c8 0022     		movs	r2, #0
+ 1077              	.L71:
+ 1078              		.loc 1 227 0 discriminator 4
+ 1079 00ca 4C4B     		ldr	r3, .L84+12
+ 1080 00cc 1A70     		strb	r2, [r3]
+ 228:main.c        ****         if (g_stop_now) {
+ 1081              		.loc 1 228 0 is_stmt 1 discriminator 4
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 24
+
+
+ 1082 00ce 4B4B     		ldr	r3, .L84+12
+ 1083 00d0 1B78     		ldrb	r3, [r3]
+ 1084 00d2 DBB2     		uxtb	r3, r3
+ 1085 00d4 002B     		cmp	r3, #0
+ 1086 00d6 0DD0     		beq	.L72
+ 229:main.c        ****             set_motors_symmetric(0);
+ 1087              		.loc 1 229 0
+ 1088 00d8 0020     		movs	r0, #0
+ 1089 00da FFF7FEFF 		bl	set_motors_symmetric
+ 230:main.c        ****             motor_enable(1u, 1u);
+ 1090              		.loc 1 230 0
+ 1091 00de 0121     		movs	r1, #1
+ 1092 00e0 0120     		movs	r0, #1
+ 1093 00e2 FFF7FEFF 		bl	motor_enable
+ 231:main.c        ****             g_direction = 0u;
+ 1094              		.loc 1 231 0
+ 1095 00e6 434B     		ldr	r3, .L84+4
+ 1096 00e8 0022     		movs	r2, #0
+ 1097 00ea 1A70     		strb	r2, [r3]
+ 232:main.c        ****             CyDelay(LOOP_DT_MS);
+ 1098              		.loc 1 232 0
+ 1099 00ec 0820     		movs	r0, #8
+ 1100 00ee FFF7FEFF 		bl	CyDelay
+ 233:main.c        ****             continue;
+ 1101              		.loc 1 233 0
+ 1102 00f2 7BE0     		b	.L82
+ 1103              	.L72:
+ 234:main.c        ****         }
+ 235:main.c        **** 
+ 236:main.c        ****         /* Read sensors + maybe request turn */
+ 237:main.c        ****         uint16_t V4_pp=0, V5_pp=0, V6_pp=0;
+ 1104              		.loc 1 237 0
+ 1105 00f4 0023     		movs	r3, #0
+ 1106 00f6 7B81     		strh	r3, [r7, #10]	@ movhi
+ 1107 00f8 0023     		movs	r3, #0
+ 1108 00fa 3B81     		strh	r3, [r7, #8]	@ movhi
+ 1109 00fc 0023     		movs	r3, #0
+ 1110 00fe FB80     		strh	r3, [r7, #6]	@ movhi
+ 238:main.c        ****         light_sensors_update_and_maybe_request_turn(&V4_pp, &V5_pp, &V6_pp);
+ 1111              		.loc 1 238 0
+ 1112 0100 BA1D     		adds	r2, r7, #6
+ 1113 0102 07F10801 		add	r1, r7, #8
+ 1114 0106 07F10A03 		add	r3, r7, #10
+ 1115 010a 1846     		mov	r0, r3
+ 1116 010c FFF7FEFF 		bl	light_sensors_update_and_maybe_request_turn
+ 239:main.c        **** 
+ 240:main.c        ****         /* ---------------- Turn handling with arming delay (Option A) ---------------- */
+ 241:main.c        ****         /* Arm once on the first detection (edge 0 -> 1/2) */
+ 242:main.c        ****         if ((g_direction == 1u || g_direction == 2u) && dir_latched_side == 0){
+ 1117              		.loc 1 242 0
+ 1118 0110 384B     		ldr	r3, .L84+4
+ 1119 0112 1B78     		ldrb	r3, [r3]
+ 1120 0114 DBB2     		uxtb	r3, r3
+ 1121 0116 012B     		cmp	r3, #1
+ 1122 0118 04D0     		beq	.L74
+ 1123              		.loc 1 242 0 is_stmt 0 discriminator 2
+ 1124 011a 364B     		ldr	r3, .L84+4
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 25
+
+
+ 1125 011c 1B78     		ldrb	r3, [r3]
+ 1126 011e DBB2     		uxtb	r3, r3
+ 1127 0120 022B     		cmp	r3, #2
+ 1128 0122 0BD1     		bne	.L75
+ 1129              	.L74:
+ 1130              		.loc 1 242 0 discriminator 3
+ 1131 0124 364B     		ldr	r3, .L84+16
+ 1132 0126 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1133 0128 002B     		cmp	r3, #0
+ 1134 012a 07D1     		bne	.L75
+ 243:main.c        ****             dir_latched_side = g_direction;          /* remember side */
+ 1135              		.loc 1 243 0 is_stmt 1
+ 1136 012c 314B     		ldr	r3, .L84+4
+ 1137 012e 1B78     		ldrb	r3, [r3]
+ 1138 0130 DAB2     		uxtb	r2, r3
+ 1139 0132 334B     		ldr	r3, .L84+16
+ 1140 0134 1A70     		strb	r2, [r3]
+ 244:main.c        ****             dir_delay_ticks  = DIR_CALL_DELAY_TICKS; /* start countdown */
+ 1141              		.loc 1 244 0
+ 1142 0136 334B     		ldr	r3, .L84+20
+ 1143 0138 0D22     		movs	r2, #13
+ 1144 013a 1A80     		strh	r2, [r3]	@ movhi
+ 1145              	.L75:
+ 245:main.c        ****         }
+ 246:main.c        ****         /* If request cleared during delay, cancel gracefully */
+ 247:main.c        ****         if (g_direction == 0u && dir_latched_side != 0){
+ 1146              		.loc 1 247 0
+ 1147 013c 2D4B     		ldr	r3, .L84+4
+ 1148 013e 1B78     		ldrb	r3, [r3]
+ 1149 0140 DBB2     		uxtb	r3, r3
+ 1150 0142 002B     		cmp	r3, #0
+ 1151 0144 09D1     		bne	.L76
+ 1152              		.loc 1 247 0 is_stmt 0 discriminator 1
+ 1153 0146 2E4B     		ldr	r3, .L84+16
+ 1154 0148 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1155 014a 002B     		cmp	r3, #0
+ 1156 014c 05D0     		beq	.L76
+ 248:main.c        ****             dir_latched_side = 0;
+ 1157              		.loc 1 248 0 is_stmt 1
+ 1158 014e 2C4B     		ldr	r3, .L84+16
+ 1159 0150 0022     		movs	r2, #0
+ 1160 0152 1A70     		strb	r2, [r3]
+ 249:main.c        ****             dir_delay_ticks  = 0;
+ 1161              		.loc 1 249 0
+ 1162 0154 2B4B     		ldr	r3, .L84+20
+ 1163 0156 0022     		movs	r2, #0
+ 1164 0158 1A80     		strh	r2, [r3]	@ movhi
+ 1165              	.L76:
+ 250:main.c        ****         }
+ 251:main.c        **** 
+ 252:main.c        ****         if (g_direction == 1u || g_direction == 2u){
+ 1166              		.loc 1 252 0
+ 1167 015a 264B     		ldr	r3, .L84+4
+ 1168 015c 1B78     		ldrb	r3, [r3]
+ 1169 015e DBB2     		uxtb	r3, r3
+ 1170 0160 012B     		cmp	r3, #1
+ 1171 0162 04D0     		beq	.L77
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 26
+
+
+ 1172              		.loc 1 252 0 is_stmt 0 discriminator 1
+ 1173 0164 234B     		ldr	r3, .L84+4
+ 1174 0166 1B78     		ldrb	r3, [r3]
+ 1175 0168 DBB2     		uxtb	r3, r3
+ 1176 016a 022B     		cmp	r3, #2
+ 1177 016c 25D1     		bne	.L78
+ 1178              	.L77:
+ 253:main.c        ****             if (dir_delay_ticks > 0){
+ 1179              		.loc 1 253 0 is_stmt 1
+ 1180 016e 254B     		ldr	r3, .L84+20
+ 1181 0170 1B88     		ldrh	r3, [r3]
+ 1182 0172 002B     		cmp	r3, #0
+ 1183 0174 06D0     		beq	.L79
+ 254:main.c        ****                 /* Still delaying: keep doing normal straight PI */
+ 255:main.c        ****                 dir_delay_ticks--;
+ 1184              		.loc 1 255 0
+ 1185 0176 234B     		ldr	r3, .L84+20
+ 1186 0178 1B88     		ldrh	r3, [r3]
+ 1187 017a 013B     		subs	r3, r3, #1
+ 1188 017c 9AB2     		uxth	r2, r3
+ 1189 017e 214B     		ldr	r3, .L84+20
+ 1190 0180 1A80     		strh	r2, [r3]	@ movhi
+ 1191 0182 1AE0     		b	.L78
+ 1192              	.L79:
+ 256:main.c        ****             } else {
+ 257:main.c        ****                 /* Delay elapsed: perform the maneuver */
+ 258:main.c        ****                 Directions_Handle(&g_direction);
+ 1193              		.loc 1 258 0
+ 1194 0184 1B48     		ldr	r0, .L84+4
+ 1195 0186 FFF7FEFF 		bl	Directions_Handle
+ 259:main.c        **** 
+ 260:main.c        ****                 /* When turn completes, Directions sets g_direction back to 0 */
+ 261:main.c        ****                 if (g_direction == 0u){
+ 1196              		.loc 1 261 0
+ 1197 018a 1A4B     		ldr	r3, .L84+4
+ 1198 018c 1B78     		ldrb	r3, [r3]
+ 1199 018e DBB2     		uxtb	r3, r3
+ 1200 0190 002B     		cmp	r3, #0
+ 1201 0192 0ED1     		bne	.L80
+ 262:main.c        ****                     pi.i = 0.0f; pi.u = 0.0f; pi.t_loss = 0.0f;  /* clear bias */
+ 1202              		.loc 1 262 0
+ 1203 0194 4FF00003 		mov	r3, #0
+ 1204 0198 FB60     		str	r3, [r7, #12]	@ float
+ 1205 019a 4FF00003 		mov	r3, #0
+ 1206 019e 3B61     		str	r3, [r7, #16]	@ float
+ 1207 01a0 4FF00003 		mov	r3, #0
+ 1208 01a4 7B61     		str	r3, [r7, #20]	@ float
+ 263:main.c        ****                     dir_latched_side = 0;                        /* ready next time */
+ 1209              		.loc 1 263 0
+ 1210 01a6 164B     		ldr	r3, .L84+16
+ 1211 01a8 0022     		movs	r2, #0
+ 1212 01aa 1A70     		strb	r2, [r3]
+ 264:main.c        ****                     
+ 265:main.c        ****                     
+ 266:main.c        ****                     turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+ 1213              		.loc 1 266 0
+ 1214 01ac 164B     		ldr	r3, .L84+24
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 27
+
+
+ 1215 01ae 3222     		movs	r2, #50
+ 1216 01b0 1A80     		strh	r2, [r3]	@ movhi
+ 1217              	.L80:
+ 267:main.c        ****                 }
+ 268:main.c        ****                 CyDelay(LOOP_DT_MS);
+ 1218              		.loc 1 268 0
+ 1219 01b2 0820     		movs	r0, #8
+ 1220 01b4 FFF7FEFF 		bl	CyDelay
+ 269:main.c        ****                 continue;  /* skip the rest this tick */
+ 1221              		.loc 1 269 0
+ 1222 01b8 18E0     		b	.L82
+ 1223              	.L78:
+ 270:main.c        ****             }
+ 271:main.c        ****         }
+ 272:main.c        ****         /* ---------------- end turn handling with delay ---------------- */
+ 273:main.c        **** 
+ 274:main.c        ****         /* Straight run with PI steering */
+ 275:main.c        ****         
+ 276:main.c        ****         if(turn_cooldown_ticks > 0) {
+ 1224              		.loc 1 276 0
+ 1225 01ba 134B     		ldr	r3, .L84+24
+ 1226 01bc 1B88     		ldrh	r3, [r3]
+ 1227 01be 002B     		cmp	r3, #0
+ 1228 01c0 05D0     		beq	.L81
+ 277:main.c        ****             turn_cooldown_ticks--;
+ 1229              		.loc 1 277 0
+ 1230 01c2 114B     		ldr	r3, .L84+24
+ 1231 01c4 1B88     		ldrh	r3, [r3]
+ 1232 01c6 013B     		subs	r3, r3, #1
+ 1233 01c8 9AB2     		uxth	r2, r3
+ 1234 01ca 0F4B     		ldr	r3, .L84+24
+ 1235 01cc 1A80     		strh	r2, [r3]	@ movhi
+ 1236              	.L81:
+ 278:main.c        ****         }
+ 279:main.c        ****         
+ 280:main.c        ****         
+ 281:main.c        ****         int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
+ 1237              		.loc 1 281 0
+ 1238 01ce 7989     		ldrh	r1, [r7, #10]
+ 1239 01d0 3A89     		ldrh	r2, [r7, #8]
+ 1240 01d2 FB88     		ldrh	r3, [r7, #6]
+ 1241 01d4 07F10C00 		add	r0, r7, #12
+ 1242 01d8 FFF7FEFF 		bl	pi_step
+ 1243 01dc B861     		str	r0, [r7, #24]
+ 282:main.c        ****         set_motors_with_trim_and_steer(center_duty_est, steer);
+ 1244              		.loc 1 282 0
+ 1245 01de B969     		ldr	r1, [r7, #24]
+ 1246 01e0 F869     		ldr	r0, [r7, #28]
+ 1247 01e2 FFF7FEFF 		bl	set_motors_with_trim_and_steer
+ 283:main.c        **** 
+ 284:main.c        ****         CyDelay(LOOP_DT_MS);
+ 1248              		.loc 1 284 0
+ 1249 01e6 0820     		movs	r0, #8
+ 1250 01e8 FFF7FEFF 		bl	CyDelay
+ 1251              	.L82:
+ 1252              	.LBE2:
+ 285:main.c        ****     }
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 28
+
+
+ 1253              		.loc 1 285 0 discriminator 1
+ 1254 01ec 64E7     		b	.L83
+ 1255              	.L85:
+ 1256 01ee 00BF     		.align	2
+ 1257              	.L84:
+ 1258 01f0 00000000 		.word	isr_qd_Handler
+ 1259 01f4 06000000 		.word	g_direction
+ 1260 01f8 08000000 		.word	g_dist_mm
+ 1261 01fc 07000000 		.word	g_stop_now
+ 1262 0200 0E000000 		.word	dir_latched_side
+ 1263 0204 0C000000 		.word	dir_delay_ticks
+ 1264 0208 10000000 		.word	turn_cooldown_ticks
+ 1265              		.cfi_endproc
+ 1266              	.LFE69:
+ 1267              		.size	main, .-main
+ 1268              		.text
+ 1269              	.Letext0:
+ 1270              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 1271              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 1272              		.file 4 "Generated_Source\\PSoC5/core_cm3.h"
+ 1273              		.section	.debug_info,"",%progbits
+ 1274              	.Ldebug_info0:
+ 1275 0000 20050000 		.4byte	0x520
+ 1276 0004 0400     		.2byte	0x4
+ 1277 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 1278 000a 04       		.byte	0x4
+ 1279 000b 01       		.uleb128 0x1
+ 1280 000c 30000000 		.4byte	.LASF57
+ 1281 0010 0C       		.byte	0xc
+ 1282 0011 C5020000 		.4byte	.LASF58
+ 1283 0015 EB000000 		.4byte	.LASF59
+ 1284 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 1285 001d 00000000 		.4byte	0
+ 1286 0021 00000000 		.4byte	.Ldebug_line0
+ 1287 0025 02       		.uleb128 0x2
+ 1288 0026 01       		.byte	0x1
+ 1289 0027 06       		.byte	0x6
+ 1290 0028 DF010000 		.4byte	.LASF0
+ 1291 002c 03       		.uleb128 0x3
+ 1292 002d 70010000 		.4byte	.LASF3
+ 1293 0031 02       		.byte	0x2
+ 1294 0032 1D       		.byte	0x1d
+ 1295 0033 37000000 		.4byte	0x37
+ 1296 0037 02       		.uleb128 0x2
+ 1297 0038 01       		.byte	0x1
+ 1298 0039 08       		.byte	0x8
+ 1299 003a 87010000 		.4byte	.LASF1
+ 1300 003e 02       		.uleb128 0x2
+ 1301 003f 02       		.byte	0x2
+ 1302 0040 05       		.byte	0x5
+ 1303 0041 1D000000 		.4byte	.LASF2
+ 1304 0045 03       		.uleb128 0x3
+ 1305 0046 C3000000 		.4byte	.LASF4
+ 1306 004a 02       		.byte	0x2
+ 1307 004b 2B       		.byte	0x2b
+ 1308 004c 50000000 		.4byte	0x50
+ 1309 0050 02       		.uleb128 0x2
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 29
+
+
+ 1310 0051 02       		.byte	0x2
+ 1311 0052 07       		.byte	0x7
+ 1312 0053 40020000 		.4byte	.LASF5
+ 1313 0057 03       		.uleb128 0x3
+ 1314 0058 22030000 		.4byte	.LASF6
+ 1315 005c 02       		.byte	0x2
+ 1316 005d 3F       		.byte	0x3f
+ 1317 005e 62000000 		.4byte	0x62
+ 1318 0062 02       		.uleb128 0x2
+ 1319 0063 04       		.byte	0x4
+ 1320 0064 05       		.byte	0x5
+ 1321 0065 57010000 		.4byte	.LASF7
+ 1322 0069 02       		.uleb128 0x2
+ 1323 006a 04       		.byte	0x4
+ 1324 006b 07       		.byte	0x7
+ 1325 006c CC020000 		.4byte	.LASF8
+ 1326 0070 03       		.uleb128 0x3
+ 1327 0071 60010000 		.4byte	.LASF9
+ 1328 0075 02       		.byte	0x2
+ 1329 0076 59       		.byte	0x59
+ 1330 0077 7B000000 		.4byte	0x7b
+ 1331 007b 02       		.uleb128 0x2
+ 1332 007c 08       		.byte	0x8
+ 1333 007d 05       		.byte	0x5
+ 1334 007e 3F010000 		.4byte	.LASF10
+ 1335 0082 02       		.uleb128 0x2
+ 1336 0083 08       		.byte	0x8
+ 1337 0084 07       		.byte	0x7
+ 1338 0085 EB010000 		.4byte	.LASF11
+ 1339 0089 04       		.uleb128 0x4
+ 1340 008a 04       		.byte	0x4
+ 1341 008b 05       		.byte	0x5
+ 1342 008c 696E7400 		.ascii	"int\000"
+ 1343 0090 02       		.uleb128 0x2
+ 1344 0091 04       		.byte	0x4
+ 1345 0092 07       		.byte	0x7
+ 1346 0093 0F020000 		.4byte	.LASF12
+ 1347 0097 03       		.uleb128 0x3
+ 1348 0098 D6000000 		.4byte	.LASF13
+ 1349 009c 03       		.byte	0x3
+ 1350 009d 18       		.byte	0x18
+ 1351 009e 2C000000 		.4byte	0x2c
+ 1352 00a2 03       		.uleb128 0x3
+ 1353 00a3 22020000 		.4byte	.LASF14
+ 1354 00a7 03       		.byte	0x3
+ 1355 00a8 24       		.byte	0x24
+ 1356 00a9 45000000 		.4byte	0x45
+ 1357 00ad 03       		.uleb128 0x3
+ 1358 00ae 78020000 		.4byte	.LASF15
+ 1359 00b2 03       		.byte	0x3
+ 1360 00b3 2C       		.byte	0x2c
+ 1361 00b4 57000000 		.4byte	0x57
+ 1362 00b8 03       		.uleb128 0x3
+ 1363 00b9 CE000000 		.4byte	.LASF16
+ 1364 00bd 03       		.byte	0x3
+ 1365 00be 38       		.byte	0x38
+ 1366 00bf 70000000 		.4byte	0x70
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 30
+
+
+ 1367 00c3 02       		.uleb128 0x2
+ 1368 00c4 04       		.byte	0x4
+ 1369 00c5 04       		.byte	0x4
+ 1370 00c6 39010000 		.4byte	.LASF17
+ 1371 00ca 02       		.uleb128 0x2
+ 1372 00cb 08       		.byte	0x8
+ 1373 00cc 04       		.byte	0x4
+ 1374 00cd 4E030000 		.4byte	.LASF18
+ 1375 00d1 02       		.uleb128 0x2
+ 1376 00d2 01       		.byte	0x1
+ 1377 00d3 08       		.byte	0x8
+ 1378 00d4 4D010000 		.4byte	.LASF19
+ 1379 00d8 02       		.uleb128 0x2
+ 1380 00d9 08       		.byte	0x8
+ 1381 00da 04       		.byte	0x4
+ 1382 00db 9A010000 		.4byte	.LASF20
+ 1383 00df 02       		.uleb128 0x2
+ 1384 00e0 04       		.byte	0x4
+ 1385 00e1 07       		.byte	0x7
+ 1386 00e2 27000000 		.4byte	.LASF21
+ 1387 00e6 05       		.uleb128 0x5
+ 1388 00e7 97000000 		.4byte	0x97
+ 1389 00eb 06       		.uleb128 0x6
+ 1390 00ec 0C       		.byte	0xc
+ 1391 00ed 01       		.byte	0x1
+ 1392 00ee 8E       		.byte	0x8e
+ 1393 00ef 14010000 		.4byte	0x114
+ 1394 00f3 07       		.uleb128 0x7
+ 1395 00f4 6900     		.ascii	"i\000"
+ 1396 00f6 01       		.byte	0x1
+ 1397 00f7 8E       		.byte	0x8e
+ 1398 00f8 C3000000 		.4byte	0xc3
+ 1399 00fc 00       		.byte	0
+ 1400 00fd 07       		.uleb128 0x7
+ 1401 00fe 7500     		.ascii	"u\000"
+ 1402 0100 01       		.byte	0x1
+ 1403 0101 8E       		.byte	0x8e
+ 1404 0102 C3000000 		.4byte	0xc3
+ 1405 0106 04       		.byte	0x4
+ 1406 0107 08       		.uleb128 0x8
+ 1407 0108 1B030000 		.4byte	.LASF22
+ 1408 010c 01       		.byte	0x1
+ 1409 010d 8E       		.byte	0x8e
+ 1410 010e C3000000 		.4byte	0xc3
+ 1411 0112 08       		.byte	0x8
+ 1412 0113 00       		.byte	0
+ 1413 0114 03       		.uleb128 0x3
+ 1414 0115 52010000 		.4byte	.LASF23
+ 1415 0119 01       		.byte	0x1
+ 1416 011a 8E       		.byte	0x8e
+ 1417 011b EB000000 		.4byte	0xeb
+ 1418 011f 09       		.uleb128 0x9
+ 1419 0120 94020000 		.4byte	.LASF60
+ 1420 0124 01       		.byte	0x1
+ 1421 0125 48       		.byte	0x48
+ 1422 0126 00000000 		.4byte	.LFB64
+ 1423 012a 78010000 		.4byte	.LFE64-.LFB64
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 31
+
+
+ 1424 012e 01       		.uleb128 0x1
+ 1425 012f 9C       		.byte	0x9c
+ 1426 0130 D0010000 		.4byte	0x1d0
+ 1427 0134 0A       		.uleb128 0xa
+ 1428 0135 95010000 		.4byte	.LASF24
+ 1429 0139 01       		.byte	0x1
+ 1430 013a 4A       		.byte	0x4a
+ 1431 013b AD000000 		.4byte	0xad
+ 1432 013f 02       		.uleb128 0x2
+ 1433 0140 91       		.byte	0x91
+ 1434 0141 54       		.sleb128 -44
+ 1435 0142 0A       		.uleb128 0xa
+ 1436 0143 DE000000 		.4byte	.LASF25
+ 1437 0147 01       		.byte	0x1
+ 1438 0148 4B       		.byte	0x4b
+ 1439 0149 AD000000 		.4byte	0xad
+ 1440 014d 02       		.uleb128 0x2
+ 1441 014e 91       		.byte	0x91
+ 1442 014f 50       		.sleb128 -48
+ 1443 0150 0B       		.uleb128 0xb
+ 1444 0151 643100   		.ascii	"d1\000"
+ 1445 0154 01       		.byte	0x1
+ 1446 0155 4D       		.byte	0x4d
+ 1447 0156 AD000000 		.4byte	0xad
+ 1448 015a 02       		.uleb128 0x2
+ 1449 015b 91       		.byte	0x91
+ 1450 015c 4C       		.sleb128 -52
+ 1451 015d 0B       		.uleb128 0xb
+ 1452 015e 643200   		.ascii	"d2\000"
+ 1453 0161 01       		.byte	0x1
+ 1454 0162 4D       		.byte	0x4d
+ 1455 0163 AD000000 		.4byte	0xad
+ 1456 0167 02       		.uleb128 0x2
+ 1457 0168 91       		.byte	0x91
+ 1458 0169 48       		.sleb128 -56
+ 1459 016a 0B       		.uleb128 0xb
+ 1460 016b 613100   		.ascii	"a1\000"
+ 1461 016e 01       		.byte	0x1
+ 1462 016f 4E       		.byte	0x4e
+ 1463 0170 AD000000 		.4byte	0xad
+ 1464 0174 02       		.uleb128 0x2
+ 1465 0175 91       		.byte	0x91
+ 1466 0176 44       		.sleb128 -60
+ 1467 0177 0B       		.uleb128 0xb
+ 1468 0178 613200   		.ascii	"a2\000"
+ 1469 017b 01       		.byte	0x1
+ 1470 017c 4F       		.byte	0x4f
+ 1471 017d AD000000 		.4byte	0xad
+ 1472 0181 02       		.uleb128 0x2
+ 1473 0182 91       		.byte	0x91
+ 1474 0183 40       		.sleb128 -64
+ 1475 0184 0A       		.uleb128 0xa
+ 1476 0185 6C030000 		.4byte	.LASF26
+ 1477 0189 01       		.byte	0x1
+ 1478 018a 50       		.byte	0x50
+ 1479 018b AD000000 		.4byte	0xad
+ 1480 018f 03       		.uleb128 0x3
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 32
+
+
+ 1481 0190 91       		.byte	0x91
+ 1482 0191 BC7F     		.sleb128 -68
+ 1483 0193 0A       		.uleb128 0xa
+ 1484 0194 DE020000 		.4byte	.LASF27
+ 1485 0198 01       		.byte	0x1
+ 1486 0199 51       		.byte	0x51
+ 1487 019a AD000000 		.4byte	0xad
+ 1488 019e 03       		.uleb128 0x3
+ 1489 019f 91       		.byte	0x91
+ 1490 01a0 B87F     		.sleb128 -72
+ 1491 01a2 0A       		.uleb128 0xa
+ 1492 01a3 60020000 		.4byte	.LASF28
+ 1493 01a7 01       		.byte	0x1
+ 1494 01a8 53       		.byte	0x53
+ 1495 01a9 B8000000 		.4byte	0xb8
+ 1496 01ad 03       		.uleb128 0x3
+ 1497 01ae 91       		.byte	0x91
+ 1498 01af B07F     		.sleb128 -80
+ 1499 01b1 0A       		.uleb128 0xa
+ 1500 01b2 E3000000 		.4byte	.LASF29
+ 1501 01b6 01       		.byte	0x1
+ 1502 01b7 54       		.byte	0x54
+ 1503 01b8 AD000000 		.4byte	0xad
+ 1504 01bc 03       		.uleb128 0x3
+ 1505 01bd 91       		.byte	0x91
+ 1506 01be AC7F     		.sleb128 -84
+ 1507 01c0 0A       		.uleb128 0xa
+ 1508 01c1 A3020000 		.4byte	.LASF30
+ 1509 01c5 01       		.byte	0x1
+ 1510 01c6 55       		.byte	0x55
+ 1511 01c7 AD000000 		.4byte	0xad
+ 1512 01cb 03       		.uleb128 0x3
+ 1513 01cc 91       		.byte	0x91
+ 1514 01cd A87F     		.sleb128 -88
+ 1515 01cf 00       		.byte	0
+ 1516 01d0 0C       		.uleb128 0xc
+ 1517 01d1 2C030000 		.4byte	.LASF34
+ 1518 01d5 01       		.byte	0x1
+ 1519 01d6 5C       		.byte	0x5c
+ 1520 01d7 C3000000 		.4byte	0xc3
+ 1521 01db 00000000 		.4byte	.LFB65
+ 1522 01df 44000000 		.4byte	.LFE65-.LFB65
+ 1523 01e3 01       		.uleb128 0x1
+ 1524 01e4 9C       		.byte	0x9c
+ 1525 01e5 F7010000 		.4byte	0x1f7
+ 1526 01e9 0D       		.uleb128 0xd
+ 1527 01ea 707000   		.ascii	"pp\000"
+ 1528 01ed 01       		.byte	0x1
+ 1529 01ee 5C       		.byte	0x5c
+ 1530 01ef A2000000 		.4byte	0xa2
+ 1531 01f3 02       		.uleb128 0x2
+ 1532 01f4 91       		.byte	0x91
+ 1533 01f5 76       		.sleb128 -10
+ 1534 01f6 00       		.byte	0
+ 1535 01f7 0E       		.uleb128 0xe
+ 1536 01f8 E8020000 		.4byte	.LASF61
+ 1537 01fc 01       		.byte	0x1
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 33
+
+
+ 1538 01fd 64       		.byte	0x64
+ 1539 01fe 00000000 		.4byte	.LFB66
+ 1540 0202 48010000 		.4byte	.LFE66-.LFB66
+ 1541 0206 01       		.uleb128 0x1
+ 1542 0207 9C       		.byte	0x9c
+ 1543 0208 85020000 		.4byte	0x285
+ 1544 020c 0F       		.uleb128 0xf
+ 1545 020d 17000000 		.4byte	.LASF31
+ 1546 0211 01       		.byte	0x1
+ 1547 0212 64       		.byte	0x64
+ 1548 0213 85020000 		.4byte	0x285
+ 1549 0217 02       		.uleb128 0x2
+ 1550 0218 91       		.byte	0x91
+ 1551 0219 64       		.sleb128 -28
+ 1552 021a 0F       		.uleb128 0xf
+ 1553 021b 33010000 		.4byte	.LASF32
+ 1554 021f 01       		.byte	0x1
+ 1555 0220 64       		.byte	0x64
+ 1556 0221 85020000 		.4byte	0x285
+ 1557 0225 02       		.uleb128 0x2
+ 1558 0226 91       		.byte	0x91
+ 1559 0227 60       		.sleb128 -32
+ 1560 0228 0F       		.uleb128 0xf
+ 1561 0229 1C020000 		.4byte	.LASF33
+ 1562 022d 01       		.byte	0x1
+ 1563 022e 64       		.byte	0x64
+ 1564 022f 85020000 		.4byte	0x285
+ 1565 0233 02       		.uleb128 0x2
+ 1566 0234 91       		.byte	0x91
+ 1567 0235 5C       		.sleb128 -36
+ 1568 0236 0B       		.uleb128 0xb
+ 1569 0237 563100   		.ascii	"V1\000"
+ 1570 023a 01       		.byte	0x1
+ 1571 023b 66       		.byte	0x66
+ 1572 023c A2000000 		.4byte	0xa2
+ 1573 0240 02       		.uleb128 0x2
+ 1574 0241 91       		.byte	0x91
+ 1575 0242 76       		.sleb128 -10
+ 1576 0243 0B       		.uleb128 0xb
+ 1577 0244 563200   		.ascii	"V2\000"
+ 1578 0247 01       		.byte	0x1
+ 1579 0248 67       		.byte	0x67
+ 1580 0249 A2000000 		.4byte	0xa2
+ 1581 024d 02       		.uleb128 0x2
+ 1582 024e 91       		.byte	0x91
+ 1583 024f 74       		.sleb128 -12
+ 1584 0250 0B       		.uleb128 0xb
+ 1585 0251 563300   		.ascii	"V3\000"
+ 1586 0254 01       		.byte	0x1
+ 1587 0255 68       		.byte	0x68
+ 1588 0256 A2000000 		.4byte	0xa2
+ 1589 025a 02       		.uleb128 0x2
+ 1590 025b 91       		.byte	0x91
+ 1591 025c 72       		.sleb128 -14
+ 1592 025d 0B       		.uleb128 0xb
+ 1593 025e 563400   		.ascii	"V4\000"
+ 1594 0261 01       		.byte	0x1
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 34
+
+
+ 1595 0262 69       		.byte	0x69
+ 1596 0263 A2000000 		.4byte	0xa2
+ 1597 0267 02       		.uleb128 0x2
+ 1598 0268 91       		.byte	0x91
+ 1599 0269 70       		.sleb128 -16
+ 1600 026a 0B       		.uleb128 0xb
+ 1601 026b 563500   		.ascii	"V5\000"
+ 1602 026e 01       		.byte	0x1
+ 1603 026f 6A       		.byte	0x6a
+ 1604 0270 A2000000 		.4byte	0xa2
+ 1605 0274 02       		.uleb128 0x2
+ 1606 0275 91       		.byte	0x91
+ 1607 0276 6E       		.sleb128 -18
+ 1608 0277 0B       		.uleb128 0xb
+ 1609 0278 563600   		.ascii	"V6\000"
+ 1610 027b 01       		.byte	0x1
+ 1611 027c 6B       		.byte	0x6b
+ 1612 027d A2000000 		.4byte	0xa2
+ 1613 0281 02       		.uleb128 0x2
+ 1614 0282 91       		.byte	0x91
+ 1615 0283 6C       		.sleb128 -20
+ 1616 0284 00       		.byte	0
+ 1617 0285 10       		.uleb128 0x10
+ 1618 0286 04       		.byte	0x4
+ 1619 0287 A2000000 		.4byte	0xa2
+ 1620 028b 0C       		.uleb128 0xc
+ 1621 028c 38020000 		.4byte	.LASF35
+ 1622 0290 01       		.byte	0x1
+ 1623 0291 8F       		.byte	0x8f
+ 1624 0292 C3000000 		.4byte	0xc3
+ 1625 0296 00000000 		.4byte	.LFB67
+ 1626 029a 3A000000 		.4byte	.LFE67-.LFB67
+ 1627 029e 01       		.uleb128 0x1
+ 1628 029f 9C       		.byte	0x9c
+ 1629 02a0 CB020000 		.4byte	0x2cb
+ 1630 02a4 0D       		.uleb128 0xd
+ 1631 02a5 7800     		.ascii	"x\000"
+ 1632 02a7 01       		.byte	0x1
+ 1633 02a8 8F       		.byte	0x8f
+ 1634 02a9 C3000000 		.4byte	0xc3
+ 1635 02ad 02       		.uleb128 0x2
+ 1636 02ae 91       		.byte	0x91
+ 1637 02af 74       		.sleb128 -12
+ 1638 02b0 0D       		.uleb128 0xd
+ 1639 02b1 6C6F00   		.ascii	"lo\000"
+ 1640 02b4 01       		.byte	0x1
+ 1641 02b5 8F       		.byte	0x8f
+ 1642 02b6 C3000000 		.4byte	0xc3
+ 1643 02ba 02       		.uleb128 0x2
+ 1644 02bb 91       		.byte	0x91
+ 1645 02bc 70       		.sleb128 -16
+ 1646 02bd 0D       		.uleb128 0xd
+ 1647 02be 686900   		.ascii	"hi\000"
+ 1648 02c1 01       		.byte	0x1
+ 1649 02c2 8F       		.byte	0x8f
+ 1650 02c3 C3000000 		.4byte	0xc3
+ 1651 02c7 02       		.uleb128 0x2
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 35
+
+
+ 1652 02c8 91       		.byte	0x91
+ 1653 02c9 6C       		.sleb128 -20
+ 1654 02ca 00       		.byte	0
+ 1655 02cb 0C       		.uleb128 0xc
+ 1656 02cc 80020000 		.4byte	.LASF36
+ 1657 02d0 01       		.byte	0x1
+ 1658 02d1 91       		.byte	0x91
+ 1659 02d2 89000000 		.4byte	0x89
+ 1660 02d6 00000000 		.4byte	.LFB68
+ 1661 02da 84020000 		.4byte	.LFE68-.LFB68
+ 1662 02de 01       		.uleb128 0x1
+ 1663 02df 9C       		.byte	0x9c
+ 1664 02e0 C1030000 		.4byte	0x3c1
+ 1665 02e4 0D       		.uleb128 0xd
+ 1666 02e5 706900   		.ascii	"pi\000"
+ 1667 02e8 01       		.byte	0x1
+ 1668 02e9 91       		.byte	0x91
+ 1669 02ea C1030000 		.4byte	0x3c1
+ 1670 02ee 03       		.uleb128 0x3
+ 1671 02ef 91       		.byte	0x91
+ 1672 02f0 BC7F     		.sleb128 -68
+ 1673 02f2 0F       		.uleb128 0xf
+ 1674 02f3 17000000 		.4byte	.LASF31
+ 1675 02f7 01       		.byte	0x1
+ 1676 02f8 91       		.byte	0x91
+ 1677 02f9 A2000000 		.4byte	0xa2
+ 1678 02fd 03       		.uleb128 0x3
+ 1679 02fe 91       		.byte	0x91
+ 1680 02ff BA7F     		.sleb128 -70
+ 1681 0301 0F       		.uleb128 0xf
+ 1682 0302 33010000 		.4byte	.LASF32
+ 1683 0306 01       		.byte	0x1
+ 1684 0307 91       		.byte	0x91
+ 1685 0308 A2000000 		.4byte	0xa2
+ 1686 030c 03       		.uleb128 0x3
+ 1687 030d 91       		.byte	0x91
+ 1688 030e B87F     		.sleb128 -72
+ 1689 0310 0F       		.uleb128 0xf
+ 1690 0311 1C020000 		.4byte	.LASF33
+ 1691 0315 01       		.byte	0x1
+ 1692 0316 91       		.byte	0x91
+ 1693 0317 A2000000 		.4byte	0xa2
+ 1694 031b 03       		.uleb128 0x3
+ 1695 031c 91       		.byte	0x91
+ 1696 031d B67F     		.sleb128 -74
+ 1697 031f 0B       		.uleb128 0xb
+ 1698 0320 633400   		.ascii	"c4\000"
+ 1699 0323 01       		.byte	0x1
+ 1700 0324 93       		.byte	0x93
+ 1701 0325 C3000000 		.4byte	0xc3
+ 1702 0329 02       		.uleb128 0x2
+ 1703 032a 91       		.byte	0x91
+ 1704 032b 68       		.sleb128 -24
+ 1705 032c 0B       		.uleb128 0xb
+ 1706 032d 633500   		.ascii	"c5\000"
+ 1707 0330 01       		.byte	0x1
+ 1708 0331 94       		.byte	0x94
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 36
+
+
+ 1709 0332 C3000000 		.4byte	0xc3
+ 1710 0336 02       		.uleb128 0x2
+ 1711 0337 91       		.byte	0x91
+ 1712 0338 64       		.sleb128 -28
+ 1713 0339 0B       		.uleb128 0xb
+ 1714 033a 633600   		.ascii	"c6\000"
+ 1715 033d 01       		.byte	0x1
+ 1716 033e 95       		.byte	0x95
+ 1717 033f C3000000 		.4byte	0xc3
+ 1718 0343 02       		.uleb128 0x2
+ 1719 0344 91       		.byte	0x91
+ 1720 0345 60       		.sleb128 -32
+ 1721 0346 0B       		.uleb128 0xb
+ 1722 0347 73756D00 		.ascii	"sum\000"
+ 1723 034b 01       		.byte	0x1
+ 1724 034c 96       		.byte	0x96
+ 1725 034d C3000000 		.4byte	0xc3
+ 1726 0351 02       		.uleb128 0x2
+ 1727 0352 91       		.byte	0x91
+ 1728 0353 5C       		.sleb128 -36
+ 1729 0354 0A       		.uleb128 0xa
+ 1730 0355 00000000 		.4byte	.LASF37
+ 1731 0359 01       		.byte	0x1
+ 1732 035a 97       		.byte	0x97
+ 1733 035b C7030000 		.4byte	0x3c7
+ 1734 035f 02       		.uleb128 0x2
+ 1735 0360 91       		.byte	0x91
+ 1736 0361 5B       		.sleb128 -37
+ 1737 0362 0B       		.uleb128 0xb
+ 1738 0363 706F7300 		.ascii	"pos\000"
+ 1739 0367 01       		.byte	0x1
+ 1740 0368 99       		.byte	0x99
+ 1741 0369 C3000000 		.4byte	0xc3
+ 1742 036d 02       		.uleb128 0x2
+ 1743 036e 91       		.byte	0x91
+ 1744 036f 6C       		.sleb128 -20
+ 1745 0370 0B       		.uleb128 0xb
+ 1746 0371 6500     		.ascii	"e\000"
+ 1747 0373 01       		.byte	0x1
+ 1748 0374 9C       		.byte	0x9c
+ 1749 0375 C3000000 		.4byte	0xc3
+ 1750 0379 02       		.uleb128 0x2
+ 1751 037a 91       		.byte	0x91
+ 1752 037b 54       		.sleb128 -44
+ 1753 037c 0A       		.uleb128 0xa
+ 1754 037d BE020000 		.4byte	.LASF38
+ 1755 0381 01       		.byte	0x1
+ 1756 0382 A5       		.byte	0xa5
+ 1757 0383 C3000000 		.4byte	0xc3
+ 1758 0387 02       		.uleb128 0x2
+ 1759 0388 91       		.byte	0x91
+ 1760 0389 50       		.sleb128 -48
+ 1761 038a 0A       		.uleb128 0xa
+ 1762 038b 6A010000 		.4byte	.LASF39
+ 1763 038f 01       		.byte	0x1
+ 1764 0390 A6       		.byte	0xa6
+ 1765 0391 C3000000 		.4byte	0xc3
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 37
+
+
+ 1766 0395 02       		.uleb128 0x2
+ 1767 0396 91       		.byte	0x91
+ 1768 0397 4C       		.sleb128 -52
+ 1769 0398 0B       		.uleb128 0xb
+ 1770 0399 7500     		.ascii	"u\000"
+ 1771 039b 01       		.byte	0x1
+ 1772 039c A7       		.byte	0xa7
+ 1773 039d C3000000 		.4byte	0xc3
+ 1774 03a1 02       		.uleb128 0x2
+ 1775 03a2 91       		.byte	0x91
+ 1776 03a3 48       		.sleb128 -56
+ 1777 03a4 0A       		.uleb128 0xa
+ 1778 03a5 14030000 		.4byte	.LASF40
+ 1779 03a9 01       		.byte	0x1
+ 1780 03aa A9       		.byte	0xa9
+ 1781 03ab C7030000 		.4byte	0x3c7
+ 1782 03af 02       		.uleb128 0x2
+ 1783 03b0 91       		.byte	0x91
+ 1784 03b1 47       		.sleb128 -57
+ 1785 03b2 0A       		.uleb128 0xa
+ 1786 03b3 47030000 		.4byte	.LASF41
+ 1787 03b7 01       		.byte	0x1
+ 1788 03b8 AA       		.byte	0xaa
+ 1789 03b9 C7030000 		.4byte	0x3c7
+ 1790 03bd 02       		.uleb128 0x2
+ 1791 03be 91       		.byte	0x91
+ 1792 03bf 46       		.sleb128 -58
+ 1793 03c0 00       		.byte	0
+ 1794 03c1 10       		.uleb128 0x10
+ 1795 03c2 04       		.byte	0x4
+ 1796 03c3 14010000 		.4byte	0x114
+ 1797 03c7 02       		.uleb128 0x2
+ 1798 03c8 01       		.byte	0x1
+ 1799 03c9 02       		.byte	0x2
+ 1800 03ca 8E020000 		.4byte	.LASF42
+ 1801 03ce 11       		.uleb128 0x11
+ 1802 03cf BE000000 		.4byte	.LASF62
+ 1803 03d3 01       		.byte	0x1
+ 1804 03d4 B7       		.byte	0xb7
+ 1805 03d5 89000000 		.4byte	0x89
+ 1806 03d9 00000000 		.4byte	.LFB69
+ 1807 03dd 0C020000 		.4byte	.LFE69-.LFB69
+ 1808 03e1 01       		.uleb128 0x1
+ 1809 03e2 9C       		.byte	0x9c
+ 1810 03e3 46040000 		.4byte	0x446
+ 1811 03e7 0A       		.uleb128 0xa
+ 1812 03e8 68020000 		.4byte	.LASF43
+ 1813 03ec 01       		.byte	0x1
+ 1814 03ed D5       		.byte	0xd5
+ 1815 03ee 89000000 		.4byte	0x89
+ 1816 03f2 02       		.uleb128 0x2
+ 1817 03f3 91       		.byte	0x91
+ 1818 03f4 74       		.sleb128 -12
+ 1819 03f5 0B       		.uleb128 0xb
+ 1820 03f6 706900   		.ascii	"pi\000"
+ 1821 03f9 01       		.byte	0x1
+ 1822 03fa DA       		.byte	0xda
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 38
+
+
+ 1823 03fb 14010000 		.4byte	0x114
+ 1824 03ff 02       		.uleb128 0x2
+ 1825 0400 91       		.byte	0x91
+ 1826 0401 64       		.sleb128 -28
+ 1827 0402 12       		.uleb128 0x12
+ 1828 0403 B8000000 		.4byte	.LBB2
+ 1829 0407 34010000 		.4byte	.LBE2-.LBB2
+ 1830 040b 0A       		.uleb128 0xa
+ 1831 040c 17000000 		.4byte	.LASF31
+ 1832 0410 01       		.byte	0x1
+ 1833 0411 ED       		.byte	0xed
+ 1834 0412 A2000000 		.4byte	0xa2
+ 1835 0416 02       		.uleb128 0x2
+ 1836 0417 91       		.byte	0x91
+ 1837 0418 62       		.sleb128 -30
+ 1838 0419 0A       		.uleb128 0xa
+ 1839 041a 33010000 		.4byte	.LASF32
+ 1840 041e 01       		.byte	0x1
+ 1841 041f ED       		.byte	0xed
+ 1842 0420 A2000000 		.4byte	0xa2
+ 1843 0424 02       		.uleb128 0x2
+ 1844 0425 91       		.byte	0x91
+ 1845 0426 60       		.sleb128 -32
+ 1846 0427 0A       		.uleb128 0xa
+ 1847 0428 1C020000 		.4byte	.LASF33
+ 1848 042c 01       		.byte	0x1
+ 1849 042d ED       		.byte	0xed
+ 1850 042e A2000000 		.4byte	0xa2
+ 1851 0432 02       		.uleb128 0x2
+ 1852 0433 91       		.byte	0x91
+ 1853 0434 5E       		.sleb128 -34
+ 1854 0435 13       		.uleb128 0x13
+ 1855 0436 88020000 		.4byte	.LASF44
+ 1856 043a 01       		.byte	0x1
+ 1857 043b 1901     		.2byte	0x119
+ 1858 043d 89000000 		.4byte	0x89
+ 1859 0441 02       		.uleb128 0x2
+ 1860 0442 91       		.byte	0x91
+ 1861 0443 70       		.sleb128 -16
+ 1862 0444 00       		.byte	0
+ 1863 0445 00       		.byte	0
+ 1864 0446 0A       		.uleb128 0xa
+ 1865 0447 7A010000 		.4byte	.LASF45
+ 1866 044b 01       		.byte	0x1
+ 1867 044c 37       		.byte	0x37
+ 1868 044d 97000000 		.4byte	0x97
+ 1869 0451 05       		.uleb128 0x5
+ 1870 0452 03       		.byte	0x3
+ 1871 0453 00000000 		.4byte	sen1_on_line
+ 1872 0457 0A       		.uleb128 0xa
+ 1873 0458 A6010000 		.4byte	.LASF46
+ 1874 045c 01       		.byte	0x1
+ 1875 045d 37       		.byte	0x37
+ 1876 045e 97000000 		.4byte	0x97
+ 1877 0462 05       		.uleb128 0x5
+ 1878 0463 03       		.byte	0x3
+ 1879 0464 01000000 		.4byte	sen2_on_line
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 39
+
+
+ 1880 0468 0A       		.uleb128 0xa
+ 1881 0469 D2010000 		.4byte	.LASF47
+ 1882 046d 01       		.byte	0x1
+ 1883 046e 37       		.byte	0x37
+ 1884 046f 97000000 		.4byte	0x97
+ 1885 0473 05       		.uleb128 0x5
+ 1886 0474 03       		.byte	0x3
+ 1887 0475 02000000 		.4byte	sen3_on_line
+ 1888 0479 0A       		.uleb128 0xa
+ 1889 047a 02020000 		.4byte	.LASF48
+ 1890 047e 01       		.byte	0x1
+ 1891 047f 38       		.byte	0x38
+ 1892 0480 97000000 		.4byte	0x97
+ 1893 0484 05       		.uleb128 0x5
+ 1894 0485 03       		.byte	0x3
+ 1895 0486 03000000 		.4byte	sen4_on_line
+ 1896 048a 0A       		.uleb128 0xa
+ 1897 048b 2B020000 		.4byte	.LASF49
+ 1898 048f 01       		.byte	0x1
+ 1899 0490 38       		.byte	0x38
+ 1900 0491 97000000 		.4byte	0x97
+ 1901 0495 05       		.uleb128 0x5
+ 1902 0496 03       		.byte	0x3
+ 1903 0497 04000000 		.4byte	sen5_on_line
+ 1904 049b 0A       		.uleb128 0xa
+ 1905 049c 53020000 		.4byte	.LASF50
+ 1906 04a0 01       		.byte	0x1
+ 1907 04a1 38       		.byte	0x38
+ 1908 04a2 97000000 		.4byte	0x97
+ 1909 04a6 05       		.uleb128 0x5
+ 1910 04a7 03       		.byte	0x3
+ 1911 04a8 05000000 		.4byte	sen6_on_line
+ 1912 04ac 0A       		.uleb128 0xa
+ 1913 04ad 3B030000 		.4byte	.LASF51
+ 1914 04b1 01       		.byte	0x1
+ 1915 04b2 3B       		.byte	0x3b
+ 1916 04b3 E6000000 		.4byte	0xe6
+ 1917 04b7 05       		.uleb128 0x5
+ 1918 04b8 03       		.byte	0x3
+ 1919 04b9 06000000 		.4byte	g_direction
+ 1920 04bd 0A       		.uleb128 0xa
+ 1921 04be B3010000 		.4byte	.LASF52
+ 1922 04c2 01       		.byte	0x1
+ 1923 04c3 3C       		.byte	0x3c
+ 1924 04c4 E6000000 		.4byte	0xe6
+ 1925 04c8 05       		.uleb128 0x5
+ 1926 04c9 03       		.byte	0x3
+ 1927 04ca 07000000 		.4byte	g_stop_now
+ 1928 04ce 0A       		.uleb128 0xa
+ 1929 04cf 55030000 		.4byte	.LASF53
+ 1930 04d3 01       		.byte	0x1
+ 1931 04d4 3D       		.byte	0x3d
+ 1932 04d5 DF040000 		.4byte	0x4df
+ 1933 04d9 05       		.uleb128 0x5
+ 1934 04da 03       		.byte	0x3
+ 1935 04db 08000000 		.4byte	g_dist_mm
+ 1936 04df 05       		.uleb128 0x5
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 40
+
+
+ 1937 04e0 AD000000 		.4byte	0xad
+ 1938 04e4 0A       		.uleb128 0xa
+ 1939 04e5 AE020000 		.4byte	.LASF54
+ 1940 04e9 01       		.byte	0x1
+ 1941 04ea 40       		.byte	0x40
+ 1942 04eb A2000000 		.4byte	0xa2
+ 1943 04ef 05       		.uleb128 0x5
+ 1944 04f0 03       		.byte	0x3
+ 1945 04f1 0C000000 		.4byte	dir_delay_ticks
+ 1946 04f5 0A       		.uleb128 0xa
+ 1947 04f6 06000000 		.4byte	.LASF55
+ 1948 04fa 01       		.byte	0x1
+ 1949 04fb 41       		.byte	0x41
+ 1950 04fc 97000000 		.4byte	0x97
+ 1951 0500 05       		.uleb128 0x5
+ 1952 0501 03       		.byte	0x3
+ 1953 0502 0E000000 		.4byte	dir_latched_side
+ 1954 0506 0A       		.uleb128 0xa
+ 1955 0507 BE010000 		.4byte	.LASF56
+ 1956 050b 01       		.byte	0x1
+ 1957 050c 44       		.byte	0x44
+ 1958 050d A2000000 		.4byte	0xa2
+ 1959 0511 05       		.uleb128 0x5
+ 1960 0512 03       		.byte	0x3
+ 1961 0513 10000000 		.4byte	turn_cooldown_ticks
+ 1962 0517 14       		.uleb128 0x14
+ 1963 0518 5F030000 		.4byte	.LASF63
+ 1964 051c 04       		.byte	0x4
+ 1965 051d 1207     		.2byte	0x712
+ 1966 051f DF040000 		.4byte	0x4df
+ 1967 0523 00       		.byte	0
+ 1968              		.section	.debug_abbrev,"",%progbits
+ 1969              	.Ldebug_abbrev0:
+ 1970 0000 01       		.uleb128 0x1
+ 1971 0001 11       		.uleb128 0x11
+ 1972 0002 01       		.byte	0x1
+ 1973 0003 25       		.uleb128 0x25
+ 1974 0004 0E       		.uleb128 0xe
+ 1975 0005 13       		.uleb128 0x13
+ 1976 0006 0B       		.uleb128 0xb
+ 1977 0007 03       		.uleb128 0x3
+ 1978 0008 0E       		.uleb128 0xe
+ 1979 0009 1B       		.uleb128 0x1b
+ 1980 000a 0E       		.uleb128 0xe
+ 1981 000b 55       		.uleb128 0x55
+ 1982 000c 17       		.uleb128 0x17
+ 1983 000d 11       		.uleb128 0x11
+ 1984 000e 01       		.uleb128 0x1
+ 1985 000f 10       		.uleb128 0x10
+ 1986 0010 17       		.uleb128 0x17
+ 1987 0011 00       		.byte	0
+ 1988 0012 00       		.byte	0
+ 1989 0013 02       		.uleb128 0x2
+ 1990 0014 24       		.uleb128 0x24
+ 1991 0015 00       		.byte	0
+ 1992 0016 0B       		.uleb128 0xb
+ 1993 0017 0B       		.uleb128 0xb
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 41
+
+
+ 1994 0018 3E       		.uleb128 0x3e
+ 1995 0019 0B       		.uleb128 0xb
+ 1996 001a 03       		.uleb128 0x3
+ 1997 001b 0E       		.uleb128 0xe
+ 1998 001c 00       		.byte	0
+ 1999 001d 00       		.byte	0
+ 2000 001e 03       		.uleb128 0x3
+ 2001 001f 16       		.uleb128 0x16
+ 2002 0020 00       		.byte	0
+ 2003 0021 03       		.uleb128 0x3
+ 2004 0022 0E       		.uleb128 0xe
+ 2005 0023 3A       		.uleb128 0x3a
+ 2006 0024 0B       		.uleb128 0xb
+ 2007 0025 3B       		.uleb128 0x3b
+ 2008 0026 0B       		.uleb128 0xb
+ 2009 0027 49       		.uleb128 0x49
+ 2010 0028 13       		.uleb128 0x13
+ 2011 0029 00       		.byte	0
+ 2012 002a 00       		.byte	0
+ 2013 002b 04       		.uleb128 0x4
+ 2014 002c 24       		.uleb128 0x24
+ 2015 002d 00       		.byte	0
+ 2016 002e 0B       		.uleb128 0xb
+ 2017 002f 0B       		.uleb128 0xb
+ 2018 0030 3E       		.uleb128 0x3e
+ 2019 0031 0B       		.uleb128 0xb
+ 2020 0032 03       		.uleb128 0x3
+ 2021 0033 08       		.uleb128 0x8
+ 2022 0034 00       		.byte	0
+ 2023 0035 00       		.byte	0
+ 2024 0036 05       		.uleb128 0x5
+ 2025 0037 35       		.uleb128 0x35
+ 2026 0038 00       		.byte	0
+ 2027 0039 49       		.uleb128 0x49
+ 2028 003a 13       		.uleb128 0x13
+ 2029 003b 00       		.byte	0
+ 2030 003c 00       		.byte	0
+ 2031 003d 06       		.uleb128 0x6
+ 2032 003e 13       		.uleb128 0x13
+ 2033 003f 01       		.byte	0x1
+ 2034 0040 0B       		.uleb128 0xb
+ 2035 0041 0B       		.uleb128 0xb
+ 2036 0042 3A       		.uleb128 0x3a
+ 2037 0043 0B       		.uleb128 0xb
+ 2038 0044 3B       		.uleb128 0x3b
+ 2039 0045 0B       		.uleb128 0xb
+ 2040 0046 01       		.uleb128 0x1
+ 2041 0047 13       		.uleb128 0x13
+ 2042 0048 00       		.byte	0
+ 2043 0049 00       		.byte	0
+ 2044 004a 07       		.uleb128 0x7
+ 2045 004b 0D       		.uleb128 0xd
+ 2046 004c 00       		.byte	0
+ 2047 004d 03       		.uleb128 0x3
+ 2048 004e 08       		.uleb128 0x8
+ 2049 004f 3A       		.uleb128 0x3a
+ 2050 0050 0B       		.uleb128 0xb
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 42
+
+
+ 2051 0051 3B       		.uleb128 0x3b
+ 2052 0052 0B       		.uleb128 0xb
+ 2053 0053 49       		.uleb128 0x49
+ 2054 0054 13       		.uleb128 0x13
+ 2055 0055 38       		.uleb128 0x38
+ 2056 0056 0B       		.uleb128 0xb
+ 2057 0057 00       		.byte	0
+ 2058 0058 00       		.byte	0
+ 2059 0059 08       		.uleb128 0x8
+ 2060 005a 0D       		.uleb128 0xd
+ 2061 005b 00       		.byte	0
+ 2062 005c 03       		.uleb128 0x3
+ 2063 005d 0E       		.uleb128 0xe
+ 2064 005e 3A       		.uleb128 0x3a
+ 2065 005f 0B       		.uleb128 0xb
+ 2066 0060 3B       		.uleb128 0x3b
+ 2067 0061 0B       		.uleb128 0xb
+ 2068 0062 49       		.uleb128 0x49
+ 2069 0063 13       		.uleb128 0x13
+ 2070 0064 38       		.uleb128 0x38
+ 2071 0065 0B       		.uleb128 0xb
+ 2072 0066 00       		.byte	0
+ 2073 0067 00       		.byte	0
+ 2074 0068 09       		.uleb128 0x9
+ 2075 0069 2E       		.uleb128 0x2e
+ 2076 006a 01       		.byte	0x1
+ 2077 006b 3F       		.uleb128 0x3f
+ 2078 006c 19       		.uleb128 0x19
+ 2079 006d 03       		.uleb128 0x3
+ 2080 006e 0E       		.uleb128 0xe
+ 2081 006f 3A       		.uleb128 0x3a
+ 2082 0070 0B       		.uleb128 0xb
+ 2083 0071 3B       		.uleb128 0x3b
+ 2084 0072 0B       		.uleb128 0xb
+ 2085 0073 27       		.uleb128 0x27
+ 2086 0074 19       		.uleb128 0x19
+ 2087 0075 11       		.uleb128 0x11
+ 2088 0076 01       		.uleb128 0x1
+ 2089 0077 12       		.uleb128 0x12
+ 2090 0078 06       		.uleb128 0x6
+ 2091 0079 40       		.uleb128 0x40
+ 2092 007a 18       		.uleb128 0x18
+ 2093 007b 9642     		.uleb128 0x2116
+ 2094 007d 19       		.uleb128 0x19
+ 2095 007e 01       		.uleb128 0x1
+ 2096 007f 13       		.uleb128 0x13
+ 2097 0080 00       		.byte	0
+ 2098 0081 00       		.byte	0
+ 2099 0082 0A       		.uleb128 0xa
+ 2100 0083 34       		.uleb128 0x34
+ 2101 0084 00       		.byte	0
+ 2102 0085 03       		.uleb128 0x3
+ 2103 0086 0E       		.uleb128 0xe
+ 2104 0087 3A       		.uleb128 0x3a
+ 2105 0088 0B       		.uleb128 0xb
+ 2106 0089 3B       		.uleb128 0x3b
+ 2107 008a 0B       		.uleb128 0xb
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 43
+
+
+ 2108 008b 49       		.uleb128 0x49
+ 2109 008c 13       		.uleb128 0x13
+ 2110 008d 02       		.uleb128 0x2
+ 2111 008e 18       		.uleb128 0x18
+ 2112 008f 00       		.byte	0
+ 2113 0090 00       		.byte	0
+ 2114 0091 0B       		.uleb128 0xb
+ 2115 0092 34       		.uleb128 0x34
+ 2116 0093 00       		.byte	0
+ 2117 0094 03       		.uleb128 0x3
+ 2118 0095 08       		.uleb128 0x8
+ 2119 0096 3A       		.uleb128 0x3a
+ 2120 0097 0B       		.uleb128 0xb
+ 2121 0098 3B       		.uleb128 0x3b
+ 2122 0099 0B       		.uleb128 0xb
+ 2123 009a 49       		.uleb128 0x49
+ 2124 009b 13       		.uleb128 0x13
+ 2125 009c 02       		.uleb128 0x2
+ 2126 009d 18       		.uleb128 0x18
+ 2127 009e 00       		.byte	0
+ 2128 009f 00       		.byte	0
+ 2129 00a0 0C       		.uleb128 0xc
+ 2130 00a1 2E       		.uleb128 0x2e
+ 2131 00a2 01       		.byte	0x1
+ 2132 00a3 03       		.uleb128 0x3
+ 2133 00a4 0E       		.uleb128 0xe
+ 2134 00a5 3A       		.uleb128 0x3a
+ 2135 00a6 0B       		.uleb128 0xb
+ 2136 00a7 3B       		.uleb128 0x3b
+ 2137 00a8 0B       		.uleb128 0xb
+ 2138 00a9 27       		.uleb128 0x27
+ 2139 00aa 19       		.uleb128 0x19
+ 2140 00ab 49       		.uleb128 0x49
+ 2141 00ac 13       		.uleb128 0x13
+ 2142 00ad 11       		.uleb128 0x11
+ 2143 00ae 01       		.uleb128 0x1
+ 2144 00af 12       		.uleb128 0x12
+ 2145 00b0 06       		.uleb128 0x6
+ 2146 00b1 40       		.uleb128 0x40
+ 2147 00b2 18       		.uleb128 0x18
+ 2148 00b3 9642     		.uleb128 0x2116
+ 2149 00b5 19       		.uleb128 0x19
+ 2150 00b6 01       		.uleb128 0x1
+ 2151 00b7 13       		.uleb128 0x13
+ 2152 00b8 00       		.byte	0
+ 2153 00b9 00       		.byte	0
+ 2154 00ba 0D       		.uleb128 0xd
+ 2155 00bb 05       		.uleb128 0x5
+ 2156 00bc 00       		.byte	0
+ 2157 00bd 03       		.uleb128 0x3
+ 2158 00be 08       		.uleb128 0x8
+ 2159 00bf 3A       		.uleb128 0x3a
+ 2160 00c0 0B       		.uleb128 0xb
+ 2161 00c1 3B       		.uleb128 0x3b
+ 2162 00c2 0B       		.uleb128 0xb
+ 2163 00c3 49       		.uleb128 0x49
+ 2164 00c4 13       		.uleb128 0x13
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 44
+
+
+ 2165 00c5 02       		.uleb128 0x2
+ 2166 00c6 18       		.uleb128 0x18
+ 2167 00c7 00       		.byte	0
+ 2168 00c8 00       		.byte	0
+ 2169 00c9 0E       		.uleb128 0xe
+ 2170 00ca 2E       		.uleb128 0x2e
+ 2171 00cb 01       		.byte	0x1
+ 2172 00cc 03       		.uleb128 0x3
+ 2173 00cd 0E       		.uleb128 0xe
+ 2174 00ce 3A       		.uleb128 0x3a
+ 2175 00cf 0B       		.uleb128 0xb
+ 2176 00d0 3B       		.uleb128 0x3b
+ 2177 00d1 0B       		.uleb128 0xb
+ 2178 00d2 27       		.uleb128 0x27
+ 2179 00d3 19       		.uleb128 0x19
+ 2180 00d4 11       		.uleb128 0x11
+ 2181 00d5 01       		.uleb128 0x1
+ 2182 00d6 12       		.uleb128 0x12
+ 2183 00d7 06       		.uleb128 0x6
+ 2184 00d8 40       		.uleb128 0x40
+ 2185 00d9 18       		.uleb128 0x18
+ 2186 00da 9642     		.uleb128 0x2116
+ 2187 00dc 19       		.uleb128 0x19
+ 2188 00dd 01       		.uleb128 0x1
+ 2189 00de 13       		.uleb128 0x13
+ 2190 00df 00       		.byte	0
+ 2191 00e0 00       		.byte	0
+ 2192 00e1 0F       		.uleb128 0xf
+ 2193 00e2 05       		.uleb128 0x5
+ 2194 00e3 00       		.byte	0
+ 2195 00e4 03       		.uleb128 0x3
+ 2196 00e5 0E       		.uleb128 0xe
+ 2197 00e6 3A       		.uleb128 0x3a
+ 2198 00e7 0B       		.uleb128 0xb
+ 2199 00e8 3B       		.uleb128 0x3b
+ 2200 00e9 0B       		.uleb128 0xb
+ 2201 00ea 49       		.uleb128 0x49
+ 2202 00eb 13       		.uleb128 0x13
+ 2203 00ec 02       		.uleb128 0x2
+ 2204 00ed 18       		.uleb128 0x18
+ 2205 00ee 00       		.byte	0
+ 2206 00ef 00       		.byte	0
+ 2207 00f0 10       		.uleb128 0x10
+ 2208 00f1 0F       		.uleb128 0xf
+ 2209 00f2 00       		.byte	0
+ 2210 00f3 0B       		.uleb128 0xb
+ 2211 00f4 0B       		.uleb128 0xb
+ 2212 00f5 49       		.uleb128 0x49
+ 2213 00f6 13       		.uleb128 0x13
+ 2214 00f7 00       		.byte	0
+ 2215 00f8 00       		.byte	0
+ 2216 00f9 11       		.uleb128 0x11
+ 2217 00fa 2E       		.uleb128 0x2e
+ 2218 00fb 01       		.byte	0x1
+ 2219 00fc 3F       		.uleb128 0x3f
+ 2220 00fd 19       		.uleb128 0x19
+ 2221 00fe 03       		.uleb128 0x3
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 45
+
+
+ 2222 00ff 0E       		.uleb128 0xe
+ 2223 0100 3A       		.uleb128 0x3a
+ 2224 0101 0B       		.uleb128 0xb
+ 2225 0102 3B       		.uleb128 0x3b
+ 2226 0103 0B       		.uleb128 0xb
+ 2227 0104 27       		.uleb128 0x27
+ 2228 0105 19       		.uleb128 0x19
+ 2229 0106 49       		.uleb128 0x49
+ 2230 0107 13       		.uleb128 0x13
+ 2231 0108 11       		.uleb128 0x11
+ 2232 0109 01       		.uleb128 0x1
+ 2233 010a 12       		.uleb128 0x12
+ 2234 010b 06       		.uleb128 0x6
+ 2235 010c 40       		.uleb128 0x40
+ 2236 010d 18       		.uleb128 0x18
+ 2237 010e 9642     		.uleb128 0x2116
+ 2238 0110 19       		.uleb128 0x19
+ 2239 0111 01       		.uleb128 0x1
+ 2240 0112 13       		.uleb128 0x13
+ 2241 0113 00       		.byte	0
+ 2242 0114 00       		.byte	0
+ 2243 0115 12       		.uleb128 0x12
+ 2244 0116 0B       		.uleb128 0xb
+ 2245 0117 01       		.byte	0x1
+ 2246 0118 11       		.uleb128 0x11
+ 2247 0119 01       		.uleb128 0x1
+ 2248 011a 12       		.uleb128 0x12
+ 2249 011b 06       		.uleb128 0x6
+ 2250 011c 00       		.byte	0
+ 2251 011d 00       		.byte	0
+ 2252 011e 13       		.uleb128 0x13
+ 2253 011f 34       		.uleb128 0x34
+ 2254 0120 00       		.byte	0
+ 2255 0121 03       		.uleb128 0x3
+ 2256 0122 0E       		.uleb128 0xe
+ 2257 0123 3A       		.uleb128 0x3a
+ 2258 0124 0B       		.uleb128 0xb
+ 2259 0125 3B       		.uleb128 0x3b
+ 2260 0126 05       		.uleb128 0x5
+ 2261 0127 49       		.uleb128 0x49
+ 2262 0128 13       		.uleb128 0x13
+ 2263 0129 02       		.uleb128 0x2
+ 2264 012a 18       		.uleb128 0x18
+ 2265 012b 00       		.byte	0
+ 2266 012c 00       		.byte	0
+ 2267 012d 14       		.uleb128 0x14
+ 2268 012e 34       		.uleb128 0x34
+ 2269 012f 00       		.byte	0
+ 2270 0130 03       		.uleb128 0x3
+ 2271 0131 0E       		.uleb128 0xe
+ 2272 0132 3A       		.uleb128 0x3a
+ 2273 0133 0B       		.uleb128 0xb
+ 2274 0134 3B       		.uleb128 0x3b
+ 2275 0135 05       		.uleb128 0x5
+ 2276 0136 49       		.uleb128 0x49
+ 2277 0137 13       		.uleb128 0x13
+ 2278 0138 3F       		.uleb128 0x3f
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 46
+
+
+ 2279 0139 19       		.uleb128 0x19
+ 2280 013a 3C       		.uleb128 0x3c
+ 2281 013b 19       		.uleb128 0x19
+ 2282 013c 00       		.byte	0
+ 2283 013d 00       		.byte	0
+ 2284 013e 00       		.byte	0
+ 2285              		.section	.debug_aranges,"",%progbits
+ 2286 0000 44000000 		.4byte	0x44
+ 2287 0004 0200     		.2byte	0x2
+ 2288 0006 00000000 		.4byte	.Ldebug_info0
+ 2289 000a 04       		.byte	0x4
+ 2290 000b 00       		.byte	0
+ 2291 000c 0000     		.2byte	0
+ 2292 000e 0000     		.2byte	0
+ 2293 0010 00000000 		.4byte	.LFB64
+ 2294 0014 78010000 		.4byte	.LFE64-.LFB64
+ 2295 0018 00000000 		.4byte	.LFB65
+ 2296 001c 44000000 		.4byte	.LFE65-.LFB65
+ 2297 0020 00000000 		.4byte	.LFB66
+ 2298 0024 48010000 		.4byte	.LFE66-.LFB66
+ 2299 0028 00000000 		.4byte	.LFB67
+ 2300 002c 3A000000 		.4byte	.LFE67-.LFB67
+ 2301 0030 00000000 		.4byte	.LFB68
+ 2302 0034 84020000 		.4byte	.LFE68-.LFB68
+ 2303 0038 00000000 		.4byte	.LFB69
+ 2304 003c 0C020000 		.4byte	.LFE69-.LFB69
+ 2305 0040 00000000 		.4byte	0
+ 2306 0044 00000000 		.4byte	0
+ 2307              		.section	.debug_ranges,"",%progbits
+ 2308              	.Ldebug_ranges0:
+ 2309 0000 00000000 		.4byte	.LFB64
+ 2310 0004 78010000 		.4byte	.LFE64
+ 2311 0008 00000000 		.4byte	.LFB65
+ 2312 000c 44000000 		.4byte	.LFE65
+ 2313 0010 00000000 		.4byte	.LFB66
+ 2314 0014 48010000 		.4byte	.LFE66
+ 2315 0018 00000000 		.4byte	.LFB67
+ 2316 001c 3A000000 		.4byte	.LFE67
+ 2317 0020 00000000 		.4byte	.LFB68
+ 2318 0024 84020000 		.4byte	.LFE68
+ 2319 0028 00000000 		.4byte	.LFB69
+ 2320 002c 0C020000 		.4byte	.LFE69
+ 2321 0030 00000000 		.4byte	0
+ 2322 0034 00000000 		.4byte	0
+ 2323              		.section	.debug_line,"",%progbits
+ 2324              	.Ldebug_line0:
+ 2325 0000 9C030000 		.section	.debug_str,"MS",%progbits,1
+ 2325      02003F01 
+ 2325      00000201 
+ 2325      FB0E0D00 
+ 2325      01010101 
+ 2326              	.LASF37:
+ 2327 0000 76616C69 		.ascii	"valid\000"
+ 2327      6400
+ 2328              	.LASF55:
+ 2329 0006 6469725F 		.ascii	"dir_latched_side\000"
+ 2329      6C617463 
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 47
+
+
+ 2329      6865645F 
+ 2329      73696465 
+ 2329      00
+ 2330              	.LASF31:
+ 2331 0017 56345F70 		.ascii	"V4_pp\000"
+ 2331      7000
+ 2332              	.LASF2:
+ 2333 001d 73686F72 		.ascii	"short int\000"
+ 2333      7420696E 
+ 2333      7400
+ 2334              	.LASF21:
+ 2335 0027 73697A65 		.ascii	"sizetype\000"
+ 2335      74797065 
+ 2335      00
+ 2336              	.LASF57:
+ 2337 0030 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 2337      43313120 
+ 2337      352E342E 
+ 2337      31203230 
+ 2337      31363036 
+ 2338 0063 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 2338      20726576 
+ 2338      6973696F 
+ 2338      6E203233 
+ 2338      37373135 
+ 2339 0096 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 2339      66756E63 
+ 2339      74696F6E 
+ 2339      2D736563 
+ 2339      74696F6E 
+ 2340              	.LASF62:
+ 2341 00be 6D61696E 		.ascii	"main\000"
+ 2341      00
+ 2342              	.LASF4:
+ 2343 00c3 5F5F7569 		.ascii	"__uint16_t\000"
+ 2343      6E743136 
+ 2343      5F7400
+ 2344              	.LASF16:
+ 2345 00ce 696E7436 		.ascii	"int64_t\000"
+ 2345      345F7400 
+ 2346              	.LASF13:
+ 2347 00d6 75696E74 		.ascii	"uint8_t\000"
+ 2347      385F7400 
+ 2348              	.LASF25:
+ 2349 00de 72617732 		.ascii	"raw2\000"
+ 2349      00
+ 2350              	.LASF29:
+ 2351 00e3 646D6D5F 		.ascii	"dmm_abs\000"
+ 2351      61627300 
+ 2352              	.LASF59:
+ 2353 00eb 433A5C55 		.ascii	"C:\\Users\\yram171\\Downloads\\Compsys-301-CODE\\YA"
+ 2353      73657273 
+ 2353      5C797261 
+ 2353      6D313731 
+ 2353      5C446F77 
+ 2354 0119 53482043 		.ascii	"SH Code\\CS301_Class.cydsn\000"
+ 2354      6F64655C 
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 48
+
+
+ 2354      43533330 
+ 2354      315F436C 
+ 2354      6173732E 
+ 2355              	.LASF32:
+ 2356 0133 56355F70 		.ascii	"V5_pp\000"
+ 2356      7000
+ 2357              	.LASF17:
+ 2358 0139 666C6F61 		.ascii	"float\000"
+ 2358      7400
+ 2359              	.LASF10:
+ 2360 013f 6C6F6E67 		.ascii	"long long int\000"
+ 2360      206C6F6E 
+ 2360      6720696E 
+ 2360      7400
+ 2361              	.LASF19:
+ 2362 014d 63686172 		.ascii	"char\000"
+ 2362      00
+ 2363              	.LASF23:
+ 2364 0152 70695F74 		.ascii	"pi_t\000"
+ 2364      00
+ 2365              	.LASF7:
+ 2366 0157 6C6F6E67 		.ascii	"long int\000"
+ 2366      20696E74 
+ 2366      00
+ 2367              	.LASF9:
+ 2368 0160 5F5F696E 		.ascii	"__int64_t\000"
+ 2368      7436345F 
+ 2368      7400
+ 2369              	.LASF39:
+ 2370 016a 755F7261 		.ascii	"u_raw\000"
+ 2370      7700
+ 2371              	.LASF3:
+ 2372 0170 5F5F7569 		.ascii	"__uint8_t\000"
+ 2372      6E74385F 
+ 2372      7400
+ 2373              	.LASF45:
+ 2374 017a 73656E31 		.ascii	"sen1_on_line\000"
+ 2374      5F6F6E5F 
+ 2374      6C696E65 
+ 2374      00
+ 2375              	.LASF1:
+ 2376 0187 756E7369 		.ascii	"unsigned char\000"
+ 2376      676E6564 
+ 2376      20636861 
+ 2376      7200
+ 2377              	.LASF24:
+ 2378 0195 72617731 		.ascii	"raw1\000"
+ 2378      00
+ 2379              	.LASF20:
+ 2380 019a 6C6F6E67 		.ascii	"long double\000"
+ 2380      20646F75 
+ 2380      626C6500 
+ 2381              	.LASF46:
+ 2382 01a6 73656E32 		.ascii	"sen2_on_line\000"
+ 2382      5F6F6E5F 
+ 2382      6C696E65 
+ 2382      00
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 49
+
+
+ 2383              	.LASF52:
+ 2384 01b3 675F7374 		.ascii	"g_stop_now\000"
+ 2384      6F705F6E 
+ 2384      6F7700
+ 2385              	.LASF56:
+ 2386 01be 7475726E 		.ascii	"turn_cooldown_ticks\000"
+ 2386      5F636F6F 
+ 2386      6C646F77 
+ 2386      6E5F7469 
+ 2386      636B7300 
+ 2387              	.LASF47:
+ 2388 01d2 73656E33 		.ascii	"sen3_on_line\000"
+ 2388      5F6F6E5F 
+ 2388      6C696E65 
+ 2388      00
+ 2389              	.LASF0:
+ 2390 01df 7369676E 		.ascii	"signed char\000"
+ 2390      65642063 
+ 2390      68617200 
+ 2391              	.LASF11:
+ 2392 01eb 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 2392      206C6F6E 
+ 2392      6720756E 
+ 2392      7369676E 
+ 2392      65642069 
+ 2393              	.LASF48:
+ 2394 0202 73656E34 		.ascii	"sen4_on_line\000"
+ 2394      5F6F6E5F 
+ 2394      6C696E65 
+ 2394      00
+ 2395              	.LASF12:
+ 2396 020f 756E7369 		.ascii	"unsigned int\000"
+ 2396      676E6564 
+ 2396      20696E74 
+ 2396      00
+ 2397              	.LASF33:
+ 2398 021c 56365F70 		.ascii	"V6_pp\000"
+ 2398      7000
+ 2399              	.LASF14:
+ 2400 0222 75696E74 		.ascii	"uint16_t\000"
+ 2400      31365F74 
+ 2400      00
+ 2401              	.LASF49:
+ 2402 022b 73656E35 		.ascii	"sen5_on_line\000"
+ 2402      5F6F6E5F 
+ 2402      6C696E65 
+ 2402      00
+ 2403              	.LASF35:
+ 2404 0238 5F636C61 		.ascii	"_clampf\000"
+ 2404      6D706600 
+ 2405              	.LASF5:
+ 2406 0240 73686F72 		.ascii	"short unsigned int\000"
+ 2406      7420756E 
+ 2406      7369676E 
+ 2406      65642069 
+ 2406      6E7400
+ 2407              	.LASF50:
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 50
+
+
+ 2408 0253 73656E36 		.ascii	"sen6_on_line\000"
+ 2408      5F6F6E5F 
+ 2408      6C696E65 
+ 2408      00
+ 2409              	.LASF28:
+ 2410 0260 6E756D5F 		.ascii	"num_abs\000"
+ 2410      61627300 
+ 2411              	.LASF43:
+ 2412 0268 63656E74 		.ascii	"center_duty_est\000"
+ 2412      65725F64 
+ 2412      7574795F 
+ 2412      65737400 
+ 2413              	.LASF15:
+ 2414 0278 696E7433 		.ascii	"int32_t\000"
+ 2414      325F7400 
+ 2415              	.LASF36:
+ 2416 0280 70695F73 		.ascii	"pi_step\000"
+ 2416      74657000 
+ 2417              	.LASF44:
+ 2418 0288 73746565 		.ascii	"steer\000"
+ 2418      7200
+ 2419              	.LASF42:
+ 2420 028e 5F426F6F 		.ascii	"_Bool\000"
+ 2420      6C00
+ 2421              	.LASF60:
+ 2422 0294 6973725F 		.ascii	"isr_qd_Handler\000"
+ 2422      71645F48 
+ 2422      616E646C 
+ 2422      657200
+ 2423              	.LASF30:
+ 2424 02a3 646D6D5F 		.ascii	"dmm_signed\000"
+ 2424      7369676E 
+ 2424      656400
+ 2425              	.LASF54:
+ 2426 02ae 6469725F 		.ascii	"dir_delay_ticks\000"
+ 2426      64656C61 
+ 2426      795F7469 
+ 2426      636B7300 
+ 2427              	.LASF38:
+ 2428 02be 695F6E65 		.ascii	"i_next\000"
+ 2428      787400
+ 2429              	.LASF58:
+ 2430 02c5 6D61696E 		.ascii	"main.c\000"
+ 2430      2E6300
+ 2431              	.LASF8:
+ 2432 02cc 6C6F6E67 		.ascii	"long unsigned int\000"
+ 2432      20756E73 
+ 2432      69676E65 
+ 2432      6420696E 
+ 2432      7400
+ 2433              	.LASF27:
+ 2434 02de 64617667 		.ascii	"davg_sign\000"
+ 2434      5F736967 
+ 2434      6E00
+ 2435              	.LASF61:
+ 2436 02e8 6C696768 		.ascii	"light_sensors_update_and_maybe_request_turn\000"
+ 2436      745F7365 
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccUA1YHg.s 			page 51
+
+
+ 2436      6E736F72 
+ 2436      735F7570 
+ 2436      64617465 
+ 2437              	.LASF40:
+ 2438 0314 7361745F 		.ascii	"sat_hi\000"
+ 2438      686900
+ 2439              	.LASF22:
+ 2440 031b 745F6C6F 		.ascii	"t_loss\000"
+ 2440      737300
+ 2441              	.LASF6:
+ 2442 0322 5F5F696E 		.ascii	"__int32_t\000"
+ 2442      7433325F 
+ 2442      7400
+ 2443              	.LASF34:
+ 2444 032c 6E6F726D 		.ascii	"norm01_from_pp\000"
+ 2444      30315F66 
+ 2444      726F6D5F 
+ 2444      707000
+ 2445              	.LASF51:
+ 2446 033b 675F6469 		.ascii	"g_direction\000"
+ 2446      72656374 
+ 2446      696F6E00 
+ 2447              	.LASF41:
+ 2448 0347 7361745F 		.ascii	"sat_lo\000"
+ 2448      6C6F00
+ 2449              	.LASF18:
+ 2450 034e 646F7562 		.ascii	"double\000"
+ 2450      6C6500
+ 2451              	.LASF53:
+ 2452 0355 675F6469 		.ascii	"g_dist_mm\000"
+ 2452      73745F6D 
+ 2452      6D00
+ 2453              	.LASF63:
+ 2454 035f 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 2454      52784275 
+ 2454      66666572 
+ 2454      00
+ 2455              	.LASF26:
+ 2456 036c 64617667 		.ascii	"davg_abs\000"
+ 2456      5F616273 
+ 2456      00
+ 2457              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
+>>>>>>> Stashed changes

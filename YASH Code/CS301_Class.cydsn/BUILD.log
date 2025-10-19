@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 --------------- Build Started: 10/19/2025 22:50:09 Project: CS301_Class, Configuration: ARM GCC 5.4-2016-q2-update Debug ---------------
 The code generation step is up to date.
 arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/main.lst -g -D DEBUG -Wall -ffunction-sections -ffat-lto-objects -O0 -c main.c -o .\CortexM3\ARM_GCC_541\Debug\main.o
@@ -12,3 +13,88 @@ cyelftool.exe -S "C:\Users\ylee818\Downloads\301\YASH Code\CS301_Class.cydsn\Cor
 Flash used: 13198 of 262144 bytes (5.0%).
 SRAM used: 2629 of 65536 bytes (4.0%). Stack: 2048 bytes. Heap: 128 bytes.
 --------------- Build Succeeded: 10/19/2025 22:50:10 ---------------
+=======
+--------------- Build Started: 10/19/2025 23:38:14 Project: CS301_Class, Configuration: ARM GCC 5.4-2016-q2-update Debug ---------------
+The code generation step is up to date.
+arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/main.lst -g -D DEBUG -Wall -ffunction-sections -ffat-lto-objects -O0 -c main.c -o .\CortexM3\ARM_GCC_541\Debug\main.o
+main.c:135:0: warning: "STEER_MAX" redefined
+ #define STEER_MAX        13
+ ^
+main.c:131:0: note: this is the location of the previous definition
+ #define STEER_MAX        18
+ ^
+main.c:136:0: warning: "KP" redefined
+ #define KP               18.0f
+ ^
+main.c:132:0: note: this is the location of the previous definition
+ #define KP               14.5f
+ ^
+main.c:137:0: warning: "KI" redefined
+ #define KI               2.0f
+ ^
+main.c:133:0: note: this is the location of the previous definition
+ #define KI               3.0f
+ ^
+arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/directions.lst -g -D DEBUG -Wall -ffunction-sections -ffat-lto-objects -O0 -c directions.c -o .\CortexM3\ARM_GCC_541\Debug\directions.o
+directions.c:16:1: error: expected identifier or '(' before '<<' token
+ <<<<<<< HEAD
+ ^
+directions.c:21:0: warning: "PIVOT_SPEED_L" redefined
+ #define PIVOT_SPEED_L         28   // left turn speed
+ ^
+directions.c:17:0: note: this is the location of the previous definition
+ #define PIVOT_SPEED_L         29   // left turn speed
+ ^
+directions.c:22:0: warning: "PIVOT_SPEED_R" redefined
+ #define PIVOT_SPEED_R         31   // right turn speed
+ ^
+directions.c:18:0: note: this is the location of the previous definition
+ #define PIVOT_SPEED_R         30   // right turn speed
+ ^
+directions.c:23:0: warning: "STOP_BEFORE_MS" redefined
+ #define STOP_BEFORE_MS        90
+ ^
+directions.c:19:0: note: this is the location of the previous definition
+ #define STOP_BEFORE_MS        100
+ ^
+directions.c:24:9: error: invalid suffix "c7aaae47317563c7fe234c6eca35286da803793" on integer constant
+ >>>>>>> 1c7aaae47317563c7fe234c6eca35286da803793
+         ^
+directions.c:37:3: warning: data definition has no type or storage class
+ } dir_state_t;
+   ^
+The command 'arm-none-eabi-gcc.exe' failed with exit code '1'.
+directions.c:37:3: warning: type defaults to 'int' in declaration of 'dir_state_t' [-Wimplicit-int]
+directions.c:39:20: error: expected '=', ',', ';', 'asm' or '__attribute__' before 's_state'
+ static dir_state_t s_state = DIR_IDLE;
+                    ^
+directions.c: In function 'finish_and_release':
+directions.c:128:5: error: 's_state' undeclared (first use in this function)
+     s_state = DIR_IDLE;
+     ^
+directions.c:128:5: note: each undeclared identifier is reported only once for each function it appears in
+directions.c:128:15: error: 'DIR_IDLE' undeclared (first use in this function)
+     s_state = DIR_IDLE;
+               ^
+directions.c: In function 'Directions_Init':
+directions.c:148:5: error: 's_state' undeclared (first use in this function)
+     s_state = DIR_IDLE;
+     ^
+directions.c:148:15: error: 'DIR_IDLE' undeclared (first use in this function)
+     s_state = DIR_IDLE;
+               ^
+directions.c: In function 'Directions_Handle':
+directions.c:159:13: error: 's_state' undeclared (first use in this function)
+     switch (s_state)
+             ^
+directions.c:161:10: error: 'DIR_IDLE' undeclared (first use in this function)
+     case DIR_IDLE:
+          ^
+directions.c:175:23: error: 'DIR_TURNING' undeclared (first use in this function)
+             s_state = DIR_TURNING;
+                       ^
+directions.c:198:23: error: 'DIR_FINISH' undeclared (first use in this function)
+             s_state = DIR_FINISH;
+                       ^
+--------------- Build Failed: 10/19/2025 23:38:15 ---------------
+>>>>>>> Stashed changes
