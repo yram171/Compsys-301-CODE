@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 1
 
 
    1              		.syntax unified
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
    4:directions.c  **** 
    5:directions.c  **** #include "directions.h"
    6:directions.c  **** #include "motor_s.h"     // set_motors_symmetric(), set_motors_with_trim_and_steer(), motor_enable
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 2
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 2
 
 
    7:directions.c  **** #include "defines.h"     // your project-wide defines
@@ -71,7 +71,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
   14:directions.c  **** /* Pivot speed (%) — keep modest to avoid overshoot */
   15:directions.c  **** // Side-specific pivot speeds (percent duty)
   16:directions.c  **** #define PIVOT_SPEED_L         28   // left turn speed
-  17:directions.c  **** #define PIVOT_SPEED_R         28   // right turn speed
+  17:directions.c  **** #define PIVOT_SPEED_R         29   // right turn speed
   18:directions.c  **** #define STOP_BEFORE_MS        100
   19:directions.c  **** #define BRAKE_AFTER_MS        1000
   20:directions.c  **** 
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
   58              		.cfi_def_cfa_offset 4
   59              		.cfi_offset 7, -4
   60 0002 00AF     		add	r7, sp, #0
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 3
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 3
 
 
   61              		.cfi_def_cfa_register 7
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
   99              		@ sp needed
  100 000e 80BC     		pop	{r7}
  101              		.cfi_restore 7
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 4
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 4
 
 
  102              		.cfi_def_cfa_offset 0
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
   83:directions.c  ****     if (dR < 0) dR = -dR;
  144              		.loc 1 83 0 is_stmt 1
  145 001a 3B68     		ldr	r3, [r7]
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 5
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 5
 
 
  146 001c 002B     		cmp	r3, #0
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  190              		@ frame_needed = 1, uses_anonymous_args = 0
  191 0000 80B5     		push	{r7, lr}
  192              		.cfi_def_cfa_offset 8
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 6
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 6
 
 
  193              		.cfi_offset 7, -8
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  240              		.section	.text.pivot_right_speed,"ax",%progbits
  241              		.align	2
  242              		.thumb
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 7
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 7
 
 
  243              		.thumb_func
@@ -382,7 +382,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  258              		.cfi_def_cfa_register 7
  104:directions.c  ****     const int pct = PIVOT_SPEED_R;
  259              		.loc 1 104 0
- 260 0006 1C23     		movs	r3, #28
+ 260 0006 1D23     		movs	r3, #29
  261 0008 7B61     		str	r3, [r7, #20]
  105:directions.c  ****     int L = +pct;
  262              		.loc 1 105 0
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  288 0034 FFF7FEFF 		bl	set_motors_with_trim_and_steer
  110:directions.c  **** }
  289              		.loc 1 110 0
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 8
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 8
 
 
  290 0038 00BF     		nop
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  122:directions.c  ****     s_state = DIR_IDLE;
  333              		.loc 1 122 0 is_stmt 1
  334 001c 134B     		ldr	r3, .L14
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 9
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 9
 
 
  335 001e 0022     		movs	r2, #0
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  375              		.cfi_def_cfa_offset 8
  376 0068 BD46     		mov	sp, r7
  377              		.cfi_def_cfa_register 13
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 10
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 10
 
 
  378              		@ sp needed
@@ -598,7 +598,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  423 0018 0022     		movs	r2, #0
  424 001a 1A60     		str	r2, [r3]
  146:directions.c  ****     s_safety_count = 0;
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 11
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 11
 
 
  425              		.loc 1 146 0
@@ -658,7 +658,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  474              		.loc 1 151 0 is_stmt 0 discriminator 1
  475 000e 7B68     		ldr	r3, [r7, #4]
  476 0010 1B78     		ldrb	r3, [r3]
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 12
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 12
 
 
  477 0012 DBB2     		uxtb	r3, r3
@@ -718,7 +718,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  517 0050 FB7B     		ldrb	r3, [r7, #15]
  518 0052 1370     		strb	r3, [r2]
  166:directions.c  ****             s_target_ticks = (req == 1u) ? TICKS_90_LEFT : TICKS_90_RIGHT;
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 13
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 13
 
 
  519              		.loc 1 166 0
@@ -778,7 +778,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  561              	.L32:
  179:directions.c  ****         }
  180:directions.c  **** 
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 14
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 14
 
 
  181:directions.c  **** 
@@ -838,7 +838,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  199:directions.c  ****         break;
  598              		.loc 1 199 0
  599 00c8 06E0     		b	.L30
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 15
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 15
 
 
  600              	.L35:
@@ -898,7 +898,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  645 000a 04       		.byte	0x4
  646 000b 01       		.uleb128 0x1
  647 000c 0A000000 		.4byte	.LASF41
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 16
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 16
 
 
  648 0010 0C       		.byte	0xc
@@ -958,7 +958,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  702 007f 04       		.byte	0x4
  703 0080 05       		.byte	0x5
  704 0081 696E7400 		.ascii	"int\000"
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 17
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 17
 
 
  705 0085 02       		.uleb128 0x2
@@ -1018,7 +1018,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  759 00ee B2020000 		.4byte	.LASF22
  760 00f2 02       		.byte	0x2
  761 00f3 07       		.uleb128 0x7
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 18
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 18
 
 
  762 00f4 9A010000 		.4byte	.LASF23
@@ -1078,7 +1078,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  816 015e 00000000 		.4byte	.LFB66
  817 0162 40000000 		.4byte	.LFE66-.LFB66
  818 0166 01       		.uleb128 0x1
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 19
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 19
 
 
  819 0167 9C       		.byte	0x9c
@@ -1138,7 +1138,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  873 01c9 0A       		.uleb128 0xa
  874 01ca 70637400 		.ascii	"pct\000"
  875 01ce 01       		.byte	0x1
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 20
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 20
 
 
  876 01cf 68       		.byte	0x68
@@ -1198,7 +1198,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  930 022e 74       		.sleb128 -12
  931 022f 00       		.byte	0
  932 0230 0F       		.uleb128 0xf
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 21
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 21
 
 
  933 0231 04       		.byte	0x4
@@ -1258,7 +1258,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  987 02a0 03       		.byte	0x3
  988 02a1 04000000 		.4byte	TICKS_90_RIGHT
  989 02a5 0C       		.uleb128 0xc
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 22
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 22
 
 
  990 02a6 48020000 		.4byte	.LASF36
@@ -1318,7 +1318,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  1044 0007 03       		.uleb128 0x3
  1045 0008 0E       		.uleb128 0xe
  1046 0009 1B       		.uleb128 0x1b
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 23
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 23
 
 
  1047 000a 0E       		.uleb128 0xe
@@ -1378,7 +1378,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  1101 0040 0B       		.uleb128 0xb
  1102 0041 0B       		.uleb128 0xb
  1103 0042 49       		.uleb128 0x49
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 24
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 24
 
 
  1104 0043 13       		.uleb128 0x13
@@ -1438,7 +1438,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  1158 007a 40       		.uleb128 0x40
  1159 007b 18       		.uleb128 0x18
  1160 007c 9742     		.uleb128 0x2117
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 25
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 25
 
 
  1161 007e 19       		.uleb128 0x19
@@ -1498,7 +1498,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  1215 00b5 02       		.uleb128 0x2
  1216 00b6 18       		.uleb128 0x18
  1217 00b7 00       		.byte	0
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 26
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 26
 
 
  1218 00b8 00       		.byte	0
@@ -1558,7 +1558,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  1272 00ef 00       		.byte	0
  1273 00f0 11       		.uleb128 0x11
  1274 00f1 2E       		.uleb128 0x2e
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 27
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 27
 
 
  1275 00f2 01       		.byte	0x1
@@ -1618,7 +1618,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  1329 0024 44000000 		.4byte	.LFE65-.LFB65
  1330 0028 00000000 		.4byte	.LFB66
  1331 002c 40000000 		.4byte	.LFE66-.LFB66
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 28
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 28
 
 
  1332 0030 00000000 		.4byte	.LFB67
@@ -1678,7 +1678,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  1370      74696F6E 
  1370      2D736563 
  1370      74696F6E 
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 29
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 29
 
 
  1371              	.LASF40:
@@ -1738,7 +1738,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  1393      7200
  1394              	.LASF28:
  1395 015b 7069766F 		.ascii	"pivot_left_speed\000"
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 30
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 30
 
 
  1395      745F6C65 
@@ -1798,7 +1798,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  1417      5F524947 
  1417      485400
  1418              	.LASF11:
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 31
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 31
 
 
  1419 01fd 756E7369 		.ascii	"unsigned int\000"
@@ -1858,7 +1858,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 1
  1444              	.LASF2:
  1445 0296 73686F72 		.ascii	"short int\000"
  1445      7420696E 
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccfKAmGJ.s 			page 32
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccBOa8EF.s 			page 32
 
 
  1445      7400

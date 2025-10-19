@@ -118,7 +118,7 @@ static void light_sensors_update_and_maybe_request_turn(uint16_t* V4_pp, uint16_
 /* ================= PI Controller (same as your current file) ================= */
 #define STEER_MAX        18
 #define KP               14.0f
-#define KI               4.0f
+#define KI               3.0f
 #define INT_LIM          30.0f
 #define LOSS_TIMEOUT_T   0.25f
 
@@ -201,6 +201,9 @@ int main(void)
     pi_t pi = { .i = 0.0f, .u = 0.0f, .t_loss = 0.0f };
     
     CyDelay(1000);  // So the motors don't jump
+    set_motors_with_trim_and_steer(100,-10);
+    CyDelay(40);
+    set_motors_symmetric(0); 
 
     for(;;){
         /* Distance stop */
