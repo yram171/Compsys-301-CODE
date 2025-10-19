@@ -118,7 +118,7 @@ static void light_sensors_update_and_maybe_request_turn(uint16_t* V4_pp, uint16_
 /* ================= PI Controller (same as your current file) ================= */
 #define STEER_MAX        18
 #define KP               14.0f
-#define KI               2.0f
+#define KI               4.0f
 #define INT_LIM          30.0f
 #define LOSS_TIMEOUT_T   0.25f
 

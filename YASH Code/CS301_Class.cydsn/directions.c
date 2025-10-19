@@ -20,7 +20,7 @@ static volatile int32_t TICKS_90_RIGHT = 90;
 
 /* Safety: max number of handler calls allowed while turning.
  * With your ~8 ms loop this is ~3.2 s (400 * 8 ms) which is plenty. */
-#define MAX_TURN_HANDLER_TICKS  29
+#define MAX_TURN_HANDLER_TICKS  28
 
 /* ===================== Internal state ===================== */
 typedef enum {
@@ -113,11 +113,6 @@ static void pivot_right_speed(void)
 /* Ensure we always exit cleanly and release to straight */
 static void finish_and_release(volatile uint8_t* p_dir)
 {
-    /* Stop motion and brief brake/coast window */
-    set_motors_symmetric(0); 
-    CyDelay(BRAKE_AFTER_MS);
-    set_motors_symmetric(0);
-
     /* Give counters back to the background task */
     enc_resume_background();
     enc_reset_local();
@@ -129,6 +124,15 @@ static void finish_and_release(volatile uint8_t* p_dir)
     s_target_ticks = 0;
     s_acc_ticks = 0;
     s_safety_count = 0;
+    
+    /* Stop motion and brief brake/coast window */
+    set_motors_symmetric(0); 
+    CyDelay(BRAKE_AFTER_MS);
+    set_motors_symmetric(0);
+
+    set_motors_with_trim_and_steer(100,-10);
+    CyDelay(40);
+    set_motors_symmetric(0); 
 }
 
 /* ======================= Public API ======================= */
