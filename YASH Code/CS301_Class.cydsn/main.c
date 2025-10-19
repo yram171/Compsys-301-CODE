@@ -118,10 +118,13 @@ static void light_sensors_update_and_maybe_request_turn(uint16_t* V4_pp, uint16_
 /* ================= PI Controller (same as your current file) ================= */
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #define STEER_MAX        13
 #define KP               18.0f
 #define KI               2.0f
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -134,6 +137,9 @@ static void light_sensors_update_and_maybe_request_turn(uint16_t* V4_pp, uint16_
 #define KI               2.0f
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
