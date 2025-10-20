@@ -15,6 +15,7 @@ static volatile int32_t TICKS_90_RIGHT = 90;
 // Side-specific pivot speeds (percent duty)
 #define PIVOT_SPEED_L           25   // left turn speed
 #define PIVOT_SPEED_R           28   // right turn speed
+#define PIVOT_SPEED_U           60   // right turn speed
 #define STOP_BEFORE_MSL        110
 #define STOP_BEFORE_MSR        100
 #define BRAKE_AFTER_MS        1000
@@ -110,6 +111,16 @@ static void pivot_right_speed(void)
     set_motors_with_trim_and_steer(base, steer);
 }
 
+static void pivot_uturn_speed(void)
+{
+    const int pct = PIVOT_SPEED_U;
+    int L = +pct;
+    int R = -pct;
+    int base  = (L + R) / 2;
+    int steer = (R - L) / 2;
+    set_motors_with_trim_and_steer(base, steer);
+}
+
 
 /* Ensure we always exit cleanly and release to straight */
 static void finish_and_release(volatile uint8_t* p_dir)
@@ -182,6 +193,19 @@ void Directions_Handle(volatile uint8_t* p_dir)
             s_acc_ticks = 0;
             s_safety_count = 0;
             s_state = DIR_TURNING;
+        } else if (req == 3u){
+            set_motors_symmetric(0);
+            motor_enable(0u, 0u);
+            CyDelay(STOP_BEFORE_MSR);
+
+            //enc_pause_background();
+            enc_reset_local();
+
+            s_turn_side = req; /* latch side */
+            s_target_ticks = (req == 1u) ? TICKS_90_LEFT : TICKS_90_RIGHT;
+            s_acc_ticks = 0;
+            s_safety_count = 0;
+            s_state = DIR_TURNING;
         }
         break;
 
@@ -189,8 +213,10 @@ void Directions_Handle(volatile uint8_t* p_dir)
         /* Drive the pivot */
         if (s_turn_side == 1u) {
             pivot_left_speed();
-        } else {
+        } else if(s_turn_side == 2u) {
             pivot_right_speed();
+        } else if(s_turn_side == 3u) {
+            pivot_uturn_speed();
         }
 
 
