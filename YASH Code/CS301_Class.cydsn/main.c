@@ -12,15 +12,16 @@
 #include "motor_s.h"     // set_motors_*, motor_enable
 #include "directions.h"  // Directions_* turning module
 
+
 /* ===== Loop pacing (kept) ===== */
 #define LOOP_DT_MS               8u
 #define DT_S   ( (float)LOOP_DT_MS / 1000.0f )
 
 /* ===== Cruise speed / distance target (kept) ===== */
 #define VMAX_CONST_MM_S        1000
-#define SPEED_FRAC_PERCENT      25
+#define SPEED_FRAC_PERCENT      20
 #define V_CRUISE_MM_S  ((int32_t)VMAX_CONST_MM_S * (int32_t)SPEED_FRAC_PERCENT / 100)
-#define TARGET_DIST_MM        20000
+#define TARGET_DIST_MM        999999  // HALF THE DISTANCE   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 /* ===== Encoder → mm conversion (kept) ===== */
 #define QD_SAMPLE_MS             5u
@@ -29,7 +30,7 @@
 #define PI_X1000              3142
 #define PERIM_MM_X1000   ((int32_t)(2 * PI_X1000 * R_MM))
 #define MM_PER_COUNT_X1000     ( PERIM_MM_X1000 / CPR_OUTSHAFT )
-#define CALIB_DIST_X1000     1500
+#define CALIB_DIST_X1000     1000   // Changed to 1000 to avoid scaling
 #define APPLY_CALIB_DIST(x)  ( (int32_t)(((int64_t)(x) * CALIB_DIST_X1000 + 500)/1000) )
 
 /* ===== S1/S2 relaxed detection (kept) ===== */
@@ -71,21 +72,31 @@ static uint16_t turn_cooldown_ticks = 0;
 /* ------------------------------- 5 ms Timer ISR: accumulate distance (kept) ------------------------------- */
 CY_ISR(isr_qd_Handler)
 {
-    int32_t raw1 = QuadDec_M1_GetCounter();  QuadDec_M1_SetCounter(0);
-    int32_t raw2 = QuadDec_M2_GetCounter();  QuadDec_M2_SetCounter(0);
+    if (g_direction == 0u) {  // Only accumulate distance when moving straight
+        int32_t raw1 = QuadDec_M1_GetCounter();  QuadDec_M1_SetCounter(0);
+        int32_t raw2 = QuadDec_M2_GetCounter();  QuadDec_M2_SetCounter(0);
 
-    int32_t d1 = raw1, d2 = raw2;
-    int32_t a1 = (d1 >= 0) ? d1 : -d1;
-    int32_t a2 = (d2 >= 0) ? d2 : -d2;
-    int32_t davg_abs  = (a1 + a2) / 2;
-    int32_t davg_sign = ((d1 + d2) >= 0) ? +1 : -1;
+        int32_t d1 = raw1, d2 = raw2;
+        int32_t a1 = (d1 >= 0) ? d1 : -d1;
+        int32_t a2 = (d2 >= 0) ? d2 : -d2;
+        int32_t davg_abs = (a1 + a2) / 2;
+        int32_t davg_sign = ((d1 + d2) >= 0) ? +1 : -1;
 
-    int64_t num_abs = (int64_t)davg_abs * MM_PER_COUNT_X1000;
-    int32_t dmm_abs = (int32_t)((num_abs + 500) / 1000);
-    int32_t dmm_signed = APPLY_CALIB_DIST(dmm_abs) * davg_sign;
+        // Calculate the distance moved
+        int64_t num = (int64_t)(davg_abs) * MM_PER_COUNT_X1000;  // Calculate mm from encoder counts
+        int32_t dmm_abs = (int32_t)((num + 500) / 1000);          // Round to nearest mm
+        int32_t dmm_signed = (davg_sign >= 0) ? +dmm_abs : -dmm_abs;
 
-    g_dist_mm += dmm_signed;
-    (void)Timer_QD_ReadStatusRegister();     // clear TC
+        // Update the global distance traveled
+        g_dist_mm += dmm_signed;
+
+        // Optionally add small smoothing for distance (comment this out if you don't want smoothing)
+        // static int32_t v_mm = 0;
+        // v_mm = v_mm + ((dmm_signed - v_mm) >> 2); // ~alpha=0.25
+        // g_dist_mm += v_mm;
+    }
+
+    (void)Timer_QD_ReadStatusRegister();  // Clear the interrupt flag
 }
 
 /* Utility: normalize peak-to-peak to [0..1] */
@@ -127,8 +138,8 @@ static void light_sensors_update_and_maybe_request_turn(uint16_t* V4_pp, uint16_
 }
 
 /* ================= PI Controller (same as your current file) ================= */
-#define STEER_MAX        18
-#define KP               14.0f
+#define STEER_MAX        15
+#define KP               16.0f
 #define KI               3.0f
 #define INT_LIM          30.0f
 #define LOSS_TIMEOUT_T   0.25f
@@ -138,9 +149,9 @@ static inline float _clampf(float x, float lo, float hi){ return (x<lo?lo:(x>hi?
 
 static int pi_step(pi_t* pi, uint16_t V4_pp, uint16_t V5_pp, uint16_t V6_pp)
 {
-    float c4 = norm01_from_pp(V4_pp);
-    float c5 = norm01_from_pp(V5_pp);
-    float c6 = norm01_from_pp(V6_pp);
+    float c4 = norm01_from_pp(V4_pp)*1.5f;
+    float c5 = norm01_from_pp(V5_pp)*1.5f;
+    float c6 = norm01_from_pp(V6_pp)*1.5f;
     float sum = c4 + c5 + c6;
     bool valid = (sum > 0.08f);
 
@@ -188,7 +199,7 @@ int main(void)
     QuadDec_M1_Start(); QuadDec_M2_Start();
     QuadDec_M1_SetCounter(0); QuadDec_M2_SetCounter(0);
     Clock_QD_Start();
-    Timer_QD_Start();                  // 5 ms period in TopDesign
+    Timer_QD_Start();  // 5 ms period in TopDesign
     isr_qd_StartEx(isr_qd_Handler);
 
     /* PWM & motor driver */
@@ -230,12 +241,18 @@ int main(void)
         /* Read sensors + maybe request turn */
         uint16_t V4_pp=0, V5_pp=0, V6_pp=0;
         light_sensors_update_and_maybe_request_turn(&V4_pp, &V5_pp, &V6_pp);
+        
+        
+        if (sen1_on_line == 0 && sen2_on_line == 0 && sen3_on_line == 0 && sen4_on_line == 0 && sen5_on_line == 0 && sen6_on_line == 0) {
+            Motors_SetPercent(0, 0);
+        }
 
         /* ---------------- Turn handling with arming delay (Option A) ---------------- */
         /* Arm once on the first detection (edge 0 -> 1/2) */
         if ((g_direction == 1u || g_direction == 2u) && dir_latched_side == 0){
             dir_latched_side = g_direction;          /* remember side */
             dir_delay_ticks  = DIR_CALL_DELAY_TICKS; /* start countdown */
+            CyDelay(50);
         }
         /* If request cleared during delay, cancel gracefully */
         if (g_direction == 0u && dir_latched_side != 0){
@@ -270,6 +287,12 @@ int main(void)
         if(turn_cooldown_ticks > 0) {
             turn_cooldown_ticks--;
         }
+        
+        /*if (sen5_on_line == 1) {
+           set_motors_with_trim_and_steer(80,-10); 
+            CyDelay(50);
+            set_motors_symmetric(0); 
+        }*/
         
         
         int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);

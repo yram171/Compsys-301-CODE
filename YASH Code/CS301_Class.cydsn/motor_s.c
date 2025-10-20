@@ -4,7 +4,7 @@
  * 없으면 0(트림 없음)으로 처리.
  */
 #ifndef RIGHT_TRIM_PERCENT
-#define RIGHT_TRIM_PERCENT   (-7)
+#define RIGHT_TRIM_PERCENT   (-6)
 #endif
 
 int clamp100(int x){
@@ -22,7 +22,7 @@ uint16 duty_to_compare(int s){
 
 void motor_enable(uint8 m1_disable, uint8 m2_disable){
     uint8 v = 0;
-    CyDelay(10);
+    //CyDelay(10);
     if (m1_disable) v |= 0x01;  /* bit0 -> M1_D1 (HIGH=disable) */
     if (m2_disable) v |= 0x02;  /* bit1 -> M2_D1 (HIGH=disable) */
     CONTROL_Write(v);
@@ -55,6 +55,19 @@ void set_motors_with_trim_and_steer(int duty_center, int steer){
 
     PWM_1_WriteCompare(duty_to_compare(RIGHT_MOTOR_SIGN * duty_right));
     PWM_2_WriteCompare(duty_to_compare(LEFT_MOTOR_SIGN  * duty_left ));
+}
+
+void Motors_SetPercent(int8_t left_pc, int8_t right_pc) {
+    int16_t dutyL = (int16_t)left_pc  * LEFT_MOTOR_SIGN;
+    int16_t dutyR = (int16_t)right_pc * RIGHT_MOTOR_SIGN;
+
+    // Convert -100..100% into compare value
+    uint16_t period = PWM_1_ReadPeriod();
+    uint16_t cmpL = (period * (100 + dutyL)) / 200;
+    uint16_t cmpR = (period * (100 + dutyR)) / 200;
+
+    PWM_2_WriteCompare(cmpL);
+    PWM_1_WriteCompare(cmpR);
 }
 
 int dyn_brake_duty(int32_t v_mm_s_filt){

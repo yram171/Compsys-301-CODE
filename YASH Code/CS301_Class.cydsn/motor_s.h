@@ -55,6 +55,8 @@ void set_motors_symmetric(int duty_center);
 /* 센터+조향(±steer)로 좌/우 계산 + 트림/최소듀티 적용 후 출력 */
 void set_motors_with_trim_and_steer(int duty_center, int steer);
 
+void Motors_SetPercent(int8_t left_pc, int8_t right_pc);
+
 /* 속도 기반 동적 브레이크 듀티 계산 (입력: v_mm_s) */
 int  dyn_brake_duty(int32_t v_mm_s_filt);
 

@@ -13,10 +13,10 @@ static volatile int32_t TICKS_90_RIGHT = 90;
 
 /* Pivot speed (%) — keep modest to avoid overshoot */
 // Side-specific pivot speeds (percent duty)
-#define PIVOT_SPEED_L         29   // left turn speed
-#define PIVOT_SPEED_R         30   // right turn speed
+#define PIVOT_SPEED_L         23   // left turn speed
+#define PIVOT_SPEED_R         26   // right turn speed
 #define STOP_BEFORE_MS        100
-#define BRAKE_AFTER_MS        1000
+#define BRAKE_AFTER_MS        500
 
 /* Safety: max number of handler calls allowed while turning.
  * With your ~8 ms loop this is ~3.2 s (400 * 8 ms) which is plenty. */
@@ -130,7 +130,7 @@ static void finish_and_release(volatile uint8_t* p_dir)
     CyDelay(BRAKE_AFTER_MS);
     set_motors_symmetric(0);
 
-    set_motors_with_trim_and_steer(100,-15);
+    set_motors_with_trim_and_steer(100,-10);
     CyDelay(70);
     set_motors_symmetric(0); 
 }
