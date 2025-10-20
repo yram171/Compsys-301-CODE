@@ -13,9 +13,9 @@ static volatile int32_t TICKS_90_RIGHT = 90;
 
 /* Pivot speed (%) — keep modest to avoid overshoot */
 // Side-specific pivot speeds (percent duty)
-#define PIVOT_SPEED_L         28   // left turn speed
-#define PIVOT_SPEED_R         31   // right turn speed
-#define STOP_BEFORE_MS        90
+#define PIVOT_SPEED_L         29   // left turn speed
+#define PIVOT_SPEED_R         30   // right turn speed
+#define STOP_BEFORE_MS        100
 #define BRAKE_AFTER_MS        1000
 
 /* Safety: max number of handler calls allowed while turning.
@@ -130,8 +130,8 @@ static void finish_and_release(volatile uint8_t* p_dir)
     CyDelay(BRAKE_AFTER_MS);
     set_motors_symmetric(0);
 
-    set_motors_with_trim_and_steer(100,-10);
-    CyDelay(40);
+    set_motors_with_trim_and_steer(100,-15);
+    CyDelay(70);
     set_motors_symmetric(0); 
 }
 

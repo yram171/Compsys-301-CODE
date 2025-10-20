@@ -44,6 +44,13 @@
 #define DIR_CALL_DELAY_MS        (100)  /* wait ~200 ms before starting the maneuver */
 #define DIR_CALL_DELAY_TICKS     ((DIR_CALL_DELAY_MS + LOOP_DT_MS - 1) / LOOP_DT_MS)
 
+
+// Cooldown after turn to ignore intersection sensors V1 & V2
+#define TURN_COOLDOWN_MS (400)
+#define TURN_COOLDOWN_TICKS ((TURN_COOLDOWN_MS + LOOP_DT_MS - 1) / LOOP_DT_MS
+
+
+
 /* ===== Local sensor flags (used for S1/S2 edge) ===== */
 static uint8_t sen1_on_line=0, sen2_on_line=0, sen3_on_line=0;
 static uint8_t sen4_on_line=0, sen5_on_line=0, sen6_on_line=0;
@@ -56,6 +63,10 @@ static volatile int32_t g_dist_mm   = 0;
 /* ===== Option A state ===== */
 static uint16_t dir_delay_ticks = 0;        /* countdown in loop ticks */
 static uint8_t  dir_latched_side = 0;       /* remembers 1 or 2 while waiting */
+
+
+static uint16_t turn_cooldown_ticks = 0;
+
 
 /* ------------------------------- 5 ms Timer ISR: accumulate distance (kept) ------------------------------- */
 CY_ISR(isr_qd_Handler)
@@ -106,7 +117,7 @@ static void light_sensors_update_and_maybe_request_turn(uint16_t* V4_pp, uint16_
     sen5_on_line = (V5 > 10 && V5 < 100) ? 1u : 0u;
     sen6_on_line = (V6 > 10 && V6 < 100) ? 1u : 0u;
 
-    if (g_direction == 0u){
+    if (g_direction == 0u && turn_cooldown_ticks == 0u){
         if (sen1_on_line){
             g_direction = 1;  // LEFT turn
         } else if (sen2_on_line){
@@ -116,33 +127,9 @@ static void light_sensors_update_and_maybe_request_turn(uint16_t* V4_pp, uint16_
 }
 
 /* ================= PI Controller (same as your current file) ================= */
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-#define STEER_MAX        13
-#define KP               18.0f
-#define KI               2.0f
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-
 #define STEER_MAX        18
-#define KP               14.5f
+#define KP               14.0f
 #define KI               3.0f
-
-#define STEER_MAX        13
-#define KP               18.0f
-#define KI               2.0f
-
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 #define INT_LIM          30.0f
 #define LOSS_TIMEOUT_T   0.25f
 
@@ -151,9 +138,9 @@ static inline float _clampf(float x, float lo, float hi){ return (x<lo?lo:(x>hi?
 
 static int pi_step(pi_t* pi, uint16_t V4_pp, uint16_t V5_pp, uint16_t V6_pp)
 {
-    float c4 = norm01_from_pp(V4_pp) * 2.0f;
-    float c5 = norm01_from_pp(V5_pp) * 2.0f;
-    float c6 = norm01_from_pp(V6_pp) * 2.0f;
+    float c4 = norm01_from_pp(V4_pp);
+    float c5 = norm01_from_pp(V5_pp);
+    float c6 = norm01_from_pp(V6_pp);
     float sum = c4 + c5 + c6;
     bool valid = (sum > 0.08f);
 
@@ -268,6 +255,9 @@ int main(void)
                 if (g_direction == 0u){
                     pi.i = 0.0f; pi.u = 0.0f; pi.t_loss = 0.0f;  /* clear bias */
                     dir_latched_side = 0;                        /* ready next time */
+                    
+                    
+                    turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
                 }
                 CyDelay(LOOP_DT_MS);
                 continue;  /* skip the rest this tick */
@@ -276,6 +266,12 @@ int main(void)
         /* ---------------- end turn handling with delay ---------------- */
 
         /* Straight run with PI steering */
+        
+        if(turn_cooldown_ticks > 0) {
+            turn_cooldown_ticks--;
+        }
+        
+        
         int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
         set_motors_with_trim_and_steer(center_duty_est, steer);
 
