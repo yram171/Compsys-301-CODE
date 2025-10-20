@@ -353,6 +353,8 @@
 <name v=".\directions.c" />
 <name v=".\sensors.c" />
 <name v=".\motor_s.c" />
+<name v=".\raw_command.h" />
+<name v=".\raw_command.c" />
 </OpenDocs>
 <OpenDocsLayout><![CDATA[<?xml version="1.0"?><!--
 
@@ -360,7 +362,7 @@
   Copyright (c) 2001-2016 Actipro Software LLC.  All rights reserved.
   http://www.actiprosoftware.com
 
---><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="1439, 648" SelectedTabbedMdiWindow="a340f8d7-6f2b-4f43-8605-a3335f604d1b"><ToolWindow Key="Start Page:bd4649ab-da6b-4d04-a663-c722b8bf99db:Start Page" Guid="e53881c8-9395-4f47-a31c-4c0962edd0f2" /><DocumentWindow Key="C:\Users\ylee818\Documents\GitHub\Compsys-301-CODE\Yukyung CODE\CS301_Class.cydsn\TopDesign\TopDesign.cysch" Guid="beaf1f09-4210-4cb4-9cac-94117cb9998c" /><DocumentWindow Key="C:\Users\ylee818\Documents\GitHub\Compsys-301-CODE\Yukyung CODE\CS301_Class.cydsn\main.c" Guid="07b53f30-a639-4c31-8ed4-8e9d1fedd45c" /><DocumentWindow Key="C:\Users\ylee818\Documents\GitHub\Compsys-301-CODE\Yukyung CODE\CS301_Class.cydsn\directions.c" Guid="a340f8d7-6f2b-4f43-8605-a3335f604d1b" /><DocumentWindow Key="C:\Users\ylee818\Documents\GitHub\Compsys-301-CODE\Yukyung CODE\CS301_Class.cydsn\sensors.c" Guid="6aa5248e-5e99-4db6-b49d-ddadbe602449" /><DocumentWindow Key="C:\Users\ylee818\Documents\GitHub\Compsys-301-CODE\Yukyung CODE\CS301_Class.cydsn\motor_s.c" Guid="3affe6f4-6f59-4cf2-a085-2c8f5c7c9a9b" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
+--><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="1439, 648" SelectedTabbedMdiWindow="3affe6f4-6f59-4cf2-a085-2c8f5c7c9a9b"><ToolWindow Key="Start Page:bd4649ab-da6b-4d04-a663-c722b8bf99db:Start Page" Guid="e53881c8-9395-4f47-a31c-4c0962edd0f2" /><DocumentWindow Key="C:\Users\ylee818\Documents\GitHub\Compsys-301-CODE\Yukyung CODE\CS301_Class.cydsn\TopDesign\TopDesign.cysch" Guid="beaf1f09-4210-4cb4-9cac-94117cb9998c" /><DocumentWindow Key="C:\Users\ylee818\Documents\GitHub\Compsys-301-CODE\Yukyung CODE\CS301_Class.cydsn\main.c" Guid="07b53f30-a639-4c31-8ed4-8e9d1fedd45c" /><DocumentWindow Key="C:\Users\ylee818\Documents\GitHub\Compsys-301-CODE\Yukyung CODE\CS301_Class.cydsn\directions.c" Guid="a340f8d7-6f2b-4f43-8605-a3335f604d1b" /><DocumentWindow Key="C:\Users\ylee818\Documents\GitHub\Compsys-301-CODE\Yukyung CODE\CS301_Class.cydsn\sensors.c" Guid="6aa5248e-5e99-4db6-b49d-ddadbe602449" /><DocumentWindow Key="C:\Users\ylee818\Documents\GitHub\Compsys-301-CODE\Yukyung CODE\CS301_Class.cydsn\motor_s.c" Guid="3affe6f4-6f59-4cf2-a085-2c8f5c7c9a9b" /><DocumentWindow Key="C:\Users\ylee818\Documents\GitHub\Compsys-301-CODE\Yukyung CODE\CS301_Class.cydsn\raw_command.h" Guid="b616b71e-3b5e-4a1d-af17-141581b2c343" /><DocumentWindow Key="C:\Users\ylee818\Documents\GitHub\Compsys-301-CODE\Yukyung CODE\CS301_Class.cydsn\raw_command.c" Guid="943f5606-2027-4f28-a4e1-c9f74ac5bec3" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
 <config v="" />
 <AutoUpdate v="true" />
 </CyGuid_843a90a4-0c4b-4e44-991d-05e7fb117a21>
