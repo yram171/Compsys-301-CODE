@@ -22,7 +22,7 @@
 #define VMAX_CONST_MM_S        1000
 #define SPEED_FRAC_PERCENT      25
 #define V_CRUISE_MM_S  ((int32_t)VMAX_CONST_MM_S * (int32_t)SPEED_FRAC_PERCENT / 100)
-#define TARGET_DIST_MM        500
+#define TARGET_DIST_MM        150       ///half the distance !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 /* ===== Encoder → mm conversion (kept) ===== */
 #define QD_SAMPLE_MS             5u
@@ -31,7 +31,7 @@
 #define PI_X1000              3142
 #define PERIM_MM_X1000   ((int32_t)(2 * PI_X1000 * R_MM))
 #define MM_PER_COUNT_X1000     ( PERIM_MM_X1000 / CPR_OUTSHAFT )
-#define CALIB_DIST_X1000     1500
+#define CALIB_DIST_X1000     1000  // Changed to 1000 to avoid scaling
 #define APPLY_CALIB_DIST(x)  ( (int32_t)(((int64_t)(x) * CALIB_DIST_X1000 + 500)/1000) )
 
 /* ===== S1/S2 relaxed detection (kept) ===== */
@@ -53,7 +53,7 @@ static uint8_t sen4_on_line=0, sen5_on_line=0, sen6_on_line=0;
 /* ===== Global state (kept) ===== */
 static volatile uint8_t g_direction = 0;   /* 0=straight, 1=left, 2=right */
 static volatile uint8_t g_stop_now  = 0;
-static volatile int32_t g_dist_mm   = 0;
+static volatile int32_t g_dist_mm   = 0;  // Distance in mm
 
 /* ===== Option A (arming delay) state ===== */
 static uint16_t dir_delay_ticks = 0;        /* countdown in loop ticks */
@@ -62,21 +62,31 @@ static uint8_t  dir_latched_side = 0;       /* remembers 1 or 2 while waiting */
 /* ------------------------------- 5 ms Timer ISR: accumulate distance (kept) ------------------------------- */
 CY_ISR(isr_qd_Handler)
 {
-    int32_t raw1 = QuadDec_M1_GetCounter();  QuadDec_M1_SetCounter(0);
-    int32_t raw2 = QuadDec_M2_GetCounter();  QuadDec_M2_SetCounter(0);
+    if (g_direction == 0u) {  // Only accumulate distance when moving straight
+        int32_t raw1 = QuadDec_M1_GetCounter();  QuadDec_M1_SetCounter(0);
+        int32_t raw2 = QuadDec_M2_GetCounter();  QuadDec_M2_SetCounter(0);
 
-    int32_t d1 = raw1, d2 = raw2;
-    int32_t a1 = (d1 >= 0) ? d1 : -d1;
-    int32_t a2 = (d2 >= 0) ? d2 : -d2;
-    int32_t davg_abs  = (a1 + a2) / 2;
-    int32_t davg_sign = ((d1 + d2) >= 0) ? +1 : -1;
+        int32_t d1 = raw1, d2 = raw2;
+        int32_t a1 = (d1 >= 0) ? d1 : -d1;
+        int32_t a2 = (d2 >= 0) ? d2 : -d2;
+        int32_t davg_abs = (a1 + a2) / 2;
+        int32_t davg_sign = ((d1 + d2) >= 0) ? +1 : -1;
 
-    int64_t num_abs = (int64_t)davg_abs * MM_PER_COUNT_X1000;
-    int32_t dmm_abs = (int32_t)((num_abs + 500) / 1000);
-    int32_t dmm_signed = APPLY_CALIB_DIST(dmm_abs) * davg_sign;
+        // Calculate the distance moved
+        int64_t num = (int64_t)(davg_abs) * MM_PER_COUNT_X1000;  // Calculate mm from encoder counts
+        int32_t dmm_abs = (int32_t)((num + 500) / 1000);          // Round to nearest mm
+        int32_t dmm_signed = (davg_sign >= 0) ? +dmm_abs : -dmm_abs;
 
-    g_dist_mm += dmm_signed;
-    (void)Timer_QD_ReadStatusRegister();     // clear TC
+        // Update the global distance traveled
+        g_dist_mm += dmm_signed;
+
+        // Optionally add small smoothing for distance (comment this out if you don't want smoothing)
+        // static int32_t v_mm = 0;
+        // v_mm = v_mm + ((dmm_signed - v_mm) >> 2); // ~alpha=0.25
+        // g_dist_mm += v_mm;
+    }
+
+    (void)Timer_QD_ReadStatusRegister();  // Clear the interrupt flag
 }
 
 /* Utility: normalize peak-to-peak to [0..1] */
@@ -204,7 +214,7 @@ int main(void)
     QuadDec_M1_Start(); QuadDec_M2_Start();
     QuadDec_M1_SetCounter(0); QuadDec_M2_SetCounter(0);
     Clock_QD_Start();
-    Timer_QD_Start();                  // 5 ms period in TopDesign
+    Timer_QD_Start();  // 5 ms period in TopDesign
     isr_qd_StartEx(isr_qd_Handler);
 
     /* PWM & motor driver */
