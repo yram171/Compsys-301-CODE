@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 1
 
 
    1              		.syntax unified
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
   44 000c 01DD     		ble	.L2
   45              		.loc 1 11 0 is_stmt 0 discriminator 1
   46 000e 6423     		movs	r3, #100
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 2
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 2
 
 
   47 0010 07E0     		b	.L3
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
   95              		.loc 1 17 0
   96 0008 7B68     		ldr	r3, [r7, #4]
   97 000a 13F1640F 		cmn	r3, #100
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 3
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 3
 
 
   98 000e 02DA     		bge	.L6
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  148              	.LFB65:
   22:motor_s.c     **** 
   23:motor_s.c     **** void motor_enable(uint8 m1_disable, uint8 m2_disable){
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 4
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 4
 
 
  149              		.loc 1 23 0
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  197              		.cfi_def_cfa_offset 8
  198 0042 BD46     		mov	sp, r7
  199              		.cfi_def_cfa_register 13
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 5
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 5
 
 
  200              		@ sp needed
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  248 0028 7047     		bx	lr
  249              	.L17:
  250 002a 00BF     		.align	2
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 6
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 6
 
 
  251              	.L16:
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  299 0036 0837     		adds	r7, r7, #8
  300              		.cfi_def_cfa_offset 8
  301 0038 BD46     		mov	sp, r7
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 7
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 7
 
 
  302              		.cfi_def_cfa_register 13
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  349 0030 FFF7FEFF 		bl	clamp100
  350 0034 F860     		str	r0, [r7, #12]
   49:motor_s.c     **** 
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 8
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 8
 
 
   50:motor_s.c     ****     /* 전진 구간에서 최소 듀티 보장 */
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  396 0080 00BF     		nop
  397 0082 1037     		adds	r7, r7, #16
  398              		.cfi_def_cfa_offset 8
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 9
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 9
 
 
  399 0084 BD46     		mov	sp, r7
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  448 0026 1846     		mov	r0, r3
  449 0028 FFF7FEFF 		bl	__aeabi_fadd
  450 002c 0346     		mov	r3, r0
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 10
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 10
 
 
  451 002e FB60     		str	r3, [r7, #12]	@ float
@@ -598,7 +598,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  501              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
  502              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
  503              		.file 4 "Generated_Source\\PSoC5/cytypes.h"
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 11
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 11
 
 
  504              		.file 5 "Generated_Source\\PSoC5/core_cm3.h"
@@ -609,103 +609,103 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  509 0006 00000000 		.4byte	.Ldebug_abbrev0
  510 000a 04       		.byte	0x4
  511 000b 01       		.uleb128 0x1
- 512 000c 50000000 		.4byte	.LASF35
+ 512 000c 15000000 		.4byte	.LASF35
  513 0010 0C       		.byte	0xc
- 514 0011 1D010000 		.4byte	.LASF36
- 515 0015 00000000 		.4byte	.LASF37
+ 514 0011 E2000000 		.4byte	.LASF36
+ 515 0015 EC000000 		.4byte	.LASF37
  516 0019 00000000 		.4byte	.Ldebug_ranges0+0
  517 001d 00000000 		.4byte	0
  518 0021 00000000 		.4byte	.Ldebug_line0
  519 0025 02       		.uleb128 0x2
  520 0026 01       		.byte	0x1
  521 0027 06       		.byte	0x6
- 522 0028 73020000 		.4byte	.LASF0
+ 522 0028 8A020000 		.4byte	.LASF0
  523 002c 02       		.uleb128 0x2
  524 002d 01       		.byte	0x1
  525 002e 08       		.byte	0x8
- 526 002f 57010000 		.4byte	.LASF1
+ 526 002f 6E010000 		.4byte	.LASF1
  527 0033 02       		.uleb128 0x2
  528 0034 02       		.byte	0x2
  529 0035 05       		.byte	0x5
- 530 0036 4E020000 		.4byte	.LASF2
+ 530 0036 65020000 		.4byte	.LASF2
  531 003a 02       		.uleb128 0x2
  532 003b 02       		.byte	0x2
  533 003c 07       		.byte	0x7
- 534 003d 0A010000 		.4byte	.LASF3
+ 534 003d CF000000 		.4byte	.LASF3
  535 0041 03       		.uleb128 0x3
- 536 0042 EB000000 		.4byte	.LASF9
+ 536 0042 B0000000 		.4byte	.LASF9
  537 0046 02       		.byte	0x2
  538 0047 3F       		.byte	0x3f
  539 0048 4C000000 		.4byte	0x4c
  540 004c 02       		.uleb128 0x2
  541 004d 04       		.byte	0x4
  542 004e 05       		.byte	0x5
- 543 004f 5E020000 		.4byte	.LASF4
+ 543 004f 75020000 		.4byte	.LASF4
  544 0053 02       		.uleb128 0x2
  545 0054 04       		.byte	0x4
  546 0055 07       		.byte	0x7
- 547 0056 70010000 		.4byte	.LASF5
+ 547 0056 87010000 		.4byte	.LASF5
  548 005a 02       		.uleb128 0x2
  549 005b 08       		.byte	0x8
  550 005c 05       		.byte	0x5
- 551 005d 25020000 		.4byte	.LASF6
+ 551 005d 3C020000 		.4byte	.LASF6
  552 0061 02       		.uleb128 0x2
  553 0062 08       		.byte	0x8
  554 0063 07       		.byte	0x7
- 555 0064 B5010000 		.4byte	.LASF7
+ 555 0064 CC010000 		.4byte	.LASF7
  556 0068 04       		.uleb128 0x4
  557 0069 04       		.byte	0x4
  558 006a 05       		.byte	0x5
  559 006b 696E7400 		.ascii	"int\000"
  560 006f 02       		.uleb128 0x2
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 12
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 12
 
 
  561 0070 04       		.byte	0x4
  562 0071 07       		.byte	0x7
- 563 0072 A8010000 		.4byte	.LASF8
+ 563 0072 BF010000 		.4byte	.LASF8
  564 0076 03       		.uleb128 0x3
- 565 0077 32010000 		.4byte	.LASF10
+ 565 0077 49010000 		.4byte	.LASF10
  566 007b 03       		.byte	0x3
  567 007c 2C       		.byte	0x2c
  568 007d 41000000 		.4byte	0x41
  569 0081 05       		.uleb128 0x5
- 570 0082 58020000 		.4byte	.LASF11
+ 570 0082 6F020000 		.4byte	.LASF11
  571 0086 04       		.byte	0x4
  572 0087 E701     		.2byte	0x1e7
  573 0089 2C000000 		.4byte	0x2c
  574 008d 05       		.uleb128 0x5
- 575 008e A1010000 		.4byte	.LASF12
+ 575 008e B8010000 		.4byte	.LASF12
  576 0092 04       		.byte	0x4
  577 0093 E801     		.2byte	0x1e8
  578 0095 3A000000 		.4byte	0x3a
  579 0099 05       		.uleb128 0x5
- 580 009a 82010000 		.4byte	.LASF13
+ 580 009a 99010000 		.4byte	.LASF13
  581 009e 04       		.byte	0x4
  582 009f EC01     		.2byte	0x1ec
  583 00a1 4C000000 		.4byte	0x4c
  584 00a5 02       		.uleb128 0x2
  585 00a6 04       		.byte	0x4
  586 00a7 04       		.byte	0x4
- 587 00a8 45010000 		.4byte	.LASF14
+ 587 00a8 5C010000 		.4byte	.LASF14
  588 00ac 02       		.uleb128 0x2
  589 00ad 08       		.byte	0x8
  590 00ae 04       		.byte	0x4
- 591 00af 9A010000 		.4byte	.LASF15
+ 591 00af B1010000 		.4byte	.LASF15
  592 00b3 02       		.uleb128 0x2
  593 00b4 01       		.byte	0x1
  594 00b5 08       		.byte	0x8
- 595 00b6 3A020000 		.4byte	.LASF16
+ 595 00b6 51020000 		.4byte	.LASF16
  596 00ba 02       		.uleb128 0x2
  597 00bb 08       		.byte	0x8
  598 00bc 04       		.byte	0x4
- 599 00bd 67020000 		.4byte	.LASF17
+ 599 00bd 7E020000 		.4byte	.LASF17
  600 00c1 02       		.uleb128 0x2
  601 00c2 04       		.byte	0x4
  602 00c3 07       		.byte	0x7
- 603 00c4 1C020000 		.4byte	.LASF18
+ 603 00c4 33020000 		.4byte	.LASF18
  604 00c8 06       		.uleb128 0x6
- 605 00c9 F5000000 		.4byte	.LASF19
+ 605 00c9 BA000000 		.4byte	.LASF19
  606 00cd 01       		.byte	0x1
  607 00ce 0A       		.byte	0xa
  608 00cf 68000000 		.4byte	0x68
@@ -718,7 +718,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  615 00e2 7800     		.ascii	"x\000"
  616 00e4 01       		.byte	0x1
  617 00e5 0A       		.byte	0xa
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 13
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 13
 
 
  618 00e6 68000000 		.4byte	0x68
@@ -727,7 +727,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  621 00ec 74       		.sleb128 -12
  622 00ed 00       		.byte	0
  623 00ee 06       		.uleb128 0x6
- 624 00ef 0C020000 		.4byte	.LASF20
+ 624 00ef 23020000 		.4byte	.LASF20
  625 00f3 01       		.byte	0x1
  626 00f4 10       		.byte	0x10
  627 00f5 8D000000 		.4byte	0x8d
@@ -746,7 +746,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  640 0112 74       		.sleb128 -12
  641 0113 00       		.byte	0
  642 0114 08       		.uleb128 0x8
- 643 0115 DE000000 		.4byte	.LASF26
+ 643 0115 A3000000 		.4byte	.LASF26
  644 0119 01       		.byte	0x1
  645 011a 17       		.byte	0x17
  646 011b 00000000 		.4byte	.LFB65
@@ -755,7 +755,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  649 0124 9C       		.byte	0x9c
  650 0125 52010000 		.4byte	0x152
  651 0129 09       		.uleb128 0x9
- 652 012a 65010000 		.4byte	.LASF21
+ 652 012a 7C010000 		.4byte	.LASF21
  653 012e 01       		.byte	0x1
  654 012f 17       		.byte	0x17
  655 0130 81000000 		.4byte	0x81
@@ -763,7 +763,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  657 0135 91       		.byte	0x91
  658 0136 6F       		.sleb128 -17
  659 0137 09       		.uleb128 0x9
- 660 0138 3A010000 		.4byte	.LASF22
+ 660 0138 51010000 		.4byte	.LASF22
  661 013c 01       		.byte	0x1
  662 013d 17       		.byte	0x17
  663 013e 81000000 		.4byte	0x81
@@ -778,12 +778,12 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  672 014e 02       		.uleb128 0x2
  673 014f 91       		.byte	0x91
  674 0150 77       		.sleb128 -9
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 14
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 14
 
 
  675 0151 00       		.byte	0
  676 0152 06       		.uleb128 0x6
- 677 0153 CC010000 		.4byte	.LASF23
+ 677 0153 E3010000 		.4byte	.LASF23
  678 0157 01       		.byte	0x1
  679 0158 1F       		.byte	0x1f
  680 0159 68000000 		.4byte	0x68
@@ -793,7 +793,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  684 0166 9C       		.byte	0x9c
  685 0167 88010000 		.4byte	0x188
  686 016b 09       		.uleb128 0x9
- 687 016c 88010000 		.4byte	.LASF24
+ 687 016c 9F010000 		.4byte	.LASF24
  688 0170 01       		.byte	0x1
  689 0171 1F       		.byte	0x1f
  690 0172 68000000 		.4byte	0x68
@@ -801,7 +801,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  692 0177 91       		.byte	0x91
  693 0178 6C       		.sleb128 -20
  694 0179 0B       		.uleb128 0xb
- 695 017a 33020000 		.4byte	.LASF25
+ 695 017a 4A020000 		.4byte	.LASF25
  696 017e 01       		.byte	0x1
  697 017f 21       		.byte	0x21
  698 0180 76000000 		.4byte	0x76
@@ -810,7 +810,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  701 0186 74       		.sleb128 -12
  702 0187 00       		.byte	0
  703 0188 08       		.uleb128 0x8
- 704 0189 3B000000 		.4byte	.LASF27
+ 704 0189 00000000 		.4byte	.LASF27
  705 018d 01       		.byte	0x1
  706 018e 25       		.byte	0x25
  707 018f 00000000 		.4byte	.LFB67
@@ -819,7 +819,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  710 0198 9C       		.byte	0x9c
  711 0199 AC010000 		.4byte	0x1ac
  712 019d 09       		.uleb128 0x9
- 713 019e 88010000 		.4byte	.LASF24
+ 713 019e 9F010000 		.4byte	.LASF24
  714 01a2 01       		.byte	0x1
  715 01a3 25       		.byte	0x25
  716 01a4 68000000 		.4byte	0x68
@@ -828,7 +828,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  719 01aa 74       		.sleb128 -12
  720 01ab 00       		.byte	0
  721 01ac 08       		.uleb128 0x8
- 722 01ad ED010000 		.4byte	.LASF28
+ 722 01ad 04020000 		.4byte	.LASF28
  723 01b1 01       		.byte	0x1
  724 01b2 2B       		.byte	0x2b
  725 01b3 00000000 		.4byte	.LFB68
@@ -837,8 +837,8 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  728 01bc 9C       		.byte	0x9c
  729 01bd FA010000 		.4byte	0x1fa
  730 01c1 09       		.uleb128 0x9
- 731 01c2 4B010000 		.4byte	.LASF29
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 15
+ 731 01c2 62010000 		.4byte	.LASF29
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 15
 
 
  732 01c6 01       		.byte	0x1
@@ -848,7 +848,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  736 01cd 91       		.byte	0x91
  737 01ce 6C       		.sleb128 -20
  738 01cf 09       		.uleb128 0x9
- 739 01d0 E7010000 		.4byte	.LASF30
+ 739 01d0 FE010000 		.4byte	.LASF30
  740 01d4 01       		.byte	0x1
  741 01d5 2B       		.byte	0x2b
  742 01d6 68000000 		.4byte	0x68
@@ -856,7 +856,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  744 01db 91       		.byte	0x91
  745 01dc 68       		.sleb128 -24
  746 01dd 0B       		.uleb128 0xb
- 747 01de 27010000 		.4byte	.LASF31
+ 747 01de 3E010000 		.4byte	.LASF31
  748 01e2 01       		.byte	0x1
  749 01e3 2C       		.byte	0x2c
  750 01e4 68000000 		.4byte	0x68
@@ -864,7 +864,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  752 01e9 91       		.byte	0x91
  753 01ea 74       		.sleb128 -12
  754 01eb 0B       		.uleb128 0xb
- 755 01ec DD010000 		.4byte	.LASF32
+ 755 01ec F4010000 		.4byte	.LASF32
  756 01f0 01       		.byte	0x1
  757 01f1 2D       		.byte	0x2d
  758 01f2 68000000 		.4byte	0x68
@@ -873,7 +873,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  761 01f8 70       		.sleb128 -16
  762 01f9 00       		.byte	0
  763 01fa 0C       		.uleb128 0xc
- 764 01fb 3F020000 		.4byte	.LASF33
+ 764 01fb 56020000 		.4byte	.LASF33
  765 01ff 01       		.byte	0x1
  766 0200 3C       		.byte	0x3c
  767 0201 68000000 		.4byte	0x68
@@ -883,7 +883,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  771 020e 9C       		.byte	0x9c
  772 020f 3C020000 		.4byte	0x23c
  773 0213 09       		.uleb128 0x9
- 774 0214 FE000000 		.4byte	.LASF34
+ 774 0214 C3000000 		.4byte	.LASF34
  775 0218 01       		.byte	0x1
  776 0219 3C       		.byte	0x3c
  777 021a 76000000 		.4byte	0x76
@@ -898,7 +898,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  786 022c 02       		.uleb128 0x2
  787 022d 91       		.byte	0x91
  788 022e 70       		.sleb128 -16
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 16
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 16
 
 
  789 022f 0A       		.uleb128 0xa
@@ -911,7 +911,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  796 023a 74       		.sleb128 -12
  797 023b 00       		.byte	0
  798 023c 0D       		.uleb128 0xd
- 799 023d 8D010000 		.4byte	.LASF38
+ 799 023d A4010000 		.4byte	.LASF38
  800 0241 05       		.byte	0x5
  801 0242 1207     		.2byte	0x712
  802 0244 48020000 		.4byte	0x248
@@ -958,7 +958,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  843 0023 3A       		.uleb128 0x3a
  844 0024 0B       		.uleb128 0xb
  845 0025 3B       		.uleb128 0x3b
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 17
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 17
 
 
  846 0026 0B       		.uleb128 0xb
@@ -1018,7 +1018,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  900 005d 00       		.byte	0
  901 005e 00       		.byte	0
  902 005f 07       		.uleb128 0x7
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 18
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 18
 
 
  903 0060 05       		.uleb128 0x5
@@ -1078,7 +1078,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  957 0097 0A       		.uleb128 0xa
  958 0098 34       		.uleb128 0x34
  959 0099 00       		.byte	0
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 19
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 19
 
 
  960 009a 03       		.uleb128 0x3
@@ -1138,7 +1138,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  1014 00d1 0D       		.uleb128 0xd
  1015 00d2 34       		.uleb128 0x34
  1016 00d3 00       		.byte	0
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 20
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 20
 
 
  1017 00d4 03       		.uleb128 0x3
@@ -1198,7 +1198,7 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  1071 0018 00000000 		.4byte	.LFB66
  1072 001c 30000000 		.4byte	.LFE66
  1073 0020 00000000 		.4byte	.LFB67
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 21
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 21
 
 
  1074 0024 3C000000 		.4byte	.LFE67
@@ -1215,196 +1215,197 @@ ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 1
  1083      00000201 
  1083      FB0E0D00 
  1083      01010101 
- 1084              	.LASF37:
- 1085 0000 433A5C55 		.ascii	"C:\\Users\\ylee818\\Downloads\\301\\YASH Code\\CS30"
- 1085      73657273 
- 1085      5C796C65 
- 1085      65383138 
- 1085      5C446F77 
- 1086 002d 315F436C 		.ascii	"1_Class.cydsn\000"
- 1086      6173732E 
- 1086      63796473 
- 1086      6E00
- 1087              	.LASF27:
- 1088 003b 7365745F 		.ascii	"set_motors_symmetric\000"
- 1088      6D6F746F 
- 1088      72735F73 
- 1088      796D6D65 
- 1088      74726963 
- 1089              	.LASF35:
- 1090 0050 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
- 1090      43313120 
- 1090      352E342E 
- 1090      31203230 
- 1090      31363036 
- 1091 0083 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
- 1091      20726576 
- 1091      6973696F 
- 1091      6E203233 
- 1091      37373135 
- 1092 00b6 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
- 1092      66756E63 
- 1092      74696F6E 
- 1092      2D736563 
- 1092      74696F6E 
- 1093              	.LASF26:
- 1094 00de 6D6F746F 		.ascii	"motor_enable\000"
- 1094      725F656E 
- 1094      61626C65 
- 1094      00
- 1095              	.LASF9:
- 1096 00eb 5F5F696E 		.ascii	"__int32_t\000"
- 1096      7433325F 
- 1096      7400
- 1097              	.LASF19:
- 1098 00f5 636C616D 		.ascii	"clamp100\000"
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 22
+ 1084              	.LASF27:
+ 1085 0000 7365745F 		.ascii	"set_motors_symmetric\000"
+ 1085      6D6F746F 
+ 1085      72735F73 
+ 1085      796D6D65 
+ 1085      74726963 
+ 1086              	.LASF35:
+ 1087 0015 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1087      43313120 
+ 1087      352E342E 
+ 1087      31203230 
+ 1087      31363036 
+ 1088 0048 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1088      20726576 
+ 1088      6973696F 
+ 1088      6E203233 
+ 1088      37373135 
+ 1089 007b 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 1089      66756E63 
+ 1089      74696F6E 
+ 1089      2D736563 
+ 1089      74696F6E 
+ 1090              	.LASF26:
+ 1091 00a3 6D6F746F 		.ascii	"motor_enable\000"
+ 1091      725F656E 
+ 1091      61626C65 
+ 1091      00
+ 1092              	.LASF9:
+ 1093 00b0 5F5F696E 		.ascii	"__int32_t\000"
+ 1093      7433325F 
+ 1093      7400
+ 1094              	.LASF19:
+ 1095 00ba 636C616D 		.ascii	"clamp100\000"
+ 1095      70313030 
+ 1095      00
+ 1096              	.LASF34:
+ 1097 00c3 765F6D6D 		.ascii	"v_mm_s_filt\000"
+ 1097      5F735F66 
+ 1097      696C7400 
+ 1098              	.LASF3:
+ 1099 00cf 73686F72 		.ascii	"short unsigned int\000"
+ 1099      7420756E 
+ 1099      7369676E 
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 22
 
 
- 1098      70313030 
- 1098      00
- 1099              	.LASF34:
- 1100 00fe 765F6D6D 		.ascii	"v_mm_s_filt\000"
- 1100      5F735F66 
- 1100      696C7400 
- 1101              	.LASF3:
- 1102 010a 73686F72 		.ascii	"short unsigned int\000"
- 1102      7420756E 
- 1102      7369676E 
- 1102      65642069 
- 1102      6E7400
- 1103              	.LASF36:
- 1104 011d 6D6F746F 		.ascii	"motor_s.c\000"
- 1104      725F732E 
- 1104      6300
+ 1099      65642069 
+ 1099      6E7400
+ 1100              	.LASF36:
+ 1101 00e2 6D6F746F 		.ascii	"motor_s.c\000"
+ 1101      725F732E 
+ 1101      6300
+ 1102              	.LASF37:
+ 1103 00ec 433A5C55 		.ascii	"C:\\Users\\ylee818\\Documents\\GitHub\\Compsys-301-"
+ 1103      73657273 
+ 1103      5C796C65 
+ 1103      65383138 
+ 1103      5C446F63 
+ 1104 011a 434F4445 		.ascii	"CODE\\Yukyung CODE\\CS301_Class.cydsn\000"
+ 1104      5C59756B 
+ 1104      79756E67 
+ 1104      20434F44 
+ 1104      455C4353 
  1105              	.LASF31:
- 1106 0127 64757479 		.ascii	"duty_right\000"
+ 1106 013e 64757479 		.ascii	"duty_right\000"
  1106      5F726967 
  1106      687400
  1107              	.LASF10:
- 1108 0132 696E7433 		.ascii	"int32_t\000"
+ 1108 0149 696E7433 		.ascii	"int32_t\000"
  1108      325F7400 
  1109              	.LASF22:
- 1110 013a 6D325F64 		.ascii	"m2_disable\000"
+ 1110 0151 6D325F64 		.ascii	"m2_disable\000"
  1110      69736162 
  1110      6C6500
  1111              	.LASF14:
- 1112 0145 666C6F61 		.ascii	"float\000"
+ 1112 015c 666C6F61 		.ascii	"float\000"
  1112      7400
  1113              	.LASF29:
- 1114 014b 64757479 		.ascii	"duty_center\000"
+ 1114 0162 64757479 		.ascii	"duty_center\000"
  1114      5F63656E 
  1114      74657200 
  1115              	.LASF1:
- 1116 0157 756E7369 		.ascii	"unsigned char\000"
+ 1116 016e 756E7369 		.ascii	"unsigned char\000"
  1116      676E6564 
  1116      20636861 
  1116      7200
  1117              	.LASF21:
- 1118 0165 6D315F64 		.ascii	"m1_disable\000"
+ 1118 017c 6D315F64 		.ascii	"m1_disable\000"
  1118      69736162 
  1118      6C6500
  1119              	.LASF5:
- 1120 0170 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1120 0187 6C6F6E67 		.ascii	"long unsigned int\000"
  1120      20756E73 
  1120      69676E65 
  1120      6420696E 
  1120      7400
  1121              	.LASF13:
- 1122 0182 696E7433 		.ascii	"int32\000"
+ 1122 0199 696E7433 		.ascii	"int32\000"
  1122      3200
  1123              	.LASF24:
- 1124 0188 64757479 		.ascii	"duty\000"
+ 1124 019f 64757479 		.ascii	"duty\000"
  1124      00
  1125              	.LASF38:
- 1126 018d 49544D5F 		.ascii	"ITM_RxBuffer\000"
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 23
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 23
 
 
+ 1126 01a4 49544D5F 		.ascii	"ITM_RxBuffer\000"
  1126      52784275 
  1126      66666572 
  1126      00
  1127              	.LASF15:
- 1128 019a 646F7562 		.ascii	"double\000"
+ 1128 01b1 646F7562 		.ascii	"double\000"
  1128      6C6500
  1129              	.LASF12:
- 1130 01a1 75696E74 		.ascii	"uint16\000"
+ 1130 01b8 75696E74 		.ascii	"uint16\000"
  1130      313600
  1131              	.LASF8:
- 1132 01a8 756E7369 		.ascii	"unsigned int\000"
+ 1132 01bf 756E7369 		.ascii	"unsigned int\000"
  1132      676E6564 
  1132      20696E74 
  1132      00
  1133              	.LASF7:
- 1134 01b5 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1134 01cc 6C6F6E67 		.ascii	"long long unsigned int\000"
  1134      206C6F6E 
  1134      6720756E 
  1134      7369676E 
  1134      65642069 
  1135              	.LASF23:
- 1136 01cc 6170706C 		.ascii	"apply_right_trim\000"
+ 1136 01e3 6170706C 		.ascii	"apply_right_trim\000"
  1136      795F7269 
  1136      6768745F 
  1136      7472696D 
  1136      00
  1137              	.LASF32:
- 1138 01dd 64757479 		.ascii	"duty_left\000"
+ 1138 01f4 64757479 		.ascii	"duty_left\000"
  1138      5F6C6566 
  1138      7400
  1139              	.LASF30:
- 1140 01e7 73746565 		.ascii	"steer\000"
+ 1140 01fe 73746565 		.ascii	"steer\000"
  1140      7200
  1141              	.LASF28:
- 1142 01ed 7365745F 		.ascii	"set_motors_with_trim_and_steer\000"
+ 1142 0204 7365745F 		.ascii	"set_motors_with_trim_and_steer\000"
  1142      6D6F746F 
  1142      72735F77 
  1142      6974685F 
  1142      7472696D 
  1143              	.LASF20:
- 1144 020c 64757479 		.ascii	"duty_to_compare\000"
+ 1144 0223 64757479 		.ascii	"duty_to_compare\000"
  1144      5F746F5F 
  1144      636F6D70 
  1144      61726500 
  1145              	.LASF18:
- 1146 021c 73697A65 		.ascii	"sizetype\000"
+ 1146 0233 73697A65 		.ascii	"sizetype\000"
  1146      74797065 
  1146      00
  1147              	.LASF6:
- 1148 0225 6C6F6E67 		.ascii	"long long int\000"
+ 1148 023c 6C6F6E67 		.ascii	"long long int\000"
  1148      206C6F6E 
  1148      6720696E 
  1148      7400
  1149              	.LASF25:
- 1150 0233 7363616C 		.ascii	"scaled\000"
+ 1150 024a 7363616C 		.ascii	"scaled\000"
  1150      656400
+ARM GAS  C:\Users\ylee818\AppData\Local\Temp\cc4MBcPI.s 			page 24
+
+
  1151              	.LASF16:
-ARM GAS  C:\Users\ylee818\AppData\Local\Temp\ccSflS6A.s 			page 24
-
-
- 1152 023a 63686172 		.ascii	"char\000"
+ 1152 0251 63686172 		.ascii	"char\000"
  1152      00
  1153              	.LASF33:
- 1154 023f 64796E5F 		.ascii	"dyn_brake_duty\000"
+ 1154 0256 64796E5F 		.ascii	"dyn_brake_duty\000"
  1154      6272616B 
  1154      655F6475 
  1154      747900
  1155              	.LASF2:
- 1156 024e 73686F72 		.ascii	"short int\000"
+ 1156 0265 73686F72 		.ascii	"short int\000"
  1156      7420696E 
  1156      7400
  1157              	.LASF11:
- 1158 0258 75696E74 		.ascii	"uint8\000"
+ 1158 026f 75696E74 		.ascii	"uint8\000"
  1158      3800
  1159              	.LASF4:
- 1160 025e 6C6F6E67 		.ascii	"long int\000"
+ 1160 0275 6C6F6E67 		.ascii	"long int\000"
  1160      20696E74 
  1160      00
  1161              	.LASF17:
- 1162 0267 6C6F6E67 		.ascii	"long double\000"
+ 1162 027e 6C6F6E67 		.ascii	"long double\000"
  1162      20646F75 
  1162      626C6500 
  1163              	.LASF0:
- 1164 0273 7369676E 		.ascii	"signed char\000"
+ 1164 028a 7369676E 		.ascii	"signed char\000"
  1164      65642063 
  1164      68617200 
  1165              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

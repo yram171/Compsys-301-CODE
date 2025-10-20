@@ -1,8 +1,10 @@
-/* ========================= main.c (with PI steering + turn-call delay) =========================
- * - Keeps straight-line PI active during a short delay after g_direction flips (Option A)
- * - Then calls Directions_Handle(&g_direction) to run the maneuver
- * - Resets PI integrator after the turn completes
- * ============================================================================================== */
+/* ========================= main.c (PI steering w/ predictive bias + turn-call delay) =========================
+ * - S1 under line => LEFT turn; S2 under line => RIGHT turn
+ * - Straight-line PI uses sensors 3 & 6 (on the line)
+ * - Sensors 4 & 5 act as tilt predictors (ideally off) and add a small feed-forward bias
+ * - Keeps the arming delay before calling Directions_Handle(&g_direction)
+ * - Resets PI integrator after a turn completes
+ * ============================================================================================================ */
 
 #include <project.h>
 #include <stdint.h>
@@ -20,7 +22,7 @@
 #define VMAX_CONST_MM_S        1000
 #define SPEED_FRAC_PERCENT      25
 #define V_CRUISE_MM_S  ((int32_t)VMAX_CONST_MM_S * (int32_t)SPEED_FRAC_PERCENT / 100)
-#define TARGET_DIST_MM        20000
+#define TARGET_DIST_MM        150       ///half the distance !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 /* ===== Encoder → mm conversion (kept) ===== */
 #define QD_SAMPLE_MS             5u
@@ -29,7 +31,7 @@
 #define PI_X1000              3142
 #define PERIM_MM_X1000   ((int32_t)(2 * PI_X1000 * R_MM))
 #define MM_PER_COUNT_X1000     ( PERIM_MM_X1000 / CPR_OUTSHAFT )
-#define CALIB_DIST_X1000     1500
+#define CALIB_DIST_X1000     1000  // Changed to 1000 to avoid scaling
 #define APPLY_CALIB_DIST(x)  ( (int32_t)(((int64_t)(x) * CALIB_DIST_X1000 + 500)/1000) )
 
 /* ===== S1/S2 relaxed detection (kept) ===== */
@@ -41,40 +43,50 @@
 #define TURN_DEBOUNCE_TICKS       5u
 #define CLEAR_ARM_TICKS           4u
 
-#define DIR_CALL_DELAY_MS        (100)  /* wait ~200 ms before starting the maneuver */
+#define DIR_CALL_DELAY_MS        (100)  /* wait ~100 ms before starting the maneuver */
 #define DIR_CALL_DELAY_TICKS     ((DIR_CALL_DELAY_MS + LOOP_DT_MS - 1) / LOOP_DT_MS)
 
-/* ===== Local sensor flags (used for S1/S2 edge) ===== */
+/* ===== Local sensor flags (for quick pattern checks) ===== */
 static uint8_t sen1_on_line=0, sen2_on_line=0, sen3_on_line=0;
 static uint8_t sen4_on_line=0, sen5_on_line=0, sen6_on_line=0;
 
 /* ===== Global state (kept) ===== */
 static volatile uint8_t g_direction = 0;   /* 0=straight, 1=left, 2=right */
 static volatile uint8_t g_stop_now  = 0;
-static volatile int32_t g_dist_mm   = 0;
+static volatile int32_t g_dist_mm   = 0;  // Distance in mm
 
-/* ===== Option A state ===== */
+/* ===== Option A (arming delay) state ===== */
 static uint16_t dir_delay_ticks = 0;        /* countdown in loop ticks */
 static uint8_t  dir_latched_side = 0;       /* remembers 1 or 2 while waiting */
 
 /* ------------------------------- 5 ms Timer ISR: accumulate distance (kept) ------------------------------- */
 CY_ISR(isr_qd_Handler)
 {
-    int32_t raw1 = QuadDec_M1_GetCounter();  QuadDec_M1_SetCounter(0);
-    int32_t raw2 = QuadDec_M2_GetCounter();  QuadDec_M2_SetCounter(0);
+    if (g_direction == 0u) {  // Only accumulate distance when moving straight
+        int32_t raw1 = QuadDec_M1_GetCounter();  QuadDec_M1_SetCounter(0);
+        int32_t raw2 = QuadDec_M2_GetCounter();  QuadDec_M2_SetCounter(0);
 
-    int32_t d1 = raw1, d2 = raw2;
-    int32_t a1 = (d1 >= 0) ? d1 : -d1;
-    int32_t a2 = (d2 >= 0) ? d2 : -d2;
-    int32_t davg_abs  = (a1 + a2) / 2;
-    int32_t davg_sign = ((d1 + d2) >= 0) ? +1 : -1;
+        int32_t d1 = raw1, d2 = raw2;
+        int32_t a1 = (d1 >= 0) ? d1 : -d1;
+        int32_t a2 = (d2 >= 0) ? d2 : -d2;
+        int32_t davg_abs = (a1 + a2) / 2;
+        int32_t davg_sign = ((d1 + d2) >= 0) ? +1 : -1;
 
-    int64_t num_abs = (int64_t)davg_abs * MM_PER_COUNT_X1000;
-    int32_t dmm_abs = (int32_t)((num_abs + 500) / 1000);
-    int32_t dmm_signed = APPLY_CALIB_DIST(dmm_abs) * davg_sign;
+        // Calculate the distance moved
+        int64_t num = (int64_t)(davg_abs) * MM_PER_COUNT_X1000;  // Calculate mm from encoder counts
+        int32_t dmm_abs = (int32_t)((num + 500) / 1000);          // Round to nearest mm
+        int32_t dmm_signed = (davg_sign >= 0) ? +dmm_abs : -dmm_abs;
 
-    g_dist_mm += dmm_signed;
-    (void)Timer_QD_ReadStatusRegister();     // clear TC
+        // Update the global distance traveled
+        g_dist_mm += dmm_signed;
+
+        // Optionally add small smoothing for distance (comment this out if you don't want smoothing)
+        // static int32_t v_mm = 0;
+        // v_mm = v_mm + ((dmm_signed - v_mm) >> 2); // ~alpha=0.25
+        // g_dist_mm += v_mm;
+    }
+
+    (void)Timer_QD_ReadStatusRegister();  // Clear the interrupt flag
 }
 
 /* Utility: normalize peak-to-peak to [0..1] */
@@ -85,73 +97,97 @@ static inline float norm01_from_pp(uint16_t pp)
     return (float)(pp - S_MINC_COUNTS) / (float)(S_MAXC_COUNTS - S_MINC_COUNTS);
 }
 
-/* Read sensors and (maybe) request a turn based on S1 / S2 (kept) */
-static void light_sensors_update_and_maybe_request_turn(uint16_t* V4_pp, uint16_t* V5_pp, uint16_t* V6_pp)
-{
-    uint16_t V1 = Sensor_ComputePeakToPeak(0);
-    uint16_t V2 = Sensor_ComputePeakToPeak(1);
-    uint16_t V3 = Sensor_ComputePeakToPeak(2);
-    uint16_t V4 = Sensor_ComputePeakToPeak(3);
-    uint16_t V5 = Sensor_ComputePeakToPeak(4);
-    uint16_t V6 = Sensor_ComputePeakToPeak(5);
+static inline uint8_t on(uint16_t pp){ return (pp > S_MINC_COUNTS && pp < S_MAXC_COUNTS); }
 
+/* ============================== Sensor read + hard-turn request (only S1/S2) ============================== */
+static void light_sensors_update_and_maybe_request_turn(
+    uint16_t* V3_pp, uint16_t* V4_pp, uint16_t* V5_pp, uint16_t* V6_pp)
+{
+    /* Map (your rule set)
+       S1: hard LEFT     S2: hard RIGHT
+       S3 & S6: straight-line sensors (ON line)
+       S4 & S5: tilt predictors (ideally OFF)
+    */
+    uint16_t V1 = Sensor_ComputePeakToPeak(0); // Sensor 1 (left turn marker)
+    uint16_t V2 = Sensor_ComputePeakToPeak(1); // Sensor 2 (right turn marker)
+    uint16_t V3 = Sensor_ComputePeakToPeak(2); // Sensor 3 (center-left, ON line)
+    uint16_t V4 = Sensor_ComputePeakToPeak(3); // Sensor 4 (left predictor, OFF ideally)
+    uint16_t V5 = Sensor_ComputePeakToPeak(4); // Sensor 5 (right predictor, OFF ideally)
+    uint16_t V6 = Sensor_ComputePeakToPeak(5); // Sensor 6 (center-right, ON line)
+
+    if (V3_pp) *V3_pp = V3;
     if (V4_pp) *V4_pp = V4;
     if (V5_pp) *V5_pp = V5;
     if (V6_pp) *V6_pp = V6;
-    
-    sen1_on_line = (V1 > 10 && V1 < 100) ? 1u : 0u;
-    sen2_on_line = (V2 > 10 && V2 < 100) ? 1u : 0u;
-    sen3_on_line = (V3 > 10 && V3 < 100) ? 1u : 0u;
-    sen4_on_line = (V4 > 10 && V4 < 100) ? 1u : 0u;
-    sen5_on_line = (V5 > 10 && V5 < 100) ? 1u : 0u;
-    sen6_on_line = (V6 > 10 && V6 < 100) ? 1u : 0u;
 
+    sen1_on_line = on(V1);
+    sen2_on_line = on(V2);
+    sen3_on_line = on(V3);
+    sen4_on_line = on(V4);
+    sen5_on_line = on(V5);
+    sen6_on_line = on(V6);
+
+    /* HARD turn requests ONLY from 1/2 */
     if (g_direction == 0u){
-        if (sen1_on_line){
-            g_direction = 1;  // LEFT turn
-        } else if (sen2_on_line){
-            g_direction = 2;  // RIGHT turn
-        }
+        if (sen1_on_line) { g_direction = 1; }  // S1 under line => LEFT
+        else if (sen2_on_line) { g_direction = 2; } // S2 under line => RIGHT
+        /* Otherwise remain 0 (straight) — straight/tilt handled by PI below */
     }
 }
 
-/* ================= PI Controller (same as your current file) ================= */
-#define STEER_MAX        13
+/* ========================================== PI Controller ========================================== */
+#define STEER_MAX        11
 #define KP               18.0f
 #define KI               2.0f
 #define INT_LIM          30.0f
 #define LOSS_TIMEOUT_T   0.25f
 
+/* How strongly 4/5 ‘tilt’ should bias steering (feed-forward) */
+#define K_PREDICT        0.25f   /* start 0.2–0.35; + pushes RIGHT, – pushes LEFT */
+
 typedef struct { float i, u, t_loss; } pi_t;
 static inline float _clampf(float x, float lo, float hi){ return (x<lo?lo:(x>hi?hi:x)); }
 
-static int pi_step(pi_t* pi, uint16_t V4_pp, uint16_t V5_pp, uint16_t V6_pp)
+/* PI uses 3 & 6 as the line; 4 & 5 provide predictive bias */
+static int pi_step(pi_t* pi, uint16_t V3_pp, uint16_t V4_pp, uint16_t V5_pp, uint16_t V6_pp)
 {
-    float c4 = norm01_from_pp(V4_pp) * 2.0f;
-    float c5 = norm01_from_pp(V5_pp) * 2.0f;
-    float c6 = norm01_from_pp(V6_pp) * 2.0f;
-    float sum = c4 + c5 + c6;
-    bool valid = (sum > 0.08f);
+    float c3 = norm01_from_pp(V3_pp) * 1.5f;  // center-left ON
+    float c6 = norm01_from_pp(V6_pp) * 1.5f;  // center-right ON
+    float s4 = norm01_from_pp(V4_pp);         // predictor left (ideally 0)
+    float s5 = norm01_from_pp(V5_pp);         // predictor right (ideally 0)
 
+    float sum36 = c3 + c6;
+    bool valid  = (sum36 > 0.06f);            // have the line on 3/6 somewhere
+
+    /* pos: left = negative (more c3), right = positive (more c6) */
     float pos = 0.0f;
-    if (valid) pos = (-1.0f * c4 + 0.0f * c5 + 1.0f * c6) / sum;
+    if (valid) pos = (-1.0f * c3 + 1.0f * c6) / (sum36);
 
-    float e = pos;
+    /* Predictive bias:
+       if 4 sees line -> drifting/tilting LEFT -> push RIGHT (+)
+       if 5 sees line -> drifting/tilting RIGHT -> push LEFT (−)
+    */
+    float bias = 0.0f;
+    bias += K_PREDICT * s4;
+    bias -= K_PREDICT * s5;
+
+    float e = pos + bias;
 
     if (!valid) {
+        /* Lost 3/6; keep last u, bleed integral slowly to avoid windup */
         pi->t_loss += DT_S;
         if (pi->t_loss >= LOSS_TIMEOUT_T) pi->i *= 0.92f;
         return (int)_clampf(pi->u, -(float)STEER_MAX, (float)STEER_MAX);
     }
     pi->t_loss = 0.0f;
 
+    /* PI with anti-windup */
     float i_next = _clampf(pi->i + e * DT_S, -INT_LIM, +INT_LIM);
     float u_raw  = KP * e + KI * i_next;
     float u      = _clampf(u_raw, -(float)STEER_MAX, (float)STEER_MAX);
 
     bool sat_hi = (u >=  (float)STEER_MAX - 1e-3f);
     bool sat_lo = (u <= -(float)STEER_MAX + 1e-3f);
-
     if ((sat_hi && (KI * i_next > KI * pi->i)) ||
         (sat_lo && (KI * i_next < KI * pi->i))) {
         /* don’t integrate further into saturation */
@@ -163,6 +199,7 @@ static int pi_step(pi_t* pi, uint16_t V4_pp, uint16_t V5_pp, uint16_t V6_pp)
     return (int)(u + (u>=0?0.5f:-0.5f));
 }
 
+/* =============================================== main =============================================== */
 int main(void)
 {
     motor_enable(1u, 1u);
@@ -177,7 +214,7 @@ int main(void)
     QuadDec_M1_Start(); QuadDec_M2_Start();
     QuadDec_M1_SetCounter(0); QuadDec_M2_SetCounter(0);
     Clock_QD_Start();
-    Timer_QD_Start();                  // 5 ms period in TopDesign
+    Timer_QD_Start();  // 5 ms period in TopDesign
     isr_qd_StartEx(isr_qd_Handler);
 
     /* PWM & motor driver */
@@ -200,6 +237,7 @@ int main(void)
     /* PI state */
     pi_t pi = { .i = 0.0f, .u = 0.0f, .t_loss = 0.0f };
     
+    /* Small kick (your pattern) */
     CyDelay(1000);  // So the motors don't jump
     set_motors_with_trim_and_steer(100,-10);
     CyDelay(40);
@@ -216,9 +254,9 @@ int main(void)
             continue;
         }
 
-        /* Read sensors + maybe request turn */
-        uint16_t V4_pp=0, V5_pp=0, V6_pp=0;
-        light_sensors_update_and_maybe_request_turn(&V4_pp, &V5_pp, &V6_pp);
+        /* Read sensors + maybe request a hard turn (only from S1/S2) */
+        uint16_t V3_pp=0, V4_pp=0, V5_pp=0, V6_pp=0;
+        light_sensors_update_and_maybe_request_turn(&V3_pp, &V4_pp, &V5_pp, &V6_pp);
 
         /* ---------------- Turn handling with arming delay (Option A) ---------------- */
         /* Arm once on the first detection (edge 0 -> 1/2) */
@@ -251,8 +289,8 @@ int main(void)
         }
         /* ---------------- end turn handling with delay ---------------- */
 
-        /* Straight run with PI steering */
-        int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
+        /* Straight run with PI steering (3&6 line, 4/5 predictive bias) */
+        int steer = pi_step(&pi, V3_pp, V4_pp, V5_pp, V6_pp);
         set_motors_with_trim_and_steer(center_duty_est, steer);
 
         CyDelay(LOOP_DT_MS);

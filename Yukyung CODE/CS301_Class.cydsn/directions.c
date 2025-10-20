@@ -13,14 +13,15 @@ static volatile int32_t TICKS_90_RIGHT = 90;
 
 /* Pivot speed (%) — keep modest to avoid overshoot */
 // Side-specific pivot speeds (percent duty)
-#define PIVOT_SPEED_L         28   // left turn speed
-#define PIVOT_SPEED_R         31   // right turn speed
-#define STOP_BEFORE_MS        90
+#define PIVOT_SPEED_L           25   // left turn speed
+#define PIVOT_SPEED_R           28   // right turn speed
+#define STOP_BEFORE_MSL        110
+#define STOP_BEFORE_MSR        100
 #define BRAKE_AFTER_MS        1000
 
 /* Safety: max number of handler calls allowed while turning.
  * With your ~8 ms loop this is ~3.2 s (400 * 8 ms) which is plenty. */
-#define MAX_TURN_HANDLER_TICKS  28
+#define MAX_TURN_HANDLER_TICKS  30
 
 /* ===================== Internal state ===================== */
 typedef enum {
@@ -153,11 +154,25 @@ void Directions_Handle(volatile uint8_t* p_dir)
     switch (s_state)
     {
     case DIR_IDLE:
-        if (req == 1u || req == 2u) {
+        if (req == 1u) {
             /* Stop, settle, pause encoders, zero counters */
             set_motors_symmetric(0);
             motor_enable(0u, 0u);
-            CyDelay(STOP_BEFORE_MS);
+            CyDelay(STOP_BEFORE_MSL);
+
+            //enc_pause_background();
+            enc_reset_local();
+
+            s_turn_side = req; /* latch side */
+            s_target_ticks = (req == 1u) ? TICKS_90_LEFT : TICKS_90_RIGHT;
+            s_acc_ticks = 0;
+            s_safety_count = 0;
+            s_state = DIR_TURNING;
+        } else if (req == 2u) {
+            /* Stop, settle, pause encoders, zero counters */
+            set_motors_symmetric(0);
+            motor_enable(0u, 0u);
+            CyDelay(STOP_BEFORE_MSR);
 
             //enc_pause_background();
             enc_reset_local();
