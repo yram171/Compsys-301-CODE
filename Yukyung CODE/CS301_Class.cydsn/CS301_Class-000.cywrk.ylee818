@@ -13,7 +13,7 @@
 <v>Output</v>
 </TreeKeys>
 <TreeStates>
-<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="CS301_Class-000\CS301_Class\Source Files\motor_s.c">
+<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="CS301_Class-000\CS301_Class\Source Files">
 <ExpandedNodeIds>
 <v>CS301_Class-000</v>
 <v>CS301_Class-000\CS301_Class</v>
@@ -29,15 +29,12 @@
 <v>CS301_Class-000\CS301_Class\CS301_Class.cydwr\Flash Security</v>
 <v>CS301_Class-000\CS301_Class\CS301_Class.cydwr\EEPROM</v>
 <v>CS301_Class-000\CS301_Class\Header Files</v>
-<v>CS301_Class-000\CS301_Class\Header Files\defines.h</v>
-<v>CS301_Class-000\CS301_Class\Header Files\directions.h</v>
-<v>CS301_Class-000\CS301_Class\Header Files\motor_s.h</v>
-<v>CS301_Class-000\CS301_Class\Header Files\sensors.h</v>
-<v>CS301_Class-000\CS301_Class\Header Files\vars.h</v>
+<v>CS301_Class-000\CS301_Class\Header Files\raw_command.h</v>
 <v>CS301_Class-000\CS301_Class\Source Files</v>
 <v>CS301_Class-000\CS301_Class\Source Files\directions.c</v>
 <v>CS301_Class-000\CS301_Class\Source Files\main.c</v>
 <v>CS301_Class-000\CS301_Class\Source Files\motor_s.c</v>
+<v>CS301_Class-000\CS301_Class\Source Files\raw_command.c</v>
 <v>CS301_Class-000\CS301_Class\Source Files\sensors.c</v>
 <v>CS301_Class-000\CS301_Class\Source Files\tacho.c</v>
 <v>CS301_Class-000\CS301_Class\commands</v>
@@ -62,12 +59,14 @@
 <v>CS301_Class-000\CS301_Class\Header Files\defines.h</v>
 <v>CS301_Class-000\CS301_Class\Header Files\directions.h</v>
 <v>CS301_Class-000\CS301_Class\Header Files\motor_s.h</v>
+<v>CS301_Class-000\CS301_Class\Header Files\raw_command.h</v>
 <v>CS301_Class-000\CS301_Class\Header Files\sensors.h</v>
 <v>CS301_Class-000\CS301_Class\Header Files\vars.h</v>
 <v>CS301_Class-000\CS301_Class\Source Files</v>
 <v>CS301_Class-000\CS301_Class\Source Files\directions.c</v>
 <v>CS301_Class-000\CS301_Class\Source Files\main.c</v>
 <v>CS301_Class-000\CS301_Class\Source Files\motor_s.c</v>
+<v>CS301_Class-000\CS301_Class\Source Files\raw_command.c</v>
 <v>CS301_Class-000\CS301_Class\Source Files\sensors.c</v>
 <v>CS301_Class-000\CS301_Class\Source Files\tacho.c</v>
 <v>CS301_Class-000\CS301_Class\commands</v>
@@ -90,8 +89,6 @@
 <v>CS301_Class-000\CS301_Class\Generated_Source\PSoC5\Clock_QENC</v>
 <v>CS301_Class-000\CS301_Class\Generated_Source\PSoC5\Clock2</v>
 <v>CS301_Class-000\CS301_Class\Generated_Source\PSoC5\CONTROL</v>
-<v>CS301_Class-000\CS301_Class\Generated_Source\PSoC5\cy_boot</v>
-<v>CS301_Class-000\CS301_Class\Generated_Source\PSoC5\DB0</v>
 </VisibleNodeIds>
 </CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
 <CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="">
@@ -278,7 +275,7 @@
 <v>Datasheet</v>
 </TreeKeysV2>
 <TreeStatesV2>
-<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="">
+<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="CS301_Class-000">
 <ExpandedNodeIds>
 <v>CS301_Class-000</v>
 <v>CS301_Class-000\CS301_Class</v>
@@ -351,11 +348,11 @@
 </CyGuid_fdba8dfd-b15b-4469-9bbb-9e40c3e70997>
 <Unloaded />
 <OpenDocs>
-<name v=".\motor_s.c" />
+<name v=".\TopDesign\TopDesign.cysch" />
 <name v=".\main.c" />
 <name v=".\directions.c" />
 <name v=".\sensors.c" />
-<name v=".\sensors.h" />
+<name v=".\motor_s.c" />
 </OpenDocs>
 <OpenDocsLayout><![CDATA[<?xml version="1.0"?><!--
 
@@ -363,7 +360,7 @@
   Copyright (c) 2001-2016 Actipro Software LLC.  All rights reserved.
   http://www.actiprosoftware.com
 
---><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="1439, 703" SelectedTabbedMdiWindow="de1b875c-ddb7-4929-ab78-f371fbfc0d6d"><ToolWindow Key="Start Page:bd4649ab-da6b-4d04-a663-c722b8bf99db:Start Page" Guid="e53881c8-9395-4f47-a31c-4c0962edd0f2" /><DocumentWindow Key="C:\Users\ylee818\Downloads\301\YASH Code\CS301_Class.cydsn\motor_s.c" Guid="6e036d49-893e-43b7-89eb-0b182190ccc1" /><DocumentWindow Key="C:\Users\ylee818\Downloads\301\YASH Code\CS301_Class.cydsn\main.c" Guid="de1b875c-ddb7-4929-ab78-f371fbfc0d6d" /><DocumentWindow Key="C:\Users\ylee818\Downloads\301\YASH Code\CS301_Class.cydsn\directions.c" Guid="2e9227c3-7c69-40e0-8dc1-2916f0795715" /><DocumentWindow Key="C:\Users\ylee818\Downloads\301\YASH Code\CS301_Class.cydsn\sensors.c" Guid="6da1ef8e-2b1b-4837-a7c6-933de4586be9" /><DocumentWindow Key="C:\Users\ylee818\Downloads\301\YASH Code\CS301_Class.cydsn\sensors.h" Guid="cfc2b955-ac8e-4018-813c-a90388b251ed" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
+--><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="1439, 648" SelectedTabbedMdiWindow="a340f8d7-6f2b-4f43-8605-a3335f604d1b"><ToolWindow Key="Start Page:bd4649ab-da6b-4d04-a663-c722b8bf99db:Start Page" Guid="e53881c8-9395-4f47-a31c-4c0962edd0f2" /><DocumentWindow Key="C:\Users\ylee818\Documents\GitHub\Compsys-301-CODE\Yukyung CODE\CS301_Class.cydsn\TopDesign\TopDesign.cysch" Guid="beaf1f09-4210-4cb4-9cac-94117cb9998c" /><DocumentWindow Key="C:\Users\ylee818\Documents\GitHub\Compsys-301-CODE\Yukyung CODE\CS301_Class.cydsn\main.c" Guid="07b53f30-a639-4c31-8ed4-8e9d1fedd45c" /><DocumentWindow Key="C:\Users\ylee818\Documents\GitHub\Compsys-301-CODE\Yukyung CODE\CS301_Class.cydsn\directions.c" Guid="a340f8d7-6f2b-4f43-8605-a3335f604d1b" /><DocumentWindow Key="C:\Users\ylee818\Documents\GitHub\Compsys-301-CODE\Yukyung CODE\CS301_Class.cydsn\sensors.c" Guid="6aa5248e-5e99-4db6-b49d-ddadbe602449" /><DocumentWindow Key="C:\Users\ylee818\Documents\GitHub\Compsys-301-CODE\Yukyung CODE\CS301_Class.cydsn\motor_s.c" Guid="3affe6f4-6f59-4cf2-a085-2c8f5c7c9a9b" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
 <config v="" />
 <AutoUpdate v="true" />
 </CyGuid_843a90a4-0c4b-4e44-991d-05e7fb117a21>
