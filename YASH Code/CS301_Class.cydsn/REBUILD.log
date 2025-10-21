@@ -1,0 +1,133 @@
+--------------- Rebuild Started: 10/21/2025 15:54:27 Project: CS301_Class, Configuration: ARM GCC 5.4-2016-q2-update Debug ---------------
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\main.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\tacho.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\sensors.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\motor_s.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\directions.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\cyfitter_cfg.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\cymetadata.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\A0.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\ADC.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\ADC_PM.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\ADC_INT.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\A1.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\A2.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\A3.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\A4.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\A5.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\isr_TS.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\Timer_TS.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\Timer_TS_PM.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\USBUART.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\USBUART_audio.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\USBUART_boot.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\USBUART_cdc.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\USBUART_cls.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\USBUART_descr.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\USBUART_drv.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\USBUART_episr.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\USBUART_hid.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\USBUART_pm.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\USBUART_std.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\USBUART_vnd.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\USBUART_midi.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\USBUART_msc.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\Clock2.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\CONTROL.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\CONTROL_PM.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\ADC_SAR.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\ADC_SAR_INT.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\ADC_SAR_PM.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\ADC_IntClock.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\ADC_TempBuf_dma.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\ADC_FinalBuf_dma.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\ADC_IRQ.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\USBUART_Dm.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\USBUART_Dp.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\Cm3Start.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\CyBootAsmGnu.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\CyDmac.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\CyFlash.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\CyLib.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\cyPm.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\CySpc.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\cyutils.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\PWM_1.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\PWM_1_PM.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\Clock_PWM.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\Clock_QENC.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\M1_IN1.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\M1_IN2.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\M2_IN1.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\M2_IN2.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\M2_D1.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\M1_QA.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\M1_QB.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\M2_QA.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\M2_QB.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\M1_D1.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\isr_eoc.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\PWM_2.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\PWM_2_PM.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\LED.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\QuadDec_M1.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\QuadDec_M1_PM.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\QuadDec_M2.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\QuadDec_M2_PM.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\QuadDec_M1_Cnt16.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\QuadDec_M1_Cnt16_PM.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\QuadDec_M2_Cnt16.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\QuadDec_M2_Cnt16_PM.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\DB0.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\DB1.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\DB2.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\isrRF_TX.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\isrRF_RX.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\UART.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\UART_PM.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\UART_INT.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\UART_BOOT.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\UART_IntClock.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\RF_BT_SELECT.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\RF_BT_SELECT_PM.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\cy_em_eeprom.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\M1_D2.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\M2_D2.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\M1_EN.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\M2_EN.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\Clock_QD.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\Timer_QD.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\Timer_QD_PM.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\isr_qd.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\D4.o"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\CS301_Class.hex"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\CS301_Class.elf"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\CS301_Class.map"
+Deleting file ".\CS301_Class.rpt"
+Deleting file ".\CS301_Class_timing.html"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\.deps\SOURCE_C__ARM_GCC_GENERIC.P"
+Deleting file ".\CortexM3\ARM_GCC_541\Debug\.deps\SOURCE_ASM__ARM_GCC_GENERIC.P"
+cydsfit.exe -.appdatapath "C:\Users\yram171\AppData\Local\Cypress Semiconductor\PSoC Creator\4.2" -.fdsnotice -.fdswarpdepfile=warp_dependencies.txt -.fdselabdepfile=elab_dependencies.txt -.fdsbldfile=generated_files.txt -.fdsreffile=referenced_files.txt -p "C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\CS301_Class.cyprj" -d CY8C5888LTI-LP097 -s "C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\Generated_Source\PSoC5" -- -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE
+Elaborating Design...
+ADD: sdb.M0033: error: The instance 'isr_TS', of component cy_isr_v1_71, contains an error. Unable to locate and customize component 'cy_isr_v1_71' used in schematic 'C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\TopDesign\TopDesign.cysch'.
+ *  (Component Update Tool)
+ * C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\TopDesign\TopDesign.cysch (Instance:isr_TS)
+ADD: sdb.M0033: error: The instance 'isr_eoc', of component cy_isr_v1_71, contains an error. Unable to locate and customize component 'cy_isr_v1_71' used in schematic 'C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\TopDesign\TopDesign.cysch'.
+ *  (Component Update Tool)
+ * C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\TopDesign\TopDesign.cysch (Instance:isr_eoc)
+ADD: sdb.M0033: error: The instance 'isrRF_TX', of component cy_isr_v1_71, contains an error. Unable to locate and customize component 'cy_isr_v1_71' used in schematic 'C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\TopDesign\TopDesign.cysch'.
+ *  (Component Update Tool)
+ * C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\TopDesign\TopDesign.cysch (Instance:isrRF_TX)
+ADD: sdb.M0033: error: The instance 'isrRF_RX', of component cy_isr_v1_71, contains an error. Unable to locate and customize component 'cy_isr_v1_71' used in schematic 'C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\TopDesign\TopDesign.cysch'.
+ *  (Component Update Tool)
+ * C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\TopDesign\TopDesign.cysch (Instance:isrRF_RX)
+ADD: sdb.M0033: error: The instance 'isr_qd', of component cy_isr_v1_71, contains an error. Unable to locate and customize component 'cy_isr_v1_71' used in schematic 'C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\TopDesign\TopDesign.cysch'.
+ *  (Component Update Tool)
+ * C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\TopDesign\TopDesign.cysch (Instance:isr_qd)
+ADD: sdb.M0065: information: Analog terminal "vdac_ref" on ADC_SAR_SEQ_v2_10 is unconnected.
+ * C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyComponentLibrary\CyComponentLibrary.cylib\ADC_SAR_SEQ_v2_10\PSoC5\ADC_SAR_SEQ_v2_10.cysch (Signal: vdac_ref)
+ * C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyComponentLibrary\CyComponentLibrary.cylib\ADC_SAR_SEQ_v2_10\PSoC5\ADC_SAR_SEQ_v2_10.cysch (Shape_798)
+ * C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyComponentLibrary\CyComponentLibrary.cylib\ADC_SAR_SEQ_v2_10\PSoC5\ADC_SAR_SEQ_v2_10.cysch (Shape_885)
+ADD: sdb.M0052: error: Unable to find component "cy_boot_v5_82".
+Error: fit.M0050: The fitter aborted due to errors, please address all errors and rebuild. (App=cydsfit)
+--------------- Rebuild Failed: 10/21/2025 15:54:30 ---------------

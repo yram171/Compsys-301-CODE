@@ -13,7 +13,7 @@
 <v>Output</v>
 </TreeKeys>
 <TreeStates>
-<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="">
+<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="CS301_Class-000\CS301_Class\TopDesign">
 <ExpandedNodeIds>
 <v>CS301_Class-000</v>
 <v>CS301_Class-000\CS301_Class</v>
@@ -306,7 +306,18 @@
 </userData>
 </CyGuid_fdba8dfd-b15b-4469-9bbb-9e40c3e70997>
 <Unloaded />
-<OpenDocs />
+<OpenDocs>
+<name v=".\main.c" />
+<name v=".\directions.c" />
+<name v=".\TopDesign\TopDesign.cysch" />
+</OpenDocs>
+<OpenDocsLayout><![CDATA[<?xml version="1.0"?><!--
+
+  Actipro Docking/MDI for WinForms
+  Copyright (c) 2001-2016 Actipro Software LLC.  All rights reserved.
+  http://www.actiprosoftware.com
+
+--><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="477, 694" SelectedTabbedMdiWindow="32e4bd0f-c1e5-4e0c-83d5-e365a486c829"><DocumentWindow Key="C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\main.c" Guid="32e4bd0f-c1e5-4e0c-83d5-e365a486c829" /><DocumentWindow Key="C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\directions.c" Guid="c39766b7-69fd-49af-bb13-0281255c1321" /><DocumentWindow Key="C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\TopDesign\TopDesign.cysch" Guid="6100a905-e8f5-47e9-9672-0aaeb2d353a0" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
 <config v="" />
 <AutoUpdate v="true" />
 </CyGuid_843a90a4-0c4b-4e44-991d-05e7fb117a21>

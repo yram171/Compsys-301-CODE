@@ -47,7 +47,7 @@
 
 
 // Cooldown after turn to ignore intersection sensors V1 & V2
-#define TURN_COOLDOWN_MS (1000)
+#define TURN_COOLDOWN_MS (300)
 #define TURN_COOLDOWN_TICKS ((TURN_COOLDOWN_MS + LOOP_DT_MS - 1) / LOOP_DT_MS
 
 
@@ -233,34 +233,49 @@ int main(void)
      * STRAIGHT -> 0, TURN LEFT -> 1, TURN RIGHT -> 2, TURN U_TURN -> 3,
      * REACH -> 5, END -> 6
      */
-    /*
-    const uint8_t CMD_STATES[] = {
-    0,  // TURN_START
-    1,  // TURN_LEFT
-    5,  // REACH
-    3,  // TURN_U_TURN
-    1,  // TURN_LEFT
-    1,  // TURN_LEFT
-    2,  // TURN_RIGHT
-    2,  // TURN_RIGHT
-    5,  // REACH
-    2,  // TURN_RIGHT
-    5,  // REACH
-    3,  // TURN_U_TURN
-    2,  // TURN_RIGHT
-    2,  // TURN_RIGHT
-    1,  // TURN_LEFT
-    2,  // TURN_RIGHT
-    2,  // TURN_RIGHT
-    5,  // REACH
-    5,  // REACH
-    0   // TURN_END
-};*/
     
-    const uint8_t CMD_STATES[] = {5};
+const uint8_t CMD_STATES[] = {
+    // 31 entries, aligned 1:1 with COMMANDS[i]
+    0, // START
+    2, // RIGHT
+    2, // RIGHT
+    1, // LEFT
+    2, // RIGHT
+    2, // RIGHT
+    0,// 5, // REACH
+    3, // UTURN
+    2, // RIGHT
+    1, // LEFT
+    2, // RIGHT
+    1, // LEFT
+    0,// 5, // REACH
+    3, // UTURN
+    2, // RIGHT
+    2, // RIGHT
+    1, // LEFT
+    0,// 5, // REACH
+    3, // UTURN
+    2, // RIGHT
+    1, // LEFT
+    1, // LEFT
+    1, // LEFT
+    0,// 5, // REACH
+    1, // LEFT
+    2, // RIGHT
+    2, // RIGHT
+    1, // LEFT
+    2, // RIGHT
+    1, // LEFT
+    0// 6  // END
+}; 
+    int8_t indexMAX = 31;  // Loop index
+    
+    // For Testing
+    //const uint8_t CMD_STATES[] = {1,2};
+    //int8_t indexMAX = 1;  // Loop index
+    
     
     int8_t i = 0;  // Loop index
-    int8_t indexMAX = 0;  // Loop index
     int32_t target_dist = 0;
     
     int8_t straight_complete = 0;
@@ -269,6 +284,14 @@ int main(void)
     int8_t fruit_complete = 0;
 
     for(;;){
+        
+        // This check will make the robot stay stopped
+        // once the path is complete.
+        if (g_stop_now) {
+            set_motors_symmetric(0);
+            motor_enable(1u, 1u);
+            continue;
+        }
 
         /* Read sensors + maybe request turn */
         uint16_t V4_pp=0, V5_pp=0, V6_pp=0;
@@ -356,9 +379,9 @@ int main(void)
             int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
             set_motors_with_trim_and_steer(center_duty_est, steer);
             
-            uint16_t V1 = Sensor_ComputePeakToPeak(4);
+            uint16_t V1 = Sensor_ComputePeakToPeak(0);
             sen1_on_line = (V1 > 10 && V1 < 100) ? 1u : 0u;
-            uint16_t V2 = Sensor_ComputePeakToPeak(4);
+            uint16_t V2 = Sensor_ComputePeakToPeak(1);
             sen2_on_line = (V2 > 10 && V2 < 100) ? 1u : 0u;
             if (sen1_on_line == 1u || sen2_on_line == 1u) {
                 straight_complete = 1;
@@ -491,17 +514,17 @@ int main(void)
          // We know we just entered this state if target_dist is 0
         if (target_dist == 0) {
          // Set target to be 500mm *from our current position*
-         target_dist = g_dist_mm + 500; // in mm
+         target_dist = g_dist_mm + 150 ; // in mm
          }
 
         // Check if we have *now* reached that target
-         g_stop_now = (g_dist_mm >= TARGET_DIST_MM) ? 1u : 0u;
+         g_stop_now = (g_dist_mm >= target_dist) ? 1u : 0u;
 
          // --- FIX 2 & 3: Use if/else and remove 'continue' ---
          if (g_stop_now) {
          // Target met: STOP
          set_motors_symmetric(0);
-         motor_enable(1u, 1u);
+         motor_enable(1u, 1u); // Disable the motors
         
          fruit_complete = 1; // Flag that this state is done
         D4_Write(1);
@@ -536,7 +559,14 @@ int main(void)
 }
         if (straight_complete == 1u || turn_complete == 1u || uTurn_complete == 1u || fruit_complete == 1u) {
             
-            i += 1;
+            // Check if we are at the end of the array
+        if (i >= indexMAX) {
+         // We are done. Set permanent stop flag.
+         g_stop_now = 1;
+         } else {
+         // Not done. Advance to the next state.
+         i += 1;
+        }
             
             straight_complete = 0;
             turn_complete = 0;

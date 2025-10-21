@@ -13,8 +13,8 @@ static volatile int32_t TICKS_90_RIGHT = 90;
 
 /* Pivot speed (%) — keep modest to avoid overshoot */
 // Side-specific pivot speeds (percent duty)
-#define PIVOT_SPEED_L         22   // left turn speed
-#define PIVOT_SPEED_R         23   // right turn speed
+#define PIVOT_SPEED_L         24   // left turn speed
+#define PIVOT_SPEED_R         24   // right turn speed
 #define PIVOT_SPEED_U         42   // U turn speed
 #define STOP_BEFORE_MS        100
 #define BRAKE_AFTER_MS        500
