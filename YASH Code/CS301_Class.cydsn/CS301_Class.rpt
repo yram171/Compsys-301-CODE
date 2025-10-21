@@ -1,6 +1,6 @@
-Loading plugins phase: Elapsed time ==> 1s.349ms
+Loading plugins phase: Elapsed time ==> 1s.649ms
 <CYPRESSTAG name="CyDsfit arguments...">
-cydsfit arguments: -.fdsnotice -.fdswarpdepfile=warp_dependencies.txt -.fdselabdepfile=elab_dependencies.txt -.fdsbldfile=generated_files.txt -.fdsreffile=referenced_files.txt -p C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\CS301_Class.cyprj -d CY8C5888LTI-LP097 -s C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\Generated_Source\PSoC5 -- -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE
+cydsfit arguments: -.fdsnotice -.fdswarpdepfile=warp_dependencies.txt -.fdselabdepfile=elab_dependencies.txt -.fdsbldfile=generated_files.txt -.fdsreffile=referenced_files.txt -p C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\CS301_Class.cyprj -d CY8C5888LTI-LP097 -s C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\Generated_Source\PSoC5 -- -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE
 </CYPRESSTAG>
 <CYPRESSTAG name="Design elaboration results...">
 ADD: sdb.M0065: information: Analog terminal "vdac_ref" on ADC_SAR_SEQ_v2_10 is unconnected.
@@ -9,10 +9,10 @@ ADD: sdb.M0065: information: Analog terminal "vdac_ref" on ADC_SAR_SEQ_v2_10 is 
  * C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyComponentLibrary\CyComponentLibrary.cylib\ADC_SAR_SEQ_v2_10\PSoC5\ADC_SAR_SEQ_v2_10.cysch (Shape_885)
 
 </CYPRESSTAG>
-Elaboration phase: Elapsed time ==> 9s.894ms
+Elaboration phase: Elapsed time ==> 11s.025ms
 <CYPRESSTAG name="HDL generation results...">
 </CYPRESSTAG>
-HDL generation phase: Elapsed time ==> 0s.064ms
+HDL generation phase: Elapsed time ==> 0s.066ms
 <CYPRESSTAG name="Synthesis results...">
 
      | | | | | | |
@@ -30,23 +30,23 @@ HDL generation phase: Elapsed time ==> 0s.064ms
 ======================================================================
 Compiling:  CS301_Class.v
 Program  :   C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\bin\warp.exe
-Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\CS301_Class.cyprj -dcpsoc3 CS301_Class.v -verilog
+Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\CS301_Class.cyprj -dcpsoc3 CS301_Class.v -verilog
 ======================================================================
 
 ======================================================================
 Compiling:  CS301_Class.v
 Program  :   C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\bin\warp.exe
-Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\CS301_Class.cyprj -dcpsoc3 CS301_Class.v -verilog
+Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\CS301_Class.cyprj -dcpsoc3 CS301_Class.v -verilog
 ======================================================================
 
 ======================================================================
 Compiling:  CS301_Class.v
 Program  :   vlogfe
-Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\CS301_Class.cyprj -dcpsoc3 -verilog CS301_Class.v
+Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\CS301_Class.cyprj -dcpsoc3 -verilog CS301_Class.v
 ======================================================================
 
 vlogfe V6.3 IR 41:  Verilog parser
-Mon Oct 20 20:47:51 2025
+Tue Oct 21 14:08:26 2025
 
 
 ======================================================================
@@ -56,7 +56,7 @@ Options  :    -yv2 -q10 CS301_Class.v
 ======================================================================
 
 vpp V6.3 IR 41:  Verilog Pre-Processor
-Mon Oct 20 20:47:52 2025
+Tue Oct 21 14:08:26 2025
 
 Flattening file 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\cy_constant_v1_0\cy_constant_v1_0.v'
 Flattening file 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\cy_virtualmux_v1_0\cy_virtualmux_v1_0.v'
@@ -117,11 +117,11 @@ vlogfe:  No errors.
 ======================================================================
 Compiling:  CS301_Class.v
 Program  :   tovif
-Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\CS301_Class.cyprj -dcpsoc3 -verilog CS301_Class.v
+Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\CS301_Class.cyprj -dcpsoc3 -verilog CS301_Class.v
 ======================================================================
 
 tovif V6.3 IR 41:  High-level synthesis
-Mon Oct 20 20:47:52 2025
+Tue Oct 21 14:08:27 2025
 
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\std.vhd'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\cypress.vhd'.
@@ -132,9 +132,9 @@ Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\c
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\stdlogic\mod_cnst.vif'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\stdlogic\mod_mthv.vif'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\stdlogic\mod_genv.vif'.
-Linking 'C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\codegentemp\CS301_Class.ctl'.
+Linking 'C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\codegentemp\CS301_Class.ctl'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\cy_constant_v1_0\cy_constant_v1_0.v'.
-Linking 'C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\codegentemp\CS301_Class.v'.
+Linking 'C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\codegentemp\CS301_Class.v'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\cy_virtualmux_v1_0\cy_virtualmux_v1_0.v'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\ZeroTerminal\ZeroTerminal.v'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\OneTerminal\OneTerminal.v'.
@@ -164,11 +164,11 @@ tovif:  No errors.
 ======================================================================
 Compiling:  CS301_Class.v
 Program  :   topld
-Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\CS301_Class.cyprj -dcpsoc3 -verilog CS301_Class.v
+Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\CS301_Class.cyprj -dcpsoc3 -verilog CS301_Class.v
 ======================================================================
 
 topld V6.3 IR 41:  Synthesis and optimization
-Mon Oct 20 20:47:53 2025
+Tue Oct 21 14:08:27 2025
 
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\std.vhd'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\cypress.vhd'.
@@ -179,9 +179,9 @@ Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\c
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\stdlogic\mod_cnst.vif'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\stdlogic\mod_mthv.vif'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\lib\common\stdlogic\mod_genv.vif'.
-Linking 'C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\codegentemp\CS301_Class.ctl'.
+Linking 'C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\codegentemp\CS301_Class.ctl'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\cy_constant_v1_0\cy_constant_v1_0.v'.
-Linking 'C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\codegentemp\CS301_Class.v'.
+Linking 'C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\codegentemp\CS301_Class.v'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\cy_virtualmux_v1_0\cy_virtualmux_v1_0.v'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\ZeroTerminal\ZeroTerminal.v'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\OneTerminal\OneTerminal.v'.
@@ -435,6 +435,7 @@ Aliasing Net_4341 to tmpOE__M1_IN1_net_0
 Aliasing Net_4352 to Net_2183
 Aliasing \Timer_QD:Net_260\ to Net_2183
 Aliasing \Timer_QD:Net_102\ to tmpOE__M1_IN1_net_0
+Aliasing tmpOE__D4_net_0 to tmpOE__M1_IN1_net_0
 Aliasing \QuadDec_M1:Cnt16:CounterUDB:prevCapture\\D\ to Net_2183
 Aliasing \QuadDec_M1:Cnt16:CounterUDB:cmp_out_reg_i\\D\ to \QuadDec_M1:Cnt16:CounterUDB:prevCompare\\D\
 Aliasing \QuadDec_M2:Cnt16:CounterUDB:prevCapture\\D\ to Net_2183
@@ -765,35 +766,36 @@ Removing Lhs of wire \Timer_QD:Net_260\[1350] = Net_2183[0]
 Removing Lhs of wire \Timer_QD:Net_266\[1351] = tmpOE__M1_IN1_net_0[4]
 Removing Rhs of wire Net_4343[1355] = \Timer_QD:Net_57\[1354]
 Removing Lhs of wire \Timer_QD:Net_102\[1357] = tmpOE__M1_IN1_net_0[4]
-Removing Lhs of wire \QuadDec_M1:Cnt16:CounterUDB:prevCapture\\D\[1360] = Net_2183[0]
-Removing Lhs of wire \QuadDec_M1:Cnt16:CounterUDB:overflow_reg_i\\D\[1361] = \QuadDec_M1:Cnt16:CounterUDB:overflow\[87]
-Removing Lhs of wire \QuadDec_M1:Cnt16:CounterUDB:underflow_reg_i\\D\[1362] = \QuadDec_M1:Cnt16:CounterUDB:status_1\[75]
-Removing Lhs of wire \QuadDec_M1:Cnt16:CounterUDB:tc_reg_i\\D\[1363] = \QuadDec_M1:Cnt16:CounterUDB:reload_tc\[70]
-Removing Lhs of wire \QuadDec_M1:Cnt16:CounterUDB:prevCompare\\D\[1364] = \QuadDec_M1:Cnt16:CounterUDB:cmp_out_i\[94]
-Removing Lhs of wire \QuadDec_M1:Cnt16:CounterUDB:cmp_out_reg_i\\D\[1365] = \QuadDec_M1:Cnt16:CounterUDB:cmp_out_i\[94]
-Removing Lhs of wire \QuadDec_M1:Cnt16:CounterUDB:count_stored_i\\D\[1366] = \QuadDec_M1:Net_1203\[100]
-Removing Lhs of wire \QuadDec_M2:Cnt16:CounterUDB:prevCapture\\D\[1375] = Net_2183[0]
-Removing Lhs of wire \QuadDec_M2:Cnt16:CounterUDB:overflow_reg_i\\D\[1376] = \QuadDec_M2:Cnt16:CounterUDB:overflow\[288]
-Removing Lhs of wire \QuadDec_M2:Cnt16:CounterUDB:underflow_reg_i\\D\[1377] = \QuadDec_M2:Cnt16:CounterUDB:status_1\[276]
-Removing Lhs of wire \QuadDec_M2:Cnt16:CounterUDB:tc_reg_i\\D\[1378] = \QuadDec_M2:Cnt16:CounterUDB:reload_tc\[271]
-Removing Lhs of wire \QuadDec_M2:Cnt16:CounterUDB:prevCompare\\D\[1379] = \QuadDec_M2:Cnt16:CounterUDB:cmp_out_i\[295]
-Removing Lhs of wire \QuadDec_M2:Cnt16:CounterUDB:cmp_out_reg_i\\D\[1380] = \QuadDec_M2:Cnt16:CounterUDB:cmp_out_i\[295]
-Removing Lhs of wire \QuadDec_M2:Cnt16:CounterUDB:count_stored_i\\D\[1381] = \QuadDec_M2:Net_1203\[301]
-Removing Lhs of wire \ADC:AMuxHw_2_Decoder_old_id_5\\D\[1389] = \ADC:ch_addr_5\[461]
-Removing Lhs of wire \ADC:AMuxHw_2_Decoder_old_id_4\\D\[1390] = \ADC:ch_addr_4\[463]
-Removing Lhs of wire \ADC:AMuxHw_2_Decoder_old_id_3\\D\[1391] = \ADC:ch_addr_3\[465]
-Removing Lhs of wire \ADC:AMuxHw_2_Decoder_old_id_2\\D\[1392] = \ADC:ch_addr_2\[467]
-Removing Lhs of wire \ADC:AMuxHw_2_Decoder_old_id_1\\D\[1393] = \ADC:ch_addr_1\[469]
-Removing Lhs of wire \ADC:AMuxHw_2_Decoder_old_id_0\\D\[1394] = \ADC:ch_addr_0\[471]
-Removing Lhs of wire \ADC:bSAR_SEQ:nrq_edge_detect_reg\\D\[1459] = \ADC:bSAR_SEQ:nrq_edge_detect\[679]
-Removing Lhs of wire \ADC:bSAR_SEQ:nrq_reg\\D\[1461] = \ADC:bSAR_SEQ:bus_clk_nrq_reg\[676]
-Removing Lhs of wire \UART:BUART:reset_reg\\D\[1462] = Net_2183[0]
-Removing Lhs of wire \UART:BUART:rx_bitclk\\D\[1477] = \UART:BUART:rx_bitclk_pre\[1067]
-Removing Lhs of wire \UART:BUART:rx_parity_error_pre\\D\[1486] = \UART:BUART:rx_parity_error_pre\[1144]
-Removing Lhs of wire \UART:BUART:rx_break_status\\D\[1487] = Net_2183[0]
+Removing Lhs of wire tmpOE__D4_net_0[1360] = tmpOE__M1_IN1_net_0[4]
+Removing Lhs of wire \QuadDec_M1:Cnt16:CounterUDB:prevCapture\\D\[1366] = Net_2183[0]
+Removing Lhs of wire \QuadDec_M1:Cnt16:CounterUDB:overflow_reg_i\\D\[1367] = \QuadDec_M1:Cnt16:CounterUDB:overflow\[87]
+Removing Lhs of wire \QuadDec_M1:Cnt16:CounterUDB:underflow_reg_i\\D\[1368] = \QuadDec_M1:Cnt16:CounterUDB:status_1\[75]
+Removing Lhs of wire \QuadDec_M1:Cnt16:CounterUDB:tc_reg_i\\D\[1369] = \QuadDec_M1:Cnt16:CounterUDB:reload_tc\[70]
+Removing Lhs of wire \QuadDec_M1:Cnt16:CounterUDB:prevCompare\\D\[1370] = \QuadDec_M1:Cnt16:CounterUDB:cmp_out_i\[94]
+Removing Lhs of wire \QuadDec_M1:Cnt16:CounterUDB:cmp_out_reg_i\\D\[1371] = \QuadDec_M1:Cnt16:CounterUDB:cmp_out_i\[94]
+Removing Lhs of wire \QuadDec_M1:Cnt16:CounterUDB:count_stored_i\\D\[1372] = \QuadDec_M1:Net_1203\[100]
+Removing Lhs of wire \QuadDec_M2:Cnt16:CounterUDB:prevCapture\\D\[1381] = Net_2183[0]
+Removing Lhs of wire \QuadDec_M2:Cnt16:CounterUDB:overflow_reg_i\\D\[1382] = \QuadDec_M2:Cnt16:CounterUDB:overflow\[288]
+Removing Lhs of wire \QuadDec_M2:Cnt16:CounterUDB:underflow_reg_i\\D\[1383] = \QuadDec_M2:Cnt16:CounterUDB:status_1\[276]
+Removing Lhs of wire \QuadDec_M2:Cnt16:CounterUDB:tc_reg_i\\D\[1384] = \QuadDec_M2:Cnt16:CounterUDB:reload_tc\[271]
+Removing Lhs of wire \QuadDec_M2:Cnt16:CounterUDB:prevCompare\\D\[1385] = \QuadDec_M2:Cnt16:CounterUDB:cmp_out_i\[295]
+Removing Lhs of wire \QuadDec_M2:Cnt16:CounterUDB:cmp_out_reg_i\\D\[1386] = \QuadDec_M2:Cnt16:CounterUDB:cmp_out_i\[295]
+Removing Lhs of wire \QuadDec_M2:Cnt16:CounterUDB:count_stored_i\\D\[1387] = \QuadDec_M2:Net_1203\[301]
+Removing Lhs of wire \ADC:AMuxHw_2_Decoder_old_id_5\\D\[1395] = \ADC:ch_addr_5\[461]
+Removing Lhs of wire \ADC:AMuxHw_2_Decoder_old_id_4\\D\[1396] = \ADC:ch_addr_4\[463]
+Removing Lhs of wire \ADC:AMuxHw_2_Decoder_old_id_3\\D\[1397] = \ADC:ch_addr_3\[465]
+Removing Lhs of wire \ADC:AMuxHw_2_Decoder_old_id_2\\D\[1398] = \ADC:ch_addr_2\[467]
+Removing Lhs of wire \ADC:AMuxHw_2_Decoder_old_id_1\\D\[1399] = \ADC:ch_addr_1\[469]
+Removing Lhs of wire \ADC:AMuxHw_2_Decoder_old_id_0\\D\[1400] = \ADC:ch_addr_0\[471]
+Removing Lhs of wire \ADC:bSAR_SEQ:nrq_edge_detect_reg\\D\[1465] = \ADC:bSAR_SEQ:nrq_edge_detect\[679]
+Removing Lhs of wire \ADC:bSAR_SEQ:nrq_reg\\D\[1467] = \ADC:bSAR_SEQ:bus_clk_nrq_reg\[676]
+Removing Lhs of wire \UART:BUART:reset_reg\\D\[1468] = Net_2183[0]
+Removing Lhs of wire \UART:BUART:rx_bitclk\\D\[1483] = \UART:BUART:rx_bitclk_pre\[1067]
+Removing Lhs of wire \UART:BUART:rx_parity_error_pre\\D\[1492] = \UART:BUART:rx_parity_error_pre\[1144]
+Removing Lhs of wire \UART:BUART:rx_break_status\\D\[1493] = Net_2183[0]
 
 ------------------------------------------------------
-Aliased 0 equations, 344 wires.
+Aliased 0 equations, 345 wires.
 ------------------------------------------------------
 
 ----------------------------------------------------------
@@ -1324,11 +1326,11 @@ Removing Lhs of wire \QuadDec_M2:Cnt16:CounterUDB:hwCapture\[268] = Net_2183[0]
 Removing Rhs of wire \UART:BUART:rx_bitclk_enable\[1031] = \UART:BUART:rx_bitclk\[1079]
 Removing Lhs of wire \UART:BUART:rx_status_0\[1130] = Net_2183[0]
 Removing Lhs of wire \UART:BUART:rx_status_6\[1139] = Net_2183[0]
-Removing Lhs of wire \UART:BUART:tx_ctrl_mark_last\\D\[1469] = \UART:BUART:tx_ctrl_mark_last\[1022]
-Removing Lhs of wire \UART:BUART:rx_markspace_status\\D\[1481] = Net_2183[0]
-Removing Lhs of wire \UART:BUART:rx_parity_error_status\\D\[1482] = Net_2183[0]
-Removing Lhs of wire \UART:BUART:rx_addr_match_status\\D\[1484] = Net_2183[0]
-Removing Lhs of wire \UART:BUART:rx_markspace_pre\\D\[1485] = \UART:BUART:rx_markspace_pre\[1143]
+Removing Lhs of wire \UART:BUART:tx_ctrl_mark_last\\D\[1475] = \UART:BUART:tx_ctrl_mark_last\[1022]
+Removing Lhs of wire \UART:BUART:rx_markspace_status\\D\[1487] = Net_2183[0]
+Removing Lhs of wire \UART:BUART:rx_parity_error_status\\D\[1488] = Net_2183[0]
+Removing Lhs of wire \UART:BUART:rx_addr_match_status\\D\[1490] = Net_2183[0]
+Removing Lhs of wire \UART:BUART:rx_markspace_pre\\D\[1491] = \UART:BUART:rx_markspace_pre\[1143]
 
 ------------------------------------------------------
 Aliased 0 equations, 10 wires.
@@ -1363,13 +1365,13 @@ topld:  No errors.
 
 CYPRESS_DIR    : C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp
 Warp Program   : C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\warp\bin\warp.exe
-Warp Arguments : -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya "-.fftprj=C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\CS301_Class.cyprj" -dcpsoc3 CS301_Class.v -verilog
+Warp Arguments : -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya "-.fftprj=C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\CS301_Class.cyprj" -dcpsoc3 CS301_Class.v -verilog
 </CYPRESSTAG>
-Warp synthesis phase: Elapsed time ==> 1s.789ms
+Warp synthesis phase: Elapsed time ==> 1s.950ms
 <CYPRESSTAG name="Fitter results...">
 <CYPRESSTAG name="Fitter startup details...">
-cyp3fit: V4.2.0.641, Family: PSoC3, Started at: Monday, 20 October 2025 20:47:53
-Options: -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\yram171\Downloads\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\CS301_Class.cyprj -d CY8C5888LTI-LP097 CS301_Class.v -verilog
+cyp3fit: V4.2.0.641, Family: PSoC3, Started at: Tuesday, 21 October 2025 14:08:27
+Options: -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\CS301_Class.cyprj -d CY8C5888LTI-LP097 CS301_Class.v -verilog
 </CYPRESSTAG>
 <CYPRESSTAG name="Design parsing">
 Design parsing phase: Elapsed time ==> 0s.066ms
@@ -2737,6 +2739,45 @@ Design Equations
             pa_out => M2_EN(0)__PA ,
             pin_input => __ONE__ ,
             pad => M2_EN(0)_PAD );
+        Properties:
+        {
+        }
+
+    Pin : Name = D4(0)
+        Attributes:
+            In Group/Port: True
+            In Sync Option: AUTO
+            Out Sync Option: NOSYNC
+            Interrupt generated: False
+            Interrupt mode: NONE
+            Drive mode: CMOS_OUT
+            VTrip: EITHER
+            Slew: FAST
+            Input Sync needed: False
+            Output Sync needed: False
+            SC shield enabled: False
+            POR State: ANY
+            LCD Mode: COMMON
+            Register Mode: RegComb
+            CaSense Mode: NEITHER
+            Treat as pin: True
+            Is OE Registered: False
+            Uses Analog: False
+            Can contain Digital: True
+            Is SIO: False
+            SIO Output Buf: NONREGULATED
+            SIO Input Buf: SINGLE_ENDED
+            SIO HiFreq: LOW
+            SIO Hyst: DISABLED
+            SIO Vtrip: MULTIPLIER_0_5
+            SIO Multiplier Index: 0
+            SIO RefSel: VCC_IO
+            Required Capabilities: DIGITAL
+            Initial Value: 0
+            IO Voltage: 0
+        PORT MAP (
+            pa_out => D4(0)__PA ,
+            pad => D4(0)_PAD );
         Properties:
         {
         }
@@ -6152,7 +6193,7 @@ Analog Clocks                 :    0 :    4 :    4 :  0.00 %
 CapSense Buffers              :    0 :    2 :    2 :  0.00 %
 Digital Filter Block          :    0 :    1 :    1 :  0.00 %
 Interrupts                    :   14 :   18 :   32 : 43.75 %
-IO                            :   32 :   16 :   48 : 66.67 %
+IO                            :   33 :   15 :   48 : 68.75 %
 Segment LCD                   :    0 :    1 :    1 :  0.00 %
 CAN 2.0b                      :    0 :    1 :    1 :  0.00 %
 I2C                           :    0 :    1 :    1 :  0.00 %
@@ -6181,8 +6222,8 @@ Analog (SC/CT) Blocks         :    0 :    4 :    4 :  0.00 %
 DAC                           :      :      :      :        
   VIDAC                       :    0 :    4 :    4 :  0.00 %
 </CYPRESSTAG>
-Technology Mapping: Elapsed time ==> 0s.359ms
-Tech Mapping phase: Elapsed time ==> 0s.455ms
+Technology Mapping: Elapsed time ==> 0s.363ms
+Tech Mapping phase: Elapsed time ==> 0s.462ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Analog Placement">
 Info: apr.M0002: Analog signal "Net_4336" is connected to one terminal only. (App=cydsfit)
@@ -6250,6 +6291,7 @@ IO_7@[IOP=(0)][IoId=(7)] : A2(0) (fixed)
 IO_2@[IOP=(1)][IoId=(2)] : A3(0) (fixed)
 IO_4@[IOP=(1)][IoId=(4)] : A4(0) (fixed)
 IO_5@[IOP=(1)][IoId=(5)] : A5(0) (fixed)
+IO_6@[IOP=(2)][IoId=(6)] : D4(0) (fixed)
 IO_0@[IOP=(3)][IoId=(0)] : DB0(0) (fixed)
 IO_1@[IOP=(3)][IoId=(1)] : DB1(0) (fixed)
 IO_6@[IOP=(3)][IoId=(6)] : DB2(0) (fixed)
@@ -6276,8 +6318,8 @@ IO_6@[IOP=(15)][IoId=(6)] : \USBUART:Dp(0)\ (fixed)
 SAR[1]@[FFB(SAR,1)] : \ADC:SAR:ADC_SAR\
 Vref[13]@[FFB(Vref,13)] : \ADC:SAR:vRef_Vdda_1\
 USB[0]@[FFB(USB,0)] : \USBUART:USB\
-Log: apr.M0058: The analog placement iterative improvement is 35% done. (App=cydsfit)
-Log: apr.M0058: The analog placement iterative improvement is 100% done. (App=cydsfit)
+Log: apr.M0058: The analog placement iterative improvement is 39% done. (App=cydsfit)
+Log: apr.M0058: The analog placement iterative improvement is 89% done. (App=cydsfit)
 Analog Placement Results:
 IO_5@[IOP=(0)][IoId=(5)] : A0(0) (fixed)
 IO_6@[IOP=(0)][IoId=(6)] : A1(0) (fixed)
@@ -6285,6 +6327,7 @@ IO_7@[IOP=(0)][IoId=(7)] : A2(0) (fixed)
 IO_2@[IOP=(1)][IoId=(2)] : A3(0) (fixed)
 IO_4@[IOP=(1)][IoId=(4)] : A4(0) (fixed)
 IO_5@[IOP=(1)][IoId=(5)] : A5(0) (fixed)
+IO_6@[IOP=(2)][IoId=(6)] : D4(0) (fixed)
 IO_0@[IOP=(3)][IoId=(0)] : DB0(0) (fixed)
 IO_1@[IOP=(3)][IoId=(1)] : DB1(0) (fixed)
 IO_6@[IOP=(3)][IoId=(6)] : DB2(0) (fixed)
@@ -6312,10 +6355,10 @@ SAR[1]@[FFB(SAR,1)] : \ADC:SAR:ADC_SAR\
 Vref[13]@[FFB(Vref,13)] : \ADC:SAR:vRef_Vdda_1\
 USB[0]@[FFB(USB,0)] : \USBUART:USB\
 
-Analog Placement phase: Elapsed time ==> 2s.263ms
+Analog Placement phase: Elapsed time ==> 2s.489ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Analog Routing">
-Analog Routing phase: Elapsed time ==> 0s.007ms
+Analog Routing phase: Elapsed time ==> 0s.006ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Analog Code Generation">
 ============ Analog Final Answer Routes ============
@@ -6487,20 +6530,20 @@ Map of net to items {
     agr0_x_sar_1_vplus
     agr0
     agr0_x_p1_4
-    agr2_x_sar_1_vplus
-    agr2
-    agr2_x_p1_2
     agr1_x_sar_1_vplus
     agr1
     agr1_x_p1_5
+    agr2_x_sar_1_vplus
+    agr2
+    agr2_x_p1_2
     agl7_x_dsm_0_vplus
     agl7
     agl7_x_p0_7
     p0_6
     p0_5
     p1_4
-    p1_2
     p1_5
+    p1_2
     p0_7
   }
 }
@@ -6533,12 +6576,12 @@ Map of item to net {
   agr0_x_sar_1_vplus                               -> AmuxNet::\ADC:AMuxHw_2\
   agr0                                             -> AmuxNet::\ADC:AMuxHw_2\
   agr0_x_p1_4                                      -> AmuxNet::\ADC:AMuxHw_2\
-  agr2_x_sar_1_vplus                               -> AmuxNet::\ADC:AMuxHw_2\
-  agr2                                             -> AmuxNet::\ADC:AMuxHw_2\
-  agr2_x_p1_2                                      -> AmuxNet::\ADC:AMuxHw_2\
   agr1_x_sar_1_vplus                               -> AmuxNet::\ADC:AMuxHw_2\
   agr1                                             -> AmuxNet::\ADC:AMuxHw_2\
   agr1_x_p1_5                                      -> AmuxNet::\ADC:AMuxHw_2\
+  agr2_x_sar_1_vplus                               -> AmuxNet::\ADC:AMuxHw_2\
+  agr2                                             -> AmuxNet::\ADC:AMuxHw_2\
+  agr2_x_p1_2                                      -> AmuxNet::\ADC:AMuxHw_2\
   agl7_x_dsm_0_vplus                               -> AmuxNet::\ADC:AMuxHw_2\
   agl7                                             -> AmuxNet::\ADC:AMuxHw_2\
   agl7_x_p0_7                                      -> AmuxNet::\ADC:AMuxHw_2\
@@ -7048,11 +7091,11 @@ Dump of CyP35AnalogRoutingResultsDB
 IsVddaHalfUsedForComp = False
 IsVddaHalfUsedForSar0 = False
 IsVddaHalfUsedForSar1 = True
-Analog Code Generation phase: Elapsed time ==> 0s.157ms
+Analog Code Generation phase: Elapsed time ==> 0s.153ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Digital Placement">
 <CYPRESSTAG name="Detailed placement messages">
-I2076: Total run-time: 2.3 sec.
+I2076: Total run-time: 2.4 sec.
 
 </CYPRESSTAG>
 <CYPRESSTAG name="PLD Packing">
@@ -7083,7 +7126,7 @@ PLD Packing: Elapsed time ==> 0s.016ms
 Initial Partitioning Summary not displayed at this verbose level.</CYPRESSTAG>
 <CYPRESSTAG name="Final Partitioning Summary">
 Final Partitioning Summary not displayed at this verbose level.</CYPRESSTAG>
-Partitioning: Elapsed time ==> 0s.214ms
+Partitioning: Elapsed time ==> 0s.215ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Final Placement Summary">
 
@@ -11649,6 +11692,46 @@ Pin : Name = Rx_2(0)
     {
     }
 
+[IoId=6]: 
+Pin : Name = D4(0)
+    Attributes:
+        In Group/Port: True
+        In Sync Option: AUTO
+        Out Sync Option: NOSYNC
+        Interrupt generated: False
+        Interrupt mode: NONE
+        Drive mode: CMOS_OUT
+        VTrip: EITHER
+        Slew: FAST
+        Input Sync needed: False
+        Output Sync needed: False
+        SC shield enabled: False
+        POR State: ANY
+        LCD Mode: COMMON
+        Register Mode: RegComb
+        CaSense Mode: NEITHER
+        Treat as pin: True
+        Is OE Registered: False
+        Uses Analog: False
+        Can contain Digital: True
+        Is SIO: False
+        SIO Output Buf: NONREGULATED
+        SIO Input Buf: SINGLE_ENDED
+        SIO HiFreq: LOW
+        SIO Hyst: DISABLED
+        SIO Vtrip: MULTIPLIER_0_5
+        SIO Multiplier Index: 0
+        SIO RefSel: VCC_IO
+        Required Capabilities: DIGITAL
+        Initial Value: 0
+        IO Voltage: 0
+    PORT MAP (
+        pa_out => D4(0)__PA ,
+        pad => D4(0)_PAD );
+    Properties:
+    {
+    }
+
 Port 3 contains the following IO cells:
 [IoId=0]: 
 Pin : Name = DB0(0)
@@ -12748,6 +12831,7 @@ Port | Pin | Fixed |      Type |       Drive Mode |            Name | Connection
      |   2 |     * |      NONE |     HI_Z_DIGITAL |         Rx_1(0) | FB(Net_3438)
      |   3 |     * |      NONE |         CMOS_OUT |         Tx_1(0) | In(Net_1880)
      |   4 |     * |      NONE |     HI_Z_DIGITAL |         Rx_2(0) | FB(Net_3405)
+     |   6 |     * |      NONE |         CMOS_OUT |           D4(0) | 
 -----+-----+-------+-----------+------------------+-----------------+-------------------------------------------------------
    3 |   0 |     * |      NONE |         CMOS_OUT |          DB0(0) | 
      |   1 |     * |      NONE |         CMOS_OUT |          DB1(0) | 
@@ -12773,32 +12857,32 @@ Port | Pin | Fixed |      Type |       Drive Mode |            Name | Connection
 </CYPRESSTAG>
 </CYPRESSTAG>
 Digital component placer commit/Report: Elapsed time ==> 0s.115ms
-Digital Placement phase: Elapsed time ==> 3s.100ms
+Digital Placement phase: Elapsed time ==> 3s.181ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Digital Routing">
 "C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\bin/sjrouter.exe" --xml-path "C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\dev\psoc5/psoc5lp/route_arch-rrg.cydata" --vh2-path "CS301_Class_r.vh2" --pcf-path "CS301_Class.pco" --des-name "CS301_Class" --dsf-path "CS301_Class.dsf" --sdc-path "CS301_Class.sdc" --lib-path "CS301_Class_r.lib"
 Routing successful.
-Digital Routing phase: Elapsed time ==> 1s.956ms
+Digital Routing phase: Elapsed time ==> 1s.915ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Bitstream Generation">
-Bitstream Generation phase: Elapsed time ==> 0s.196ms
+Bitstream Generation phase: Elapsed time ==> 0s.201ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Bitstream Verification">
-Bitstream Verification phase: Elapsed time ==> 0s.049ms
+Bitstream Verification phase: Elapsed time ==> 0s.046ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Static timing analysis">
 Timing report is in CS301_Class_timing.html.
-Static timing analysis phase: Elapsed time ==> 0s.458ms
+Static timing analysis phase: Elapsed time ==> 0s.450ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Data reporting">
 Data reporting phase: Elapsed time ==> 0s.003ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Database update...">
-Design database save phase: Elapsed time ==> 0s.158ms
+Design database save phase: Elapsed time ==> 0s.185ms
 </CYPRESSTAG>
-cydsfit: Elapsed time ==> 8s.936ms
+cydsfit: Elapsed time ==> 9s.256ms
 </CYPRESSTAG>
-Fitter phase: Elapsed time ==> 8s.942ms
-API generation phase: Elapsed time ==> 2s.734ms
-Dependency generation phase: Elapsed time ==> 0s.013ms
-Cleanup phase: Elapsed time ==> 0s.001ms
+Fitter phase: Elapsed time ==> 9s.262ms
+API generation phase: Elapsed time ==> 3s.226ms
+Dependency generation phase: Elapsed time ==> 0s.011ms
+Cleanup phase: Elapsed time ==> 0s.000ms

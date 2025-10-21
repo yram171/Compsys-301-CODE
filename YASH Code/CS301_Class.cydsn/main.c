@@ -21,7 +21,7 @@
 #define VMAX_CONST_MM_S        1000
 #define SPEED_FRAC_PERCENT      20
 #define V_CRUISE_MM_S  ((int32_t)VMAX_CONST_MM_S * (int32_t)SPEED_FRAC_PERCENT / 100)
-#define TARGET_DIST_MM        999999  // HALF THE DISTANCE   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#define TARGET_DIST_MM        150  // HALF THE DISTANCE   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 /* ===== Encoder → mm conversion (kept) ===== */
 #define QD_SAMPLE_MS             5u
@@ -47,7 +47,7 @@
 
 
 // Cooldown after turn to ignore intersection sensors V1 & V2
-#define TURN_COOLDOWN_MS (400)
+#define TURN_COOLDOWN_MS (1000)
 #define TURN_COOLDOWN_TICKS ((TURN_COOLDOWN_MS + LOOP_DT_MS - 1) / LOOP_DT_MS
 
 
@@ -139,8 +139,8 @@ static void light_sensors_update_and_maybe_request_turn(uint16_t* V4_pp, uint16_
 
 /* ================= PI Controller (same as your current file) ================= */
 #define STEER_MAX        15
-#define KP               16.0f
-#define KI               3.0f
+#define KP               18.0f
+#define KI               2.0f
 #define INT_LIM          30.0f
 #define LOSS_TIMEOUT_T   0.25f
 
@@ -226,77 +226,325 @@ int main(void)
     set_motors_with_trim_and_steer(100,-10);
     CyDelay(40);
     set_motors_symmetric(0); 
+    
+    
+    // Pathfinding array
+    /* 
+     * STRAIGHT -> 0, TURN LEFT -> 1, TURN RIGHT -> 2, TURN U_TURN -> 3,
+     * REACH -> 5, END -> 6
+     */
+    /*
+    const uint8_t CMD_STATES[] = {
+    0,  // TURN_START
+    1,  // TURN_LEFT
+    5,  // REACH
+    3,  // TURN_U_TURN
+    1,  // TURN_LEFT
+    1,  // TURN_LEFT
+    2,  // TURN_RIGHT
+    2,  // TURN_RIGHT
+    5,  // REACH
+    2,  // TURN_RIGHT
+    5,  // REACH
+    3,  // TURN_U_TURN
+    2,  // TURN_RIGHT
+    2,  // TURN_RIGHT
+    1,  // TURN_LEFT
+    2,  // TURN_RIGHT
+    2,  // TURN_RIGHT
+    5,  // REACH
+    5,  // REACH
+    0   // TURN_END
+};*/
+    
+    const uint8_t CMD_STATES[] = {5};
+    
+    int8_t i = 0;  // Loop index
+    int8_t indexMAX = 0;  // Loop index
+    int32_t target_dist = 0;
+    
+    int8_t straight_complete = 0;
+    int8_t turn_complete = 0;
+    int8_t uTurn_complete = 0;
+    int8_t fruit_complete = 0;
 
     for(;;){
-        /* Distance stop */
-        g_stop_now = (g_dist_mm >= TARGET_DIST_MM) ? 1u : 0u;
-        if (g_stop_now) {
-            set_motors_symmetric(0);
-            motor_enable(1u, 1u);
-            g_direction = 0u;
-            CyDelay(LOOP_DT_MS);
-            continue;
-        }
 
         /* Read sensors + maybe request turn */
         uint16_t V4_pp=0, V5_pp=0, V6_pp=0;
         light_sensors_update_and_maybe_request_turn(&V4_pp, &V5_pp, &V6_pp);
         
+
+//        /* ---------------- Turn handling with arming delay (Option A) ---------------- */
+//        /* Arm once on the first detection (edge 0 -> 1/2) */
+//        if ((g_direction == 1u || g_direction == 2u) && dir_latched_side == 0){
+//            dir_latched_side = g_direction;          /* remember side */
+//            dir_delay_ticks  = DIR_CALL_DELAY_TICKS; /* start countdown */
+//            //CyDelay(50);
+//        }
+//        /* If request cleared during delay, cancel gracefully */
+//        if (g_direction == 0u && dir_latched_side != 0){
+//            dir_latched_side = 0;
+//            dir_delay_ticks  = 0;
+//        }
+//
+//        if (g_direction == 1u || g_direction == 2u){
+//            if (dir_delay_ticks > 0){
+//                /* Still delaying: keep doing normal straight PI */
+//                dir_delay_ticks--;
+//            } else {
+//                /* Delay elapsed: perform the maneuver */
+//                Directions_Handle(&g_direction);
+//
+//                /* When turn completes, Directions sets g_direction back to 0 */
+//                if (g_direction == 0u){
+//                    pi.i = 0.0f; pi.u = 0.0f; pi.t_loss = 0.0f;  /* clear bias */
+//                    dir_latched_side = 0;                        /* ready next time */
+//                    
+//                    
+//                    turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+//                }
+//                CyDelay(LOOP_DT_MS);
+//                continue;  /* skip the rest this tick */
+//            }
+//        }
+//        /* ---------------- end turn handling with delay ---------------- */
+//
+//        /* Straight run with PI steering */
+//        
+//        if(turn_cooldown_ticks > 0) {
+//            turn_cooldown_ticks--;
+//        }
+//        
+//        /*
+//        // Add bias when back right sensor is under line
+//        uint16_t V5 = Sensor_ComputePeakToPeak(4);
+//        sen5_on_line = (V5 > 10 && V5 < 100) ? 1u : 0u;
+//        if (sen5_on_line == 1) {
+//            Motors_SetPercent(0,25);
+//            //set_motors_with_trim_and_steer(50,50); 
+//            CyDelay(10);
+//        } */
         
-        if (sen1_on_line == 0 && sen2_on_line == 0 && sen3_on_line == 0 && sen4_on_line == 0 && sen5_on_line == 0 && sen6_on_line == 0) {
-            Motors_SetPercent(0, 0);
-        }
-
-        /* ---------------- Turn handling with arming delay (Option A) ---------------- */
-        /* Arm once on the first detection (edge 0 -> 1/2) */
-        if ((g_direction == 1u || g_direction == 2u) && dir_latched_side == 0){
-            dir_latched_side = g_direction;          /* remember side */
-            dir_delay_ticks  = DIR_CALL_DELAY_TICKS; /* start countdown */
-            CyDelay(50);
-        }
-        /* If request cleared during delay, cancel gracefully */
-        if (g_direction == 0u && dir_latched_side != 0){
-            dir_latched_side = 0;
-            dir_delay_ticks  = 0;
-        }
-
-        if (g_direction == 1u || g_direction == 2u){
-            if (dir_delay_ticks > 0){
-                /* Still delaying: keep doing normal straight PI */
-                dir_delay_ticks--;
-            } else {
-                /* Delay elapsed: perform the maneuver */
-                Directions_Handle(&g_direction);
-
-                /* When turn completes, Directions sets g_direction back to 0 */
-                if (g_direction == 0u){
-                    pi.i = 0.0f; pi.u = 0.0f; pi.t_loss = 0.0f;  /* clear bias */
-                    dir_latched_side = 0;                        /* ready next time */
-                    
-                    
-                    turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
-                }
-                CyDelay(LOOP_DT_MS);
-                continue;  /* skip the rest this tick */
-            }
-        }
-        /* ---------------- end turn handling with delay ---------------- */
-
-        /* Straight run with PI steering */
         
+//        int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
+//        set_motors_with_trim_and_steer(center_duty_est, steer);
+//        
+//        
+//        /* Distance stop */    // g_dist_mm = total distance traveled
+//        g_stop_now = (g_dist_mm >= TARGET_DIST_MM) ? 1u : 0u;
+//        if (g_stop_now) {
+//            set_motors_symmetric(0);
+//            motor_enable(1u, 1u);
+//            g_direction = 0u;
+//            continue;
+//        }
+        
+        
+        
+        
+        /* Straight run with PI steering */        
         if(turn_cooldown_ticks > 0) {
             turn_cooldown_ticks--;
+       }
+        
+        
+        // PATHFINDING ALGORITHM
+        
+        if (CMD_STATES[i] == 0) {
+            // Go STRAIGHT
+            int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
+            set_motors_with_trim_and_steer(center_duty_est, steer);
+            
+            uint16_t V1 = Sensor_ComputePeakToPeak(4);
+            sen1_on_line = (V1 > 10 && V1 < 100) ? 1u : 0u;
+            uint16_t V2 = Sensor_ComputePeakToPeak(4);
+            sen2_on_line = (V2 > 10 && V2 < 100) ? 1u : 0u;
+            if (sen1_on_line == 1u || sen2_on_line == 1u) {
+                straight_complete = 1;
+            }
+            
+        } else if((CMD_STATES[i] == 1)) {
+            // Go LEFT
+            
+            g_direction = 1u;
+            /* ---------------- Turn handling with arming delay (Option A) ---------------- */
+                /* Arm once on the first detection (edge 0 -> 1/2) */
+                if ((g_direction == 1u || g_direction == 2u) && dir_latched_side == 0){
+                    dir_latched_side = g_direction;          /* remember side */
+                    dir_delay_ticks  = DIR_CALL_DELAY_TICKS; /* start countdown */
+                    //CyDelay(50);
+                }
+                /* If request cleared during delay, cancel gracefully */
+                if (g_direction == 0u && dir_latched_side != 0){
+                    dir_latched_side = 0;
+                    dir_delay_ticks  = 0;
+                }
+
+                if (g_direction == 1u || g_direction == 2u){
+                    if (dir_delay_ticks > 0){
+                        /* Still delaying: keep doing normal straight PI */
+                        dir_delay_ticks--;
+                    } else {
+                        /* Delay elapsed: perform the maneuver */
+                        Directions_Handle(&g_direction);
+
+                        /* When turn completes, Directions sets g_direction back to 0 */
+                        if (g_direction == 0u){
+                            pi.i = 0.0f; pi.u = 0.0f; pi.t_loss = 0.0f;  /* clear bias */
+                            dir_latched_side = 0;                        /* ready next time */
+                            
+                            
+                            turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+                            turn_complete = 1;
+                        }
+                        CyDelay(LOOP_DT_MS);
+                        continue;  /* skip the rest this tick */
+                    }
+                }
+                /* ---------------- end turn handling with delay ---------------- */
+                
+            
+        } else if((CMD_STATES[i] == 2)) {
+            // Go RIGHT
+            g_direction = 2u;
+            /* ---------------- Turn handling with arming delay (Option A) ---------------- */
+                /* Arm once on the first detection (edge 0 -> 1/2) */
+                if ((g_direction == 1u || g_direction == 2u) && dir_latched_side == 0){
+                    dir_latched_side = g_direction;          /* remember side */
+                    dir_delay_ticks  = DIR_CALL_DELAY_TICKS; /* start countdown */
+                    //CyDelay(50);
+                }
+                /* If request cleared during delay, cancel gracefully */
+                if (g_direction == 0u && dir_latched_side != 0){
+                    dir_latched_side = 0;
+                    dir_delay_ticks  = 0;
+                }
+
+                if (g_direction == 1u || g_direction == 2u){
+                    if (dir_delay_ticks > 0){
+                        /* Still delaying: keep doing normal straight PI */
+                        dir_delay_ticks--;
+                    } else {
+                        /* Delay elapsed: perform the maneuver */
+                        Directions_Handle(&g_direction);
+
+                        /* When turn completes, Directions sets g_direction back to 0 */
+                        if (g_direction == 0u){
+                            pi.i = 0.0f; pi.u = 0.0f; pi.t_loss = 0.0f;  /* clear bias */
+                            dir_latched_side = 0;                        /* ready next time */
+                            
+                            
+                            turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+                            turn_complete = 1;
+                        }
+                        CyDelay(LOOP_DT_MS);
+                        continue;  /* skip the rest this tick */
+                    }
+                }
+                /* ---------------- end turn handling with delay ---------------- */
+            
+        } else if((CMD_STATES[i] == 3)) {
+            // Do U-TURN
+            g_direction = 3u;
+            /* ---------------- Turn handling with arming delay (Option A) ---------------- */
+                /* Arm once on the first detection (edge 0 -> 1/2) */
+                if ((g_direction == 1u || g_direction == 2u || g_direction == 3u) && dir_latched_side == 0){
+                    dir_latched_side = g_direction;          /* remember side */
+                    dir_delay_ticks  = DIR_CALL_DELAY_TICKS; /* start countdown */
+                    //CyDelay(50);
+                }
+                /* If request cleared during delay, cancel gracefully */
+                if (g_direction == 0u && dir_latched_side != 0){
+                    dir_latched_side = 0;
+                    dir_delay_ticks  = 0;
+                }
+
+                if (g_direction == 1u || g_direction == 2u || g_direction == 3u){
+                    if (dir_delay_ticks > 0){
+                        /* Still delaying: keep doing normal straight PI */
+                        dir_delay_ticks--;
+                    } else {
+                        /* Delay elapsed: perform the maneuver */
+                        Directions_Handle(&g_direction);
+
+                        /* When turn completes, Directions sets g_direction back to 0 */
+                        if (g_direction == 0u){
+                            pi.i = 0.0f; pi.u = 0.0f; pi.t_loss = 0.0f;  /* clear bias */
+                            dir_latched_side = 0;                        /* ready next time */
+                            
+                            
+                            turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+                            uTurn_complete = 1;
+                        }
+                        CyDelay(LOOP_DT_MS);
+                        continue;  /* skip the rest this tick */
+                    }
+                }
+                /* ---------------- end turn handling with delay ---------------- */
+          
+            
+        } else if((CMD_STATES[i] == 5)) {
+        // REACH FOOD
+
+         // --- FIX 1: Set the target distance *only once* ---
+         // We know we just entered this state if target_dist is 0
+        if (target_dist == 0) {
+         // Set target to be 500mm *from our current position*
+         target_dist = g_dist_mm + 500; // in mm
+         }
+
+        // Check if we have *now* reached that target
+         g_stop_now = (g_dist_mm >= TARGET_DIST_MM) ? 1u : 0u;
+
+         // --- FIX 2 & 3: Use if/else and remove 'continue' ---
+         if (g_stop_now) {
+         // Target met: STOP
+         set_motors_symmetric(0);
+         motor_enable(1u, 1u);
+        
+         fruit_complete = 1; // Flag that this state is done
+        D4_Write(1);
+         // DO NOT 'continue' here
+        } else {
+         // Target not met: KEEP DRIVING
+         int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
+         set_motors_with_trim_and_steer(center_duty_est, steer);
+         }
+
+        } else if((CMD_STATES[i] == 6)) {
+         // FINISH
+
+         // --- Apply the same logic as STATE 5 ---
+         if (target_dist == 0) {
+         target_dist = g_dist_mm + 500; // in mm
+         }
+
+         g_stop_now = (g_dist_mm >= target_dist) ? 1u : 0u;
+
+         if (g_stop_now) {
+         set_motors_symmetric(0);
+         motor_enable(1u, 1u);
+
+        // **** ADDED THIS FLAG ****
+        // This tells the state machine to advance
+         // (assuming 'FINISH' should also set 'fruit_complete')
+        fruit_complete = 1; 
+
+         // 'continue' is removed
+         }
+}
+        if (straight_complete == 1u || turn_complete == 1u || uTurn_complete == 1u || fruit_complete == 1u) {
+            
+            i += 1;
+            
+            straight_complete = 0;
+            turn_complete = 0;
+            uTurn_complete = 0;
+            fruit_complete = 0;
+            
+            target_dist = 0;
         }
-        
-        /*if (sen5_on_line == 1) {
-           set_motors_with_trim_and_steer(80,-10); 
-            CyDelay(50);
-            set_motors_symmetric(0); 
-        }*/
-        
-        
-        int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
-        set_motors_with_trim_and_steer(center_duty_est, steer);
 
         CyDelay(LOOP_DT_MS);
     }
