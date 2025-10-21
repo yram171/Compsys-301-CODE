@@ -13,15 +13,15 @@ static volatile int32_t TICKS_90_RIGHT = 90;
 
 /* Pivot speed (%) — keep modest to avoid overshoot */
 // Side-specific pivot speeds (percent duty)
-#define PIVOT_SPEED_L         24   // left turn speed
-#define PIVOT_SPEED_R         24   // right turn speed
+#define PIVOT_SPEED_L         20   // left turn speed
+#define PIVOT_SPEED_R         20  // right turn speed
 #define PIVOT_SPEED_U         42   // U turn speed
-#define STOP_BEFORE_MS        100
+#define STOP_BEFORE_MS        110
 #define BRAKE_AFTER_MS        500
 
 /* Safety: max number of handler calls allowed while turning.
  * With your ~8 ms loop this is ~3.2 s (400 * 8 ms) which is plenty. */
-#define MAX_TURN_HANDLER_TICKS  28
+#define MAX_TURN_HANDLER_TICKS  45
 //uint16_t MAX_TURN;
 
 /* ===================== Internal state ===================== */
@@ -169,7 +169,7 @@ void Directions_Handle(volatile uint8_t* p_dir)
             /* Stop, settle, pause encoders, zero counters */
             set_motors_symmetric(0);
             motor_enable(0u, 0u);
-            CyDelay(STOP_BEFORE_MS);
+            CyDelay(STOP_BEFORE_MS+40);
 
             //enc_pause_background();
             enc_reset_local();

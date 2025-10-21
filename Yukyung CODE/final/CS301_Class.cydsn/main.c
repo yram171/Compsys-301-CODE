@@ -71,6 +71,10 @@ static uint8_t  dir_latched_side = 0;       /* remembers 1 or 2 while waiting */
 static uint16_t turn_cooldown_ticks = 0;
 static uint8_t s12_prev = 0;
 
+static uint8_t left_sensor_count = 0;  // Counts left sensor detections
+static uint8_t right_sensor_count = 0; // Counts right sensor detections
+
+
 
 /* ------------------------------- 5 ms Timer ISR: accumulate distance (kept) ------------------------------- */
 CY_ISR(isr_qd_Handler)
@@ -111,7 +115,7 @@ static inline float norm01_from_pp(uint16_t pp)
 }
 
 /* Read sensors and (maybe) request a turn based on S1 / S2 (kept) */
-static void light_sensors_update_and_maybe_request_turn(uint16_t* V4_pp, uint16_t* V5_pp, uint16_t* V6_pp)
+static void light_sensors_update_and_maybe_request_turn(uint16_t* V3_pp, uint16_t* V4_pp, uint16_t* V5_pp, uint16_t* V6_pp)
 {
     uint16_t V1 = Sensor_ComputePeakToPeak(0);
     uint16_t V2 = Sensor_ComputePeakToPeak(1);
@@ -120,6 +124,7 @@ static void light_sensors_update_and_maybe_request_turn(uint16_t* V4_pp, uint16_
     uint16_t V5 = Sensor_ComputePeakToPeak(4);
     uint16_t V6 = Sensor_ComputePeakToPeak(5);
 
+    if (V3_pp) *V3_pp = V3;
     if (V4_pp) *V4_pp = V4;
     if (V5_pp) *V5_pp = V5;
     if (V6_pp) *V6_pp = V6;
@@ -131,6 +136,29 @@ static void light_sensors_update_and_maybe_request_turn(uint16_t* V4_pp, uint16_
     sen5_on_line = (V5 > 10 && V5 < 100) ? 1u : 0u;
     sen6_on_line = (V6 > 10 && V6 < 100) ? 1u : 0u;
 
+    
+    if (sen1_on_line) {
+    if (left_sensor_count == 0) {
+        // First detection, ignore it (do nothing)
+        left_sensor_count = 1;  
+    } else if (left_sensor_count == 1) {
+        // Second detection, execute left turn
+        g_direction = 1;  // Left turn
+        left_sensor_count = 0;  // Reset counter after executing turn
+    }
+}
+
+// Check if the right sensor detects the line
+if (sen2_on_line) {
+    if (right_sensor_count == 0) {
+        // First detection, ignore it (do nothing)
+        right_sensor_count = 1;  
+    } else if (right_sensor_count == 1) {
+        // Second detection, execute right turn
+        g_direction = 2;  // Right turn
+        right_sensor_count = 0;  // Reset counter after executing turn
+    }
+}
 //    if (g_direction == 0u && turn_cooldown_ticks == 0u){
 //        if (sen1_on_line){
 //            g_direction = 1;  // LEFT turn
@@ -142,7 +170,7 @@ static void light_sensors_update_and_maybe_request_turn(uint16_t* V4_pp, uint16_
 }
 
 /* ================= PI Controller (same as your current file) ================= */
-#define STEER_MAX        15
+#define STEER_MAX        11
 #define KP               18.0f
 #define KI               2.0f
 #define INT_LIM          30.0f
@@ -151,8 +179,9 @@ static void light_sensors_update_and_maybe_request_turn(uint16_t* V4_pp, uint16_
 typedef struct { float i, u, t_loss; } pi_t;
 static inline float _clampf(float x, float lo, float hi){ return (x<lo?lo:(x>hi?hi:x)); }
 
-static int pi_step(pi_t* pi, uint16_t V4_pp, uint16_t V5_pp, uint16_t V6_pp)
+static int pi_step(pi_t* pi, uint16_t V3_pp, uint16_t V4_pp, uint16_t V5_pp, uint16_t V6_pp)
 {
+    float c3 = norm01_from_pp(V3_pp)*1.5f;
     float c4 = norm01_from_pp(V4_pp)*1.5f;
     float c5 = norm01_from_pp(V5_pp)*1.5f;
     float c6 = norm01_from_pp(V6_pp)*1.5f;
@@ -240,12 +269,12 @@ int main(void)
     
 const uint8_t CMD_STATES[] = {
     // 31 entries, aligned 1:1 with COMMANDS[i]
-//    0, // START
-//    2, // RIGHT
-//    0,
-//    2, // RIGHT
+    0, // START
+    2, // RIGHT
     0,
-
+    2, // RIGHT
+    0,
+    0,
     1, // LEFT
     0,
     2, // RIGHT
@@ -323,8 +352,8 @@ const uint8_t CMD_STATES[] = {
         }
 
         /* Read sensors + maybe request turn */
-        uint16_t V4_pp=0, V5_pp=0, V6_pp=0;
-        light_sensors_update_and_maybe_request_turn(&V4_pp, &V5_pp, &V6_pp);
+        uint16_t V3_pp=0, V4_pp=0, V5_pp=0, V6_pp=0;
+        light_sensors_update_and_maybe_request_turn(&V3_pp, &V4_pp, &V5_pp, &V6_pp);
         
 
 //        /* ---------------- Turn handling with arming delay (Option A) ---------------- */
@@ -405,7 +434,7 @@ const uint8_t CMD_STATES[] = {
         
         if (CMD_STATES[i] == 0) {
             // Go STRAIGHT
-            int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
+            int steer = pi_step(&pi, V3_pp, V4_pp, V5_pp, V6_pp);
             set_motors_with_trim_and_steer(center_duty_est, steer);
 
             // Rising-edge detect on S1/S2
@@ -580,7 +609,7 @@ const uint8_t CMD_STATES[] = {
          // DO NOT 'continue' here
         } else {
          // Target not met: KEEP DRIVING
-         int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
+         int steer = pi_step(&pi, V3_pp, V4_pp, V5_pp, V6_pp);
          set_motors_with_trim_and_steer(center_duty_est, steer);
          }
 
