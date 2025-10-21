@@ -411,6 +411,7 @@ const uint8_t CMD_STATES[] = {
             sen2_on_line = (V2 > 10 && V2 < 100) ? 1u : 0u;
             if (sen1_on_line == 1u || sen2_on_line == 1u) {
                 straight_complete = 1;
+                motor_enable(1u, 1u); // Disable the motors
             }
             
         } else if((CMD_STATES[i] == 1)) {
