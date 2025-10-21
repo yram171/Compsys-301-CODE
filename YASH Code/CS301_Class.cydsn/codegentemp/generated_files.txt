@@ -164,6 +164,9 @@
   <file name="C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\codegentemp\Timer_QD_PM.c" value="SOURCE_C;CortexM3;;;;Timer_QD" />
   <file name="C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\codegentemp\isr_qd.c" value="SOURCE_C;CortexM3;;;;isr_qd" />
   <file name="C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\codegentemp\isr_qd.h" value="HEADER;;;;;isr_qd" />
+  <file name="C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\codegentemp\D4_aliases.h" value="HEADER;;;;;D4" />
+  <file name="C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\codegentemp\D4.c" value="SOURCE_C;CortexM3;;;;D4" />
+  <file name="C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\codegentemp\D4.h" value="HEADER;;;;;D4" />
   <file name="C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\codegentemp\QuadDec_M1_Cnt16.c" value="SOURCE_C;CortexM3;;;;QuadDec_M1_Cnt16" />
   <file name="C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\codegentemp\QuadDec_M1_Cnt16.h" value="HEADER;;;;;QuadDec_M1_Cnt16" />
   <file name="C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\codegentemp\QuadDec_M1_Cnt16_PM.c" value="SOURCE_C;CortexM3;;;;QuadDec_M1_Cnt16" />

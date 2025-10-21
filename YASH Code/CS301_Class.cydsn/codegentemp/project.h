@@ -94,6 +94,8 @@
 #include "Clock_QD.h"
 #include "Timer_QD.h"
 #include "isr_qd.h"
+#include "D4_aliases.h"
+#include "D4.h"
 #include "QuadDec_M1_Cnt16.h"
 #include "QuadDec_M2_Cnt16.h"
 #include "ADC_SAR.h"

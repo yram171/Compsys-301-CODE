@@ -270,6 +270,9 @@
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\Timer_QD_PM.c</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\isr_qd.c</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\isr_qd.h</File>
+          <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\D4_aliases.h</File>
+          <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\D4.c</File>
+          <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\D4.h</File>
         </Files>
       </Folder>
       <Folder BuildType="STRICT" Path="C:\Users\yram171\Downloads\latest\Compsys-301-CODE\YASH Code\CS301_Class.cydsn\Export\ARM_GCC_Generic">

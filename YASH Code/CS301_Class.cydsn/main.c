@@ -47,7 +47,7 @@
 
 
 // Cooldown after turn to ignore intersection sensors V1 & V2
-#define TURN_COOLDOWN_MS (300)
+#define TURN_COOLDOWN_MS (1000)
 #define TURN_COOLDOWN_TICKS ((TURN_COOLDOWN_MS + LOOP_DT_MS - 1) / LOOP_DT_MS
 
 
@@ -310,7 +310,7 @@ int main(void)
 //        } */
         
         
-//        int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
+        int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
 //        set_motors_with_trim_and_steer(center_duty_est, steer);
 //        
 //        
@@ -326,7 +326,10 @@ int main(void)
         
         
         
-        
+        /* Straight run with PI steering */        
+        if(turn_cooldown_ticks > 0) {
+            turn_cooldown_ticks--;
+       }
         
         
         // PATHFINDING ALGORITHM
@@ -346,8 +349,8 @@ int main(void)
             
         } else if((CMD_STATES[i] == 1)) {
             // Go LEFT
-            D4_Write(1);
-            g_direction = 1u;
+            
+            //g_direction = 1u;
             /* ---------------- Turn handling with arming delay (Option A) ---------------- */
                 /* Arm once on the first detection (edge 0 -> 1/2) */
                 if ((g_direction == 1u || g_direction == 2u) && dir_latched_side == 0){
@@ -383,6 +386,7 @@ int main(void)
                 }
                 /* ---------------- end turn handling with delay ---------------- */
                 turn_complete = 1;
+                D4_Write(1);
             
         } else if((CMD_STATES[i] == 2)) {
             // Go RIGHT
