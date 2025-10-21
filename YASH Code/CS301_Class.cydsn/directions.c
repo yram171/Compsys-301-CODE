@@ -15,9 +15,9 @@ static volatile int32_t TICKS_90_RIGHT = 90;
 // Side-specific pivot speeds (percent duty)
 #define PIVOT_SPEED_L         25   // left turn speed
 #define PIVOT_SPEED_R         26   // right turn speed
-#define PIVOT_SPEED_U         42   // U turn speed
+#define PIVOT_SPEED_U         48   // U turn speed
 #define STOP_BEFORE_MS        100
-#define BRAKE_AFTER_MS        500
+#define BRAKE_AFTER_MS        1000
 
 /* Safety: max number of handler calls allowed while turning.
  * With your ~8 ms loop this is ~3.2 s (400 * 8 ms) which is plenty. */

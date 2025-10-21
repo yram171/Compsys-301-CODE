@@ -4,7 +4,7 @@
  * 없으면 0(트림 없음)으로 처리.
  */
 #ifndef RIGHT_TRIM_PERCENT
-#define RIGHT_TRIM_PERCENT   (6)
+#define RIGHT_TRIM_PERCENT   (5)
 #endif
 
 int clamp100(int x){
@@ -36,7 +36,7 @@ int apply_right_trim(int duty){
 
 void set_motors_symmetric(int duty){
     duty = clamp100(duty);
-    PWM_1_WriteCompare(duty_to_compare(RIGHT_MOTOR_SIGN * duty));
+    PWM_1_WriteCompare(duty_to_compare(RIGHT_MOTOR_SIGN * duty + 6));
     PWM_2_WriteCompare(duty_to_compare(LEFT_MOTOR_SIGN  * duty));
 }
 

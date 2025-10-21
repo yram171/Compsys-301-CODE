@@ -240,6 +240,10 @@ set_io "DB0(0)" iocell 3 0
 set_io "DB1(0)" iocell 3 1
 set_io "DB2(0)" iocell 3 6
 set_io "D4(0)" iocell 2 6
+set_io "D5(0)" iocell 2 7
+# Note: port 15 is the logical name for port 8
+set_io "D7(0)" iocell 15 3
+set_io "D8(0)" iocell 2 0
 set_location "isr_TS" interrupt -1 -1 6
 # Note: port 12 is the logical name for port 7
 set_io "M2_D1(0)" iocell 12 4

@@ -69,6 +69,7 @@ static uint8_t  dir_latched_side = 0;       /* remembers 1 or 2 while waiting */
 
 
 static uint16_t turn_cooldown_ticks = 0;
+static uint8_t s12_prev = 0;
 
 
 /* ------------------------------- 5 ms Timer ISR: accumulate distance (kept) ------------------------------- */
@@ -142,7 +143,7 @@ static void light_sensors_update_and_maybe_request_turn(uint16_t* V4_pp, uint16_
 /* ================= PI Controller (same as your current file) ================= */
 #define STEER_MAX        15
 #define KP               16.0f
-#define KI               3.0f
+#define KI               2.0f
 #define INT_LIM          30.0f
 #define LOSS_TIMEOUT_T   0.25f
 
@@ -251,6 +252,8 @@ const uint8_t CMD_STATES[] = {
     2, // RIGHT
     0,
     0,// 5, // REACH
+    3
+}; /*
     3, // UTURN
     0,
     2, // RIGHT
@@ -294,13 +297,13 @@ const uint8_t CMD_STATES[] = {
     2, // RIGHT
     0,
     6  // END
-}; 
+}; */
     //int8_t indexMAX = 50;  // Loop index
     
     // For Testing
     //const uint8_t CMD_STATES[] = {0,2};
     //int8_t indexMAX = 2;  // Loop index
-    
+    int8_t max = 14;
     const uint16_t CMD_STATES_LEN = sizeof(CMD_STATES) / sizeof(CMD_STATES[0]);
     
     int8_t i = 0;  // Loop index
@@ -372,18 +375,19 @@ const uint8_t CMD_STATES[] = {
             // Go STRAIGHT
             int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
             set_motors_with_trim_and_steer(center_duty_est, steer);
-            
+
+            // Rising-edge detect on S1/S2
             uint16_t V1 = Sensor_ComputePeakToPeak(0);
-            sen1_on_line = (V1 > 10 && V1 < 100) ? 1u : 0u;
             uint16_t V2 = Sensor_ComputePeakToPeak(1);
+            sen1_on_line = (V1 > 10 && V1 < 100) ? 1u : 0u;
             sen2_on_line = (V2 > 10 && V2 < 100) ? 1u : 0u;
-            if (sen1_on_line == 1u || sen2_on_line == 1u) {
-                straight_complete = 1;
-                CyDelay(250);
-                set_motors_symmetric(0); 
-                
-                
+
+            uint8_t s12_now = (sen1_on_line | sen2_on_line);
+            if (s12_now && !s12_prev) {
+                straight_complete = 1;     // tell the indexer to advance
             }
+            s12_prev = s12_now;
+
             
         } else if((CMD_STATES[i] == 1)) {
             // Go LEFT
@@ -537,7 +541,7 @@ const uint8_t CMD_STATES[] = {
          motor_enable(1u, 1u); // Disable the motors
         
          fruit_complete = 1; // Flag that this state is done
-        D4_Write(1);
+        //D4_Write(1);
          // DO NOT 'continue' here
         } else {
          // Target not met: KEEP DRIVING
@@ -552,13 +556,21 @@ const uint8_t CMD_STATES[] = {
          // FINISH
             set_motors_symmetric(0);
             motor_enable(1u, 1u);
+            CyDelay(20000);
+        }
         
+        if (i == 134) {
+            D4_Write(1);
+            D5_Write(1);
+            D7_Write(1);
+            D8_Write(1);
+            
         }
         
         // food
-        if (i == 12 || i == 22 || i == 30 || i == 43) {
+        /*if (i == 12 || i == 22 || i == 30 || i == 43) {
             CyDelay(2000);
-        } 
+        } */
         
         
         
@@ -566,7 +578,7 @@ const uint8_t CMD_STATES[] = {
          * and overwrites the default cooldown period for the 
          * 'straight' segment that is about to begin.
          */
-        if (i == 4) {
+        /*if (i == 4) {
             // Set 4000ms cooldown (4000ms / 8ms_per_loop)
             turn_cooldown_ticks = (uint16_t)(4000 / LOOP_DT_MS);
         } 
@@ -585,13 +597,13 @@ const uint8_t CMD_STATES[] = {
         else if (i == 46) {
             // Set 1000ms cooldown
             turn_cooldown_ticks = (uint16_t)(1000 / LOOP_DT_MS);
-        }
+        }*/
         
         
         if (straight_complete == 1u || turn_complete == 1u || uTurn_complete == 1u || fruit_complete == 1u) {
             
                 // Check if we are at the end of the array
-            if (i < CMD_STATES_LEN) {
+            if (i < max) {
 
              i += 1;
             
