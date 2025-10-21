@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 1
 
 
    1              		.syntax unified
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
   55              	.LFB64:
   56              		.file 1 "main.c"
    1:main.c        **** /* ========================= main.c (with PI steering + turn-call delay) =========================
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 2
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 2
 
 
    2:main.c        ****  * - Keeps straight-line PI active during a short delay after g_direction flips (Option A)
@@ -109,7 +109,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
   47:main.c        **** 
   48:main.c        **** 
   49:main.c        **** // Cooldown after turn to ignore intersection sensors V1 & V2
-  50:main.c        **** #define TURN_COOLDOWN_MS (400)
+  50:main.c        **** #define TURN_COOLDOWN_MS (300)
   51:main.c        **** #define TURN_COOLDOWN_TICKS ((TURN_COOLDOWN_MS + LOOP_DT_MS - 1) / LOOP_DT_MS
   52:main.c        **** 
   53:main.c        **** 
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
   56:main.c        **** static uint8_t sen1_on_line=0, sen2_on_line=0, sen3_on_line=0;
   57:main.c        **** static uint8_t sen4_on_line=0, sen5_on_line=0, sen6_on_line=0;
   58:main.c        **** 
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 3
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 3
 
 
   59:main.c        **** /* ===== Global state (kept) ===== */
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
   92 0026 BB62     		str	r3, [r7, #40]
   93 0028 0020     		movs	r0, #0
   94 002a FFF7FEFF 		bl	QuadDec_M2_SetCounter
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 4
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 4
 
 
   78:main.c        **** 
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
  140 0076 1446     		mov	r4, r2
  141 0078 DB18     		adds	r3, r3, r3
  142 007a 44EB0404 		adc	r4, r4, r4
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 5
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 5
 
 
  143 007e 5B18     		adds	r3, r3, r1
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
  192 00f4 3B68     		ldr	r3, [r7]
  193 00f6 1344     		add	r3, r3, r2
  194 00f8 054A     		ldr	r2, .L7+4
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 6
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 6
 
 
  195 00fa 1360     		str	r3, [r2]
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
  236              		.cfi_def_cfa_register 7
  237 0006 0346     		mov	r3, r0
  238 0008 FB80     		strh	r3, [r7, #6]	@ movhi
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 7
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 7
 
 
  105:main.c        ****     if (pp <= S_MINC_COUNTS) return 0.0f;
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
  110:main.c        **** /* Read sensors and (maybe) request a turn based on S1 / S2 (kept) */
  111:main.c        **** static void light_sensors_update_and_maybe_request_turn(uint16_t* V4_pp, uint16_t* V5_pp, uint16_t*
  112:main.c        **** {
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 8
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 8
 
 
  288              		.loc 1 112 0
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
  334 0048 FB68     		ldr	r3, [r7, #12]
  335 004a 002B     		cmp	r3, #0
  336 004c 02D0     		beq	.L16
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 9
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 9
 
 
  337              		.loc 1 120 0 is_stmt 0 discriminator 1
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
  386              		.loc 1 125 0 discriminator 3
  387 008e 0122     		movs	r2, #1
  388 0090 00E0     		b	.L22
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 10
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 10
 
 
  389              	.L21:
@@ -598,7 +598,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
  440              		.loc 1 128 0 discriminator 3
  441 00d0 0122     		movs	r2, #1
  442 00d2 00E0     		b	.L28
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 11
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 11
 
 
  443              	.L27:
@@ -658,7 +658,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
  138:main.c        **** }
  488              		.loc 1 138 0
  489 0110 06E0     		b	.L33
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 12
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 12
 
 
  490              	.L32:
@@ -708,8 +708,8 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
  139:main.c        **** 
  140:main.c        **** /* ================= PI Controller (same as your current file) ================= */
  141:main.c        **** #define STEER_MAX        15
- 142:main.c        **** #define KP               16.0f
- 143:main.c        **** #define KI               3.0f
+ 142:main.c        **** #define KP               18.0f
+ 143:main.c        **** #define KI               2.0f
  144:main.c        **** #define INT_LIM          30.0f
  145:main.c        **** #define LOSS_TIMEOUT_T   0.25f
  146:main.c        **** 
@@ -718,7 +718,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
  532              		.loc 1 148 0
  533              		.cfi_startproc
  534              		@ args = 0, pretend = 0, frame = 16
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 13
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 13
 
 
  535              		@ frame_needed = 1, uses_anonymous_args = 0
@@ -778,7 +778,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
  589 003a 00BF     		.section	.text.pi_step,"ax",%progbits
  590              		.align	2
  591              		.thumb
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 14
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 14
 
 
  592              		.thumb_func
@@ -838,7 +838,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
  640 004a FB88     		ldrh	r3, [r7, #6]
  641 004c 1846     		mov	r0, r3
  642 004e FFF7FEFF 		bl	norm01_from_pp
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 15
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 15
 
 
  643 0052 0346     		mov	r3, r0
@@ -862,7 +862,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
  659              		.loc 1 156 0
  660 0078 0123     		movs	r3, #1
  661 007a 1C46     		mov	r4, r3
- 662 007c 7749     		ldr	r1, .L68
+ 662 007c 7849     		ldr	r1, .L68
  663 007e F86A     		ldr	r0, [r7, #44]	@ float
  664 0080 FFF7FEFF 		bl	__aeabi_fcmpgt
  665 0084 0346     		mov	r3, r0
@@ -898,7 +898,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
  692 00c0 F96A     		ldr	r1, [r7, #44]	@ float
  693 00c2 1846     		mov	r0, r3
  694 00c4 FFF7FEFF 		bl	__aeabi_fdiv
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 16
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 16
 
 
  695 00c8 0346     		mov	r3, r0
@@ -921,7 +921,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
  707              		.loc 1 164 0
  708 00de FB68     		ldr	r3, [r7, #12]
  709 00e0 9B68     		ldr	r3, [r3, #8]	@ float
- 710 00e2 5F49     		ldr	r1, .L68+4
+ 710 00e2 6049     		ldr	r1, .L68+4
  711 00e4 1846     		mov	r0, r3
  712 00e6 FFF7FEFF 		bl	__aeabi_fadd
  713 00ea 0346     		mov	r3, r0
@@ -941,7 +941,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
  726              		.loc 1 165 0 is_stmt 0 discriminator 1
  727 0106 FB68     		ldr	r3, [r7, #12]
  728 0108 1B68     		ldr	r3, [r3]	@ float
- 729 010a 5649     		ldr	r1, .L68+8
+ 729 010a 5749     		ldr	r1, .L68+8
  730 010c 1846     		mov	r0, r3
  731 010e FFF7FEFF 		bl	__aeabi_fmul
  732 0112 0346     		mov	r3, r0
@@ -953,18 +953,18 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
  737              		.loc 1 166 0 is_stmt 1
  738 011a FB68     		ldr	r3, [r7, #12]
  739 011c 5B68     		ldr	r3, [r3, #4]	@ float
- 740 011e 524A     		ldr	r2, .L68+12
- 741 0120 5249     		ldr	r1, .L68+16
+ 740 011e 534A     		ldr	r2, .L68+12
+ 741 0120 5349     		ldr	r1, .L68+16
  742 0122 1846     		mov	r0, r3
  743 0124 FFF7FEFF 		bl	_clampf
  744 0128 0346     		mov	r3, r0
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 17
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 17
 
 
  745 012a 1846     		mov	r0, r3
  746 012c FFF7FEFF 		bl	__aeabi_f2iz
  747 0130 0346     		mov	r3, r0
- 748 0132 8FE0     		b	.L54
+ 748 0132 91E0     		b	.L54
  749              	.L51:
  167:main.c        ****     }
  168:main.c        ****     pi->t_loss = 0.0f;
@@ -977,7 +977,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
  754              		.loc 1 170 0
  755 013c FB68     		ldr	r3, [r7, #12]
  756 013e 1C68     		ldr	r4, [r3]	@ float
- 757 0140 4749     		ldr	r1, .L68+4
+ 757 0140 4849     		ldr	r1, .L68+4
  758 0142 786A     		ldr	r0, [r7, #36]	@ float
  759 0144 FFF7FEFF 		bl	__aeabi_fmul
  760 0148 0346     		mov	r3, r0
@@ -985,2099 +985,2973 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 1
  762 014c 2046     		mov	r0, r4
  763 014e FFF7FEFF 		bl	__aeabi_fadd
  764 0152 0346     		mov	r3, r0
- 765 0154 464A     		ldr	r2, .L68+20
- 766 0156 4749     		ldr	r1, .L68+24
+ 765 0154 474A     		ldr	r2, .L68+20
+ 766 0156 4849     		ldr	r1, .L68+24
  767 0158 1846     		mov	r0, r3
  768 015a FFF7FEFF 		bl	_clampf
  769 015e 3862     		str	r0, [r7, #32]	@ float
  171:main.c        ****     float u_raw  = KP * e + KI * i_next;
  770              		.loc 1 171 0
- 771 0160 4FF08341 		mov	r1, #1098907648
- 772 0164 786A     		ldr	r0, [r7, #36]	@ float
- 773 0166 FFF7FEFF 		bl	__aeabi_fmul
- 774 016a 0346     		mov	r3, r0
- 775 016c 1C46     		mov	r4, r3
- 776 016e 4249     		ldr	r1, .L68+28
- 777 0170 386A     		ldr	r0, [r7, #32]	@ float
- 778 0172 FFF7FEFF 		bl	__aeabi_fmul
- 779 0176 0346     		mov	r3, r0
- 780 0178 1946     		mov	r1, r3
- 781 017a 2046     		mov	r0, r4
- 782 017c FFF7FEFF 		bl	__aeabi_fadd
- 783 0180 0346     		mov	r3, r0
- 784 0182 FB61     		str	r3, [r7, #28]	@ float
+ 771 0160 4649     		ldr	r1, .L68+28
+ 772 0162 786A     		ldr	r0, [r7, #36]	@ float
+ 773 0164 FFF7FEFF 		bl	__aeabi_fmul
+ 774 0168 0346     		mov	r3, r0
+ 775 016a 1C46     		mov	r4, r3
+ 776 016c 3B6A     		ldr	r3, [r7, #32]	@ float
+ 777 016e 1946     		mov	r1, r3
+ 778 0170 1846     		mov	r0, r3
+ 779 0172 FFF7FEFF 		bl	__aeabi_fadd
+ 780 0176 0346     		mov	r3, r0
+ 781 0178 1946     		mov	r1, r3
+ 782 017a 2046     		mov	r0, r4
+ 783 017c FFF7FEFF 		bl	__aeabi_fadd
+ 784 0180 0346     		mov	r3, r0
+ 785 0182 FB61     		str	r3, [r7, #28]	@ float
  172:main.c        ****     float u      = _clampf(u_raw, -(float)STEER_MAX, (float)STEER_MAX);
- 785              		.loc 1 172 0
- 786 0184 384A     		ldr	r2, .L68+12
- 787 0186 3949     		ldr	r1, .L68+16
- 788 0188 F869     		ldr	r0, [r7, #28]	@ float
- 789 018a FFF7FEFF 		bl	_clampf
- 790 018e B861     		str	r0, [r7, #24]	@ float
+ 786              		.loc 1 172 0
+ 787 0184 394A     		ldr	r2, .L68+12
+ 788 0186 3A49     		ldr	r1, .L68+16
+ 789 0188 F869     		ldr	r0, [r7, #28]	@ float
+ 790 018a FFF7FEFF 		bl	_clampf
+ 791 018e B861     		str	r0, [r7, #24]	@ float
  173:main.c        **** 
  174:main.c        ****     bool sat_hi = (u >=  (float)STEER_MAX - 1e-3f);
- 791              		.loc 1 174 0
- 792 0190 0123     		movs	r3, #1
- 793 0192 1C46     		mov	r4, r3
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 18
+ 792              		.loc 1 174 0
+ 793 0190 0123     		movs	r3, #1
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 18
 
 
- 794 0194 3949     		ldr	r1, .L68+32
- 795 0196 B869     		ldr	r0, [r7, #24]	@ float
- 796 0198 FFF7FEFF 		bl	__aeabi_fcmpge
- 797 019c 0346     		mov	r3, r0
- 798 019e 002B     		cmp	r3, #0
- 799 01a0 01D1     		bne	.L55
- 800 01a2 0023     		movs	r3, #0
- 801 01a4 1C46     		mov	r4, r3
- 802              	.L55:
- 803 01a6 FC75     		strb	r4, [r7, #23]
+ 794 0192 1C46     		mov	r4, r3
+ 795 0194 3A49     		ldr	r1, .L68+32
+ 796 0196 B869     		ldr	r0, [r7, #24]	@ float
+ 797 0198 FFF7FEFF 		bl	__aeabi_fcmpge
+ 798 019c 0346     		mov	r3, r0
+ 799 019e 002B     		cmp	r3, #0
+ 800 01a0 01D1     		bne	.L55
+ 801 01a2 0023     		movs	r3, #0
+ 802 01a4 1C46     		mov	r4, r3
+ 803              	.L55:
+ 804 01a6 FC75     		strb	r4, [r7, #23]
  175:main.c        ****     bool sat_lo = (u <= -(float)STEER_MAX + 1e-3f);
- 804              		.loc 1 175 0
- 805 01a8 0123     		movs	r3, #1
- 806 01aa 1C46     		mov	r4, r3
- 807 01ac 3449     		ldr	r1, .L68+36
- 808 01ae B869     		ldr	r0, [r7, #24]	@ float
- 809 01b0 FFF7FEFF 		bl	__aeabi_fcmple
- 810 01b4 0346     		mov	r3, r0
- 811 01b6 002B     		cmp	r3, #0
- 812 01b8 01D1     		bne	.L56
- 813 01ba 0023     		movs	r3, #0
- 814 01bc 1C46     		mov	r4, r3
- 815              	.L56:
- 816 01be BC75     		strb	r4, [r7, #22]
+ 805              		.loc 1 175 0
+ 806 01a8 0123     		movs	r3, #1
+ 807 01aa 1C46     		mov	r4, r3
+ 808 01ac 3549     		ldr	r1, .L68+36
+ 809 01ae B869     		ldr	r0, [r7, #24]	@ float
+ 810 01b0 FFF7FEFF 		bl	__aeabi_fcmple
+ 811 01b4 0346     		mov	r3, r0
+ 812 01b6 002B     		cmp	r3, #0
+ 813 01b8 01D1     		bne	.L56
+ 814 01ba 0023     		movs	r3, #0
+ 815 01bc 1C46     		mov	r4, r3
+ 816              	.L56:
+ 817 01be BC75     		strb	r4, [r7, #22]
  176:main.c        **** 
  177:main.c        ****     if ((sat_hi && (KI * i_next > KI * pi->i)) ||
- 817              		.loc 1 177 0
- 818 01c0 FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
- 819 01c2 002B     		cmp	r3, #0
- 820 01c4 13D0     		beq	.L57
- 821              		.loc 1 177 0 is_stmt 0 discriminator 1
- 822 01c6 2C49     		ldr	r1, .L68+28
- 823 01c8 386A     		ldr	r0, [r7, #32]	@ float
- 824 01ca FFF7FEFF 		bl	__aeabi_fmul
- 825 01ce 0346     		mov	r3, r0
- 826 01d0 1C46     		mov	r4, r3
- 827 01d2 FB68     		ldr	r3, [r7, #12]
- 828 01d4 1B68     		ldr	r3, [r3]	@ float
- 829 01d6 2849     		ldr	r1, .L68+28
- 830 01d8 1846     		mov	r0, r3
- 831 01da FFF7FEFF 		bl	__aeabi_fmul
- 832 01de 0346     		mov	r3, r0
- 833 01e0 1946     		mov	r1, r3
- 834 01e2 2046     		mov	r0, r4
- 835 01e4 FFF7FEFF 		bl	__aeabi_fcmpgt
- 836 01e8 0346     		mov	r3, r0
- 837 01ea 002B     		cmp	r3, #0
- 838 01ec 19D1     		bne	.L59
- 839              	.L57:
- 840              		.loc 1 177 0 discriminator 3
- 841 01ee BB7D     		ldrb	r3, [r7, #22]	@ zero_extendqisi2
- 842 01f0 002B     		cmp	r3, #0
- 843 01f2 13D0     		beq	.L60
+ 818              		.loc 1 177 0
+ 819 01c0 FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 820 01c2 002B     		cmp	r3, #0
+ 821 01c4 14D0     		beq	.L57
+ 822              		.loc 1 177 0 is_stmt 0 discriminator 1
+ 823 01c6 3B6A     		ldr	r3, [r7, #32]	@ float
+ 824 01c8 1946     		mov	r1, r3
+ 825 01ca 1846     		mov	r0, r3
+ 826 01cc FFF7FEFF 		bl	__aeabi_fadd
+ 827 01d0 0346     		mov	r3, r0
+ 828 01d2 1C46     		mov	r4, r3
+ 829 01d4 FB68     		ldr	r3, [r7, #12]
+ 830 01d6 1B68     		ldr	r3, [r3]	@ float
+ 831 01d8 1946     		mov	r1, r3
+ 832 01da 1846     		mov	r0, r3
+ 833 01dc FFF7FEFF 		bl	__aeabi_fadd
+ 834 01e0 0346     		mov	r3, r0
+ 835 01e2 1946     		mov	r1, r3
+ 836 01e4 2046     		mov	r0, r4
+ 837 01e6 FFF7FEFF 		bl	__aeabi_fcmpgt
+ 838 01ea 0346     		mov	r3, r0
+ 839 01ec 002B     		cmp	r3, #0
+ 840 01ee 1AD1     		bne	.L59
+ 841              	.L57:
+ 842              		.loc 1 177 0 discriminator 3
+ 843 01f0 BB7D     		ldrb	r3, [r7, #22]	@ zero_extendqisi2
+ 844 01f2 002B     		cmp	r3, #0
+ 845 01f4 14D0     		beq	.L60
  178:main.c        ****         (sat_lo && (KI * i_next < KI * pi->i))) {
- 844              		.loc 1 178 0 is_stmt 1
- 845 01f4 2049     		ldr	r1, .L68+28
- 846 01f6 386A     		ldr	r0, [r7, #32]	@ float
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 19
+ 846              		.loc 1 178 0 is_stmt 1
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 19
 
 
- 847 01f8 FFF7FEFF 		bl	__aeabi_fmul
- 848 01fc 0346     		mov	r3, r0
- 849 01fe 1C46     		mov	r4, r3
- 850 0200 FB68     		ldr	r3, [r7, #12]
- 851 0202 1B68     		ldr	r3, [r3]	@ float
- 852 0204 1C49     		ldr	r1, .L68+28
- 853 0206 1846     		mov	r0, r3
- 854 0208 FFF7FEFF 		bl	__aeabi_fmul
- 855 020c 0346     		mov	r3, r0
- 856 020e 1946     		mov	r1, r3
- 857 0210 2046     		mov	r0, r4
- 858 0212 FFF7FEFF 		bl	__aeabi_fcmplt
- 859 0216 0346     		mov	r3, r0
- 860 0218 002B     		cmp	r3, #0
- 861 021a 02D1     		bne	.L59
- 862              	.L60:
+ 847 01f6 3B6A     		ldr	r3, [r7, #32]	@ float
+ 848 01f8 1946     		mov	r1, r3
+ 849 01fa 1846     		mov	r0, r3
+ 850 01fc FFF7FEFF 		bl	__aeabi_fadd
+ 851 0200 0346     		mov	r3, r0
+ 852 0202 1C46     		mov	r4, r3
+ 853 0204 FB68     		ldr	r3, [r7, #12]
+ 854 0206 1B68     		ldr	r3, [r3]	@ float
+ 855 0208 1946     		mov	r1, r3
+ 856 020a 1846     		mov	r0, r3
+ 857 020c FFF7FEFF 		bl	__aeabi_fadd
+ 858 0210 0346     		mov	r3, r0
+ 859 0212 1946     		mov	r1, r3
+ 860 0214 2046     		mov	r0, r4
+ 861 0216 FFF7FEFF 		bl	__aeabi_fcmplt
+ 862 021a 0346     		mov	r3, r0
+ 863 021c 002B     		cmp	r3, #0
+ 864 021e 02D1     		bne	.L59
+ 865              	.L60:
  179:main.c        ****         /* don’t integrate further into saturation */
  180:main.c        ****     } else {
  181:main.c        ****         pi->i = i_next;
- 863              		.loc 1 181 0
- 864 021c FB68     		ldr	r3, [r7, #12]
- 865 021e 3A6A     		ldr	r2, [r7, #32]	@ float
- 866 0220 1A60     		str	r2, [r3]	@ float
- 867              	.L59:
+ 866              		.loc 1 181 0
+ 867 0220 FB68     		ldr	r3, [r7, #12]
+ 868 0222 3A6A     		ldr	r2, [r7, #32]	@ float
+ 869 0224 1A60     		str	r2, [r3]	@ float
+ 870              	.L59:
  182:main.c        ****     }
  183:main.c        **** 
  184:main.c        ****     pi->u = u;
- 868              		.loc 1 184 0
- 869 0222 FB68     		ldr	r3, [r7, #12]
- 870 0224 BA69     		ldr	r2, [r7, #24]	@ float
- 871 0226 5A60     		str	r2, [r3, #4]	@ float
+ 871              		.loc 1 184 0
+ 872 0226 FB68     		ldr	r3, [r7, #12]
+ 873 0228 BA69     		ldr	r2, [r7, #24]	@ float
+ 874 022a 5A60     		str	r2, [r3, #4]	@ float
  185:main.c        ****     return (int)(u + (u>=0?0.5f:-0.5f));
- 872              		.loc 1 185 0
- 873 0228 4FF00001 		mov	r1, #0
- 874 022c B869     		ldr	r0, [r7, #24]	@ float
- 875 022e FFF7FEFF 		bl	__aeabi_fcmpge
- 876 0232 0346     		mov	r3, r0
- 877 0234 002B     		cmp	r3, #0
- 878 0236 02D0     		beq	.L67
- 879              		.loc 1 185 0 is_stmt 0 discriminator 1
- 880 0238 4FF07C53 		mov	r3, #1056964608
- 881 023c 01E0     		b	.L64
- 882              	.L67:
- 883              		.loc 1 185 0 discriminator 2
- 884 023e 4FF03F43 		mov	r3, #-1090519040
- 885              	.L64:
- 886              		.loc 1 185 0 discriminator 4
- 887 0242 B969     		ldr	r1, [r7, #24]	@ float
- 888 0244 1846     		mov	r0, r3
- 889 0246 FFF7FEFF 		bl	__aeabi_fadd
- 890 024a 0346     		mov	r3, r0
- 891 024c 1846     		mov	r0, r3
- 892 024e FFF7FEFF 		bl	__aeabi_f2iz
- 893 0252 0346     		mov	r3, r0
- 894              	.L54:
+ 875              		.loc 1 185 0
+ 876 022c 4FF00001 		mov	r1, #0
+ 877 0230 B869     		ldr	r0, [r7, #24]	@ float
+ 878 0232 FFF7FEFF 		bl	__aeabi_fcmpge
+ 879 0236 0346     		mov	r3, r0
+ 880 0238 002B     		cmp	r3, #0
+ 881 023a 02D0     		beq	.L67
+ 882              		.loc 1 185 0 is_stmt 0 discriminator 1
+ 883 023c 4FF07C53 		mov	r3, #1056964608
+ 884 0240 01E0     		b	.L64
+ 885              	.L67:
+ 886              		.loc 1 185 0 discriminator 2
+ 887 0242 4FF03F43 		mov	r3, #-1090519040
+ 888              	.L64:
+ 889              		.loc 1 185 0 discriminator 4
+ 890 0246 B969     		ldr	r1, [r7, #24]	@ float
+ 891 0248 1846     		mov	r0, r3
+ 892 024a FFF7FEFF 		bl	__aeabi_fadd
+ 893 024e 0346     		mov	r3, r0
+ 894 0250 1846     		mov	r0, r3
+ 895 0252 FFF7FEFF 		bl	__aeabi_f2iz
+ 896 0256 0346     		mov	r3, r0
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 20
+
+
+ 897              	.L54:
  186:main.c        **** }
- 895              		.loc 1 186 0 is_stmt 1
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 20
-
-
- 896 0254 1846     		mov	r0, r3
- 897 0256 4437     		adds	r7, r7, #68
- 898              		.cfi_def_cfa_offset 12
- 899 0258 BD46     		mov	sp, r7
- 900              		.cfi_def_cfa_register 13
- 901              		@ sp needed
- 902 025a 90BD     		pop	{r4, r7, pc}
- 903              	.L69:
- 904              		.align	2
- 905              	.L68:
- 906 025c 0AD7A33D 		.word	1034147594
- 907 0260 6F12033C 		.word	1006834287
- 908 0264 1F856B3F 		.word	1064011039
- 909 0268 00007041 		.word	1097859072
- 910 026c 000070C1 		.word	-1049624576
- 911 0270 0000F041 		.word	1106247680
- 912 0274 0000F0C1 		.word	-1041235968
- 913 0278 00004040 		.word	1077936128
- 914 027c E7FB6F41 		.word	1097858023
- 915 0280 E7FB6FC1 		.word	-1049625625
- 916              		.cfi_endproc
- 917              	.LFE68:
- 918              		.size	pi_step, .-pi_step
- 919              		.section	.text.main,"ax",%progbits
- 920              		.align	2
- 921              		.global	main
- 922              		.thumb
- 923              		.thumb_func
- 924              		.type	main, %function
- 925              	main:
- 926              	.LFB69:
+ 898              		.loc 1 186 0 is_stmt 1
+ 899 0258 1846     		mov	r0, r3
+ 900 025a 4437     		adds	r7, r7, #68
+ 901              		.cfi_def_cfa_offset 12
+ 902 025c BD46     		mov	sp, r7
+ 903              		.cfi_def_cfa_register 13
+ 904              		@ sp needed
+ 905 025e 90BD     		pop	{r4, r7, pc}
+ 906              	.L69:
+ 907              		.align	2
+ 908              	.L68:
+ 909 0260 0AD7A33D 		.word	1034147594
+ 910 0264 6F12033C 		.word	1006834287
+ 911 0268 1F856B3F 		.word	1064011039
+ 912 026c 00007041 		.word	1097859072
+ 913 0270 000070C1 		.word	-1049624576
+ 914 0274 0000F041 		.word	1106247680
+ 915 0278 0000F0C1 		.word	-1041235968
+ 916 027c 00009041 		.word	1099956224
+ 917 0280 E7FB6F41 		.word	1097858023
+ 918 0284 E7FB6FC1 		.word	-1049625625
+ 919              		.cfi_endproc
+ 920              	.LFE68:
+ 921              		.size	pi_step, .-pi_step
+ 922              		.section	.text.main,"ax",%progbits
+ 923              		.align	2
+ 924              		.global	main
+ 925              		.thumb
+ 926              		.thumb_func
+ 927              		.type	main, %function
+ 928              	main:
+ 929              	.LFB69:
  187:main.c        **** 
  188:main.c        **** int main(void)
  189:main.c        **** {
- 927              		.loc 1 189 0
- 928              		.cfi_startproc
- 929              		@ args = 0, pretend = 0, frame = 32
- 930              		@ frame_needed = 1, uses_anonymous_args = 0
- 931 0000 80B5     		push	{r7, lr}
- 932              		.cfi_def_cfa_offset 8
- 933              		.cfi_offset 7, -8
- 934              		.cfi_offset 14, -4
- 935 0002 88B0     		sub	sp, sp, #32
- 936              		.cfi_def_cfa_offset 40
- 937 0004 00AF     		add	r7, sp, #0
- 938              		.cfi_def_cfa_register 7
+ 930              		.loc 1 189 0
+ 931              		.cfi_startproc
+ 932              		@ args = 0, pretend = 0, frame = 56
+ 933              		@ frame_needed = 1, uses_anonymous_args = 0
+ 934 0000 80B5     		push	{r7, lr}
+ 935              		.cfi_def_cfa_offset 8
+ 936              		.cfi_offset 7, -8
+ 937              		.cfi_offset 14, -4
+ 938 0002 8EB0     		sub	sp, sp, #56
+ 939              		.cfi_def_cfa_offset 64
+ 940 0004 00AF     		add	r7, sp, #0
+ 941              		.cfi_def_cfa_register 7
  190:main.c        ****     motor_enable(1u, 1u);
- 939              		.loc 1 190 0
- 940 0006 0121     		movs	r1, #1
- 941 0008 0120     		movs	r0, #1
- 942 000a FFF7FEFF 		bl	motor_enable
+ 942              		.loc 1 190 0
+ 943 0006 0121     		movs	r1, #1
+ 944 0008 0120     		movs	r0, #1
+ 945 000a FFF7FEFF 		bl	motor_enable
  191:main.c        ****     CyGlobalIntEnable;
- 943              		.loc 1 191 0
- 944              		.syntax unified
- 945              	@ 191 "main.c" 1
- 946 000e 62B6     		CPSIE   i
- 947              	@ 0 "" 2
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 21
+ 946              		.loc 1 191 0
+ 947              		.syntax unified
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 21
 
 
+ 948              	@ 191 "main.c" 1
+ 949 000e 62B6     		CPSIE   i
+ 950              	@ 0 "" 2
  192:main.c        **** 
  193:main.c        ****     /* ADC for sensors */
  194:main.c        ****     ADC_Start();
- 948              		.loc 1 194 0
- 949              		.thumb
- 950              		.syntax unified
- 951 0010 FFF7FEFF 		bl	ADC_Start
+ 951              		.loc 1 194 0
+ 952              		.thumb
+ 953              		.syntax unified
+ 954 0010 FFF7FEFF 		bl	ADC_Start
  195:main.c        ****     CyDelay(10);
- 952              		.loc 1 195 0
- 953 0014 0A20     		movs	r0, #10
- 954 0016 FFF7FEFF 		bl	CyDelay
+ 955              		.loc 1 195 0
+ 956 0014 0A20     		movs	r0, #10
+ 957 0016 FFF7FEFF 		bl	CyDelay
  196:main.c        **** 
  197:main.c        ****     /* Encoders + 5 ms tick (distance only) */
  198:main.c        ****     Clock_QENC_Start();
- 955              		.loc 1 198 0
- 956 001a FFF7FEFF 		bl	Clock_QENC_Start
+ 958              		.loc 1 198 0
+ 959 001a FFF7FEFF 		bl	Clock_QENC_Start
  199:main.c        ****     QuadDec_M1_Start(); QuadDec_M2_Start();
- 957              		.loc 1 199 0
- 958 001e FFF7FEFF 		bl	QuadDec_M1_Start
- 959 0022 FFF7FEFF 		bl	QuadDec_M2_Start
+ 960              		.loc 1 199 0
+ 961 001e FFF7FEFF 		bl	QuadDec_M1_Start
+ 962 0022 FFF7FEFF 		bl	QuadDec_M2_Start
  200:main.c        ****     QuadDec_M1_SetCounter(0); QuadDec_M2_SetCounter(0);
- 960              		.loc 1 200 0
- 961 0026 0020     		movs	r0, #0
- 962 0028 FFF7FEFF 		bl	QuadDec_M1_SetCounter
- 963 002c 0020     		movs	r0, #0
- 964 002e FFF7FEFF 		bl	QuadDec_M2_SetCounter
+ 963              		.loc 1 200 0
+ 964 0026 0020     		movs	r0, #0
+ 965 0028 FFF7FEFF 		bl	QuadDec_M1_SetCounter
+ 966 002c 0020     		movs	r0, #0
+ 967 002e FFF7FEFF 		bl	QuadDec_M2_SetCounter
  201:main.c        ****     Clock_QD_Start();
- 965              		.loc 1 201 0
- 966 0032 FFF7FEFF 		bl	Clock_QD_Start
+ 968              		.loc 1 201 0
+ 969 0032 FFF7FEFF 		bl	Clock_QD_Start
  202:main.c        ****     Timer_QD_Start();  // 5 ms period in TopDesign
- 967              		.loc 1 202 0
- 968 0036 FFF7FEFF 		bl	Timer_QD_Start
+ 970              		.loc 1 202 0
+ 971 0036 FFF7FEFF 		bl	Timer_QD_Start
  203:main.c        ****     isr_qd_StartEx(isr_qd_Handler);
- 969              		.loc 1 203 0
- 970 003a 7C48     		ldr	r0, .L88
- 971 003c FFF7FEFF 		bl	isr_qd_StartEx
+ 972              		.loc 1 203 0
+ 973 003a B348     		ldr	r0, .L116
+ 974 003c FFF7FEFF 		bl	isr_qd_StartEx
  204:main.c        **** 
  205:main.c        ****     /* PWM & motor driver */
  206:main.c        ****     Clock_PWM_Start();
- 972              		.loc 1 206 0
- 973 0040 FFF7FEFF 		bl	Clock_PWM_Start
+ 975              		.loc 1 206 0
+ 976 0040 FFF7FEFF 		bl	Clock_PWM_Start
  207:main.c        ****     PWM_1_Start(); PWM_2_Start();
- 974              		.loc 1 207 0
- 975 0044 FFF7FEFF 		bl	PWM_1_Start
- 976 0048 FFF7FEFF 		bl	PWM_2_Start
+ 977              		.loc 1 207 0
+ 978 0044 FFF7FEFF 		bl	PWM_1_Start
+ 979 0048 FFF7FEFF 		bl	PWM_2_Start
  208:main.c        ****     PWM_1_WritePeriod(PWM_PERIOD);
- 977              		.loc 1 208 0
- 978 004c C820     		movs	r0, #200
- 979 004e FFF7FEFF 		bl	PWM_1_WritePeriod
+ 980              		.loc 1 208 0
+ 981 004c C820     		movs	r0, #200
+ 982 004e FFF7FEFF 		bl	PWM_1_WritePeriod
  209:main.c        ****     PWM_2_WritePeriod(PWM_PERIOD);
- 980              		.loc 1 209 0
- 981 0052 C820     		movs	r0, #200
- 982 0054 FFF7FEFF 		bl	PWM_2_WritePeriod
+ 983              		.loc 1 209 0
+ 984 0052 C820     		movs	r0, #200
+ 985 0054 FFF7FEFF 		bl	PWM_2_WritePeriod
  210:main.c        ****     set_motors_symmetric(0);
- 983              		.loc 1 210 0
- 984 0058 0020     		movs	r0, #0
- 985 005a FFF7FEFF 		bl	set_motors_symmetric
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 22
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 22
 
 
+ 986              		.loc 1 210 0
+ 987 0058 0020     		movs	r0, #0
+ 988 005a FFF7FEFF 		bl	set_motors_symmetric
  211:main.c        ****     motor_enable(0u, 0u);
- 986              		.loc 1 211 0
- 987 005e 0021     		movs	r1, #0
- 988 0060 0020     		movs	r0, #0
- 989 0062 FFF7FEFF 		bl	motor_enable
+ 989              		.loc 1 211 0
+ 990 005e 0021     		movs	r1, #0
+ 991 0060 0020     		movs	r0, #0
+ 992 0062 FFF7FEFF 		bl	motor_enable
  212:main.c        **** 
  213:main.c        ****     /* Directions module */
  214:main.c        ****     Directions_Init();
- 990              		.loc 1 214 0
- 991 0066 FFF7FEFF 		bl	Directions_Init
+ 993              		.loc 1 214 0
+ 994 0066 FFF7FEFF 		bl	Directions_Init
  215:main.c        ****     g_direction = 0u;
- 992              		.loc 1 215 0
- 993 006a 714B     		ldr	r3, .L88+4
- 994 006c 0022     		movs	r2, #0
- 995 006e 1A70     		strb	r2, [r3]
+ 995              		.loc 1 215 0
+ 996 006a A84B     		ldr	r3, .L116+4
+ 997 006c 0022     		movs	r2, #0
+ 998 006e 1A70     		strb	r2, [r3]
  216:main.c        **** 
  217:main.c        ****     /* Feed-forward cruise duty (kept) */
  218:main.c        ****     int center_duty_est = (int)((V_CRUISE_MM_S * 100) / VMAX_CONST_MM_S);
- 996              		.loc 1 218 0
- 997 0070 1423     		movs	r3, #20
- 998 0072 FB61     		str	r3, [r7, #28]
+ 999              		.loc 1 218 0
+ 1000 0070 1423     		movs	r3, #20
+ 1001 0072 7B63     		str	r3, [r7, #52]
  219:main.c        ****     if (center_duty_est < 0) center_duty_est = 0;
- 999              		.loc 1 219 0
- 1000 0074 FB69     		ldr	r3, [r7, #28]
- 1001 0076 002B     		cmp	r3, #0
- 1002 0078 01DA     		bge	.L71
- 1003              		.loc 1 219 0 is_stmt 0 discriminator 1
- 1004 007a 0023     		movs	r3, #0
- 1005 007c FB61     		str	r3, [r7, #28]
- 1006              	.L71:
+ 1002              		.loc 1 219 0
+ 1003 0074 7B6B     		ldr	r3, [r7, #52]
+ 1004 0076 002B     		cmp	r3, #0
+ 1005 0078 01DA     		bge	.L71
+ 1006              		.loc 1 219 0 is_stmt 0 discriminator 1
+ 1007 007a 0023     		movs	r3, #0
+ 1008 007c 7B63     		str	r3, [r7, #52]
+ 1009              	.L71:
  220:main.c        ****     if (center_duty_est > 100) center_duty_est = 100;
- 1007              		.loc 1 220 0 is_stmt 1
- 1008 007e FB69     		ldr	r3, [r7, #28]
- 1009 0080 642B     		cmp	r3, #100
- 1010 0082 01DD     		ble	.L72
- 1011              		.loc 1 220 0 is_stmt 0 discriminator 1
- 1012 0084 6423     		movs	r3, #100
- 1013 0086 FB61     		str	r3, [r7, #28]
- 1014              	.L72:
+ 1010              		.loc 1 220 0 is_stmt 1
+ 1011 007e 7B6B     		ldr	r3, [r7, #52]
+ 1012 0080 642B     		cmp	r3, #100
+ 1013 0082 01DD     		ble	.L72
+ 1014              		.loc 1 220 0 is_stmt 0 discriminator 1
+ 1015 0084 6423     		movs	r3, #100
+ 1016 0086 7B63     		str	r3, [r7, #52]
+ 1017              	.L72:
  221:main.c        **** 
  222:main.c        ****     /* PI state */
  223:main.c        ****     pi_t pi = { .i = 0.0f, .u = 0.0f, .t_loss = 0.0f };
- 1015              		.loc 1 223 0 is_stmt 1
- 1016 0088 4FF00003 		mov	r3, #0
- 1017 008c FB60     		str	r3, [r7, #12]	@ float
- 1018 008e 4FF00003 		mov	r3, #0
- 1019 0092 3B61     		str	r3, [r7, #16]	@ float
- 1020 0094 4FF00003 		mov	r3, #0
- 1021 0098 7B61     		str	r3, [r7, #20]	@ float
+ 1018              		.loc 1 223 0 is_stmt 1
+ 1019 0088 4FF00003 		mov	r3, #0
+ 1020 008c FB60     		str	r3, [r7, #12]	@ float
+ 1021 008e 4FF00003 		mov	r3, #0
+ 1022 0092 3B61     		str	r3, [r7, #16]	@ float
+ 1023 0094 4FF00003 		mov	r3, #0
+ 1024 0098 7B61     		str	r3, [r7, #20]	@ float
  224:main.c        ****     
  225:main.c        ****     CyDelay(1000);  // So the motors don't jump
- 1022              		.loc 1 225 0
- 1023 009a 4FF47A70 		mov	r0, #1000
- 1024 009e FFF7FEFF 		bl	CyDelay
+ 1025              		.loc 1 225 0
+ 1026 009a 4FF47A70 		mov	r0, #1000
+ 1027 009e FFF7FEFF 		bl	CyDelay
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 23
+
+
  226:main.c        ****     set_motors_with_trim_and_steer(100,-10);
- 1025              		.loc 1 226 0
- 1026 00a2 6FF00901 		mvn	r1, #9
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 23
-
-
- 1027 00a6 6420     		movs	r0, #100
- 1028 00a8 FFF7FEFF 		bl	set_motors_with_trim_and_steer
+ 1028              		.loc 1 226 0
+ 1029 00a2 6FF00901 		mvn	r1, #9
+ 1030 00a6 6420     		movs	r0, #100
+ 1031 00a8 FFF7FEFF 		bl	set_motors_with_trim_and_steer
  227:main.c        ****     CyDelay(40);
- 1029              		.loc 1 227 0
- 1030 00ac 2820     		movs	r0, #40
- 1031 00ae FFF7FEFF 		bl	CyDelay
+ 1032              		.loc 1 227 0
+ 1033 00ac 2820     		movs	r0, #40
+ 1034 00ae FFF7FEFF 		bl	CyDelay
  228:main.c        ****     set_motors_symmetric(0); 
- 1032              		.loc 1 228 0
- 1033 00b2 0020     		movs	r0, #0
- 1034 00b4 FFF7FEFF 		bl	set_motors_symmetric
- 1035              	.L87:
- 1036              	.LBB3:
- 229:main.c        **** 
- 230:main.c        ****     for(;;){
- 231:main.c        ****         /* Distance stop */
- 232:main.c        ****         g_stop_now = (g_dist_mm >= TARGET_DIST_MM) ? 1u : 0u;
- 1037              		.loc 1 232 0
- 1038 00b8 5E4B     		ldr	r3, .L88+8
- 1039 00ba 1B68     		ldr	r3, [r3]
- 1040 00bc 5E4A     		ldr	r2, .L88+12
- 1041 00be 9342     		cmp	r3, r2
- 1042 00c0 01DD     		ble	.L73
- 1043              		.loc 1 232 0 is_stmt 0 discriminator 1
- 1044 00c2 0122     		movs	r2, #1
- 1045 00c4 00E0     		b	.L74
- 1046              	.L73:
- 1047              		.loc 1 232 0 discriminator 2
- 1048 00c6 0022     		movs	r2, #0
- 1049              	.L74:
- 1050              		.loc 1 232 0 discriminator 4
- 1051 00c8 5C4B     		ldr	r3, .L88+16
- 1052 00ca 1A70     		strb	r2, [r3]
- 233:main.c        ****         if (g_stop_now) {
- 1053              		.loc 1 233 0 is_stmt 1 discriminator 4
- 1054 00cc 5B4B     		ldr	r3, .L88+16
- 1055 00ce 1B78     		ldrb	r3, [r3]
- 1056 00d0 DBB2     		uxtb	r3, r3
- 1057 00d2 002B     		cmp	r3, #0
- 1058 00d4 0DD0     		beq	.L75
- 234:main.c        ****             set_motors_symmetric(0);
- 1059              		.loc 1 234 0
- 1060 00d6 0020     		movs	r0, #0
- 1061 00d8 FFF7FEFF 		bl	set_motors_symmetric
- 235:main.c        ****             motor_enable(1u, 1u);
- 1062              		.loc 1 235 0
- 1063 00dc 0121     		movs	r1, #1
- 1064 00de 0120     		movs	r0, #1
- 1065 00e0 FFF7FEFF 		bl	motor_enable
- 236:main.c        ****             g_direction = 0u;
- 1066              		.loc 1 236 0
- 1067 00e4 524B     		ldr	r3, .L88+4
- 1068 00e6 0022     		movs	r2, #0
- 1069 00e8 1A70     		strb	r2, [r3]
- 237:main.c        ****             CyDelay(LOOP_DT_MS);
- 1070              		.loc 1 237 0
- 1071 00ea 0820     		movs	r0, #8
- 1072 00ec FFF7FEFF 		bl	CyDelay
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 24
+ 1035              		.loc 1 228 0
+ 1036 00b2 0020     		movs	r0, #0
+ 1037 00b4 FFF7FEFF 		bl	set_motors_symmetric
+ 229:main.c        ****     
+ 230:main.c        ****     
+ 231:main.c        ****     // Pathfinding array
+ 232:main.c        ****     /* 
+ 233:main.c        ****      * STRAIGHT -> 0, TURN LEFT -> 1, TURN RIGHT -> 2, TURN U_TURN -> 3,
+ 234:main.c        ****      * REACH -> 5, END -> 6
+ 235:main.c        ****      */
+ 236:main.c        ****     /*const uint8_t CMD_STATES[] = {
+ 237:main.c        ****     0, 1, 0, 2, 0, 1, 0, 1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1, 0, 1, 0, 2, 0, 2, 0, 1, 0, 1, 0, 2, 0, 2,
+ 238:main.c        ****     0, 1, 0, 1, 0, 2, 0, 5, 3, 0, 2, 0, 2, 0, 1, 0, 1, 0, 1, 0, 2, 0, 1, 0, 1, 0, 2, 0, 2, 0, 2, 0,
+ 239:main.c        ****     1, 0, 2, 0, 2, 0, 1, 0, 1, 0, 5, 3, 0, 1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1, 0, 1, 0, 2, 0, 2, 0, 1,
+ 240:main.c        ****     0, 1, 0, 1, 0, 2, 0, 2, 0, 5, 3, 0, 0, 2, 0, 5, 3, 0, 2, 0, 1, 0, 1, 0, 2, 0, 2, 0, 1, 0, 1, 0,
+ 241:main.c        ****     1, 0, 2, 0, 2, 0, 1, 0, 1, 0, 1, 0, 6
+ 242:main.c        ****     }; */
+ 243:main.c        ****     
+ 244:main.c        ****     const uint8_t CMD_STATES[] = {1};
+ 1038              		.loc 1 244 0
+ 1039 00b8 0123     		movs	r3, #1
+ 1040 00ba 3B72     		strb	r3, [r7, #8]
+ 245:main.c        ****     
+ 246:main.c        ****     int8_t i = 0;  // Loop index
+ 1041              		.loc 1 246 0
+ 1042 00bc 0023     		movs	r3, #0
+ 1043 00be 87F83330 		strb	r3, [r7, #51]
+ 247:main.c        ****     int32_t target_dist = 0;
+ 1044              		.loc 1 247 0
+ 1045 00c2 0023     		movs	r3, #0
+ 1046 00c4 BB62     		str	r3, [r7, #40]
+ 248:main.c        ****     
+ 249:main.c        ****     int8_t straight_complete = 0;
+ 1047              		.loc 1 249 0
+ 1048 00c6 0023     		movs	r3, #0
+ 1049 00c8 87F83230 		strb	r3, [r7, #50]
+ 250:main.c        ****     int8_t turn_complete = 0;
+ 1050              		.loc 1 250 0
+ 1051 00cc 0023     		movs	r3, #0
+ 1052 00ce 87F83130 		strb	r3, [r7, #49]
+ 251:main.c        ****     int8_t uTurn_complete = 0;
+ 1053              		.loc 1 251 0
+ 1054 00d2 0023     		movs	r3, #0
+ 1055 00d4 87F83030 		strb	r3, [r7, #48]
+ 252:main.c        ****     int8_t fruit_complete = 0;
+ 1056              		.loc 1 252 0
+ 1057 00d8 0023     		movs	r3, #0
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 24
 
 
- 238:main.c        ****             continue;
- 1073              		.loc 1 238 0
- 1074 00f0 9AE0     		b	.L86
- 1075              	.L75:
- 239:main.c        ****         }
- 240:main.c        **** 
- 241:main.c        ****         /* Read sensors + maybe request turn */
- 242:main.c        ****         uint16_t V4_pp=0, V5_pp=0, V6_pp=0;
- 1076              		.loc 1 242 0
- 1077 00f2 0023     		movs	r3, #0
- 1078 00f4 7B81     		strh	r3, [r7, #10]	@ movhi
- 1079 00f6 0023     		movs	r3, #0
- 1080 00f8 3B81     		strh	r3, [r7, #8]	@ movhi
- 1081 00fa 0023     		movs	r3, #0
- 1082 00fc FB80     		strh	r3, [r7, #6]	@ movhi
- 243:main.c        ****         light_sensors_update_and_maybe_request_turn(&V4_pp, &V5_pp, &V6_pp);
- 1083              		.loc 1 243 0
- 1084 00fe BA1D     		adds	r2, r7, #6
- 1085 0100 07F10801 		add	r1, r7, #8
- 1086 0104 07F10A03 		add	r3, r7, #10
- 1087 0108 1846     		mov	r0, r3
- 1088 010a FFF7FEFF 		bl	light_sensors_update_and_maybe_request_turn
- 244:main.c        ****         
- 245:main.c        ****         
- 246:main.c        ****         if (sen1_on_line == 0 && sen2_on_line == 0 && sen3_on_line == 0 && sen4_on_line == 0 && sen
- 1089              		.loc 1 246 0
- 1090 010e 4C4B     		ldr	r3, .L88+20
- 1091 0110 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 1092 0112 002B     		cmp	r3, #0
- 1093 0114 17D1     		bne	.L77
- 1094              		.loc 1 246 0 is_stmt 0 discriminator 1
- 1095 0116 4B4B     		ldr	r3, .L88+24
- 1096 0118 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 1097 011a 002B     		cmp	r3, #0
- 1098 011c 13D1     		bne	.L77
- 1099              		.loc 1 246 0 discriminator 2
- 1100 011e 4A4B     		ldr	r3, .L88+28
- 1101 0120 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 1102 0122 002B     		cmp	r3, #0
- 1103 0124 0FD1     		bne	.L77
- 1104              		.loc 1 246 0 discriminator 3
- 1105 0126 494B     		ldr	r3, .L88+32
- 1106 0128 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 1107 012a 002B     		cmp	r3, #0
- 1108 012c 0BD1     		bne	.L77
- 1109              		.loc 1 246 0 discriminator 4
- 1110 012e 484B     		ldr	r3, .L88+36
- 1111 0130 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 1112 0132 002B     		cmp	r3, #0
- 1113 0134 07D1     		bne	.L77
- 1114              		.loc 1 246 0 discriminator 5
- 1115 0136 474B     		ldr	r3, .L88+40
- 1116 0138 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 1117 013a 002B     		cmp	r3, #0
- 1118 013c 03D1     		bne	.L77
- 247:main.c        ****             Motors_SetPercent(0, 0);
- 1119              		.loc 1 247 0 is_stmt 1
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 25
+ 1058 00da 87F82F30 		strb	r3, [r7, #47]
+ 1059              	.L115:
+ 1060              	.LBB3:
+ 253:main.c        **** 
+ 254:main.c        ****     for(;;){
+ 255:main.c        **** 
+ 256:main.c        ****         /* Read sensors + maybe request turn */
+ 257:main.c        ****         uint16_t V4_pp=0, V5_pp=0, V6_pp=0;
+ 1061              		.loc 1 257 0
+ 1062 00de 0023     		movs	r3, #0
+ 1063 00e0 FB80     		strh	r3, [r7, #6]	@ movhi
+ 1064 00e2 0023     		movs	r3, #0
+ 1065 00e4 BB80     		strh	r3, [r7, #4]	@ movhi
+ 1066 00e6 0023     		movs	r3, #0
+ 1067 00e8 7B80     		strh	r3, [r7, #2]	@ movhi
+ 258:main.c        ****         light_sensors_update_and_maybe_request_turn(&V4_pp, &V5_pp, &V6_pp);
+ 1068              		.loc 1 258 0
+ 1069 00ea BA1C     		adds	r2, r7, #2
+ 1070 00ec 391D     		adds	r1, r7, #4
+ 1071 00ee BB1D     		adds	r3, r7, #6
+ 1072 00f0 1846     		mov	r0, r3
+ 1073 00f2 FFF7FEFF 		bl	light_sensors_update_and_maybe_request_turn
+ 259:main.c        ****         
+ 260:main.c        **** 
+ 261:main.c        **** //        /* ---------------- Turn handling with arming delay (Option A) ---------------- */
+ 262:main.c        **** //        /* Arm once on the first detection (edge 0 -> 1/2) */
+ 263:main.c        **** //        if ((g_direction == 1u || g_direction == 2u) && dir_latched_side == 0){
+ 264:main.c        **** //            dir_latched_side = g_direction;          /* remember side */
+ 265:main.c        **** //            dir_delay_ticks  = DIR_CALL_DELAY_TICKS; /* start countdown */
+ 266:main.c        **** //            //CyDelay(50);
+ 267:main.c        **** //        }
+ 268:main.c        **** //        /* If request cleared during delay, cancel gracefully */
+ 269:main.c        **** //        if (g_direction == 0u && dir_latched_side != 0){
+ 270:main.c        **** //            dir_latched_side = 0;
+ 271:main.c        **** //            dir_delay_ticks  = 0;
+ 272:main.c        **** //        }
+ 273:main.c        **** //
+ 274:main.c        **** //        if (g_direction == 1u || g_direction == 2u){
+ 275:main.c        **** //            if (dir_delay_ticks > 0){
+ 276:main.c        **** //                /* Still delaying: keep doing normal straight PI */
+ 277:main.c        **** //                dir_delay_ticks--;
+ 278:main.c        **** //            } else {
+ 279:main.c        **** //                /* Delay elapsed: perform the maneuver */
+ 280:main.c        **** //                Directions_Handle(&g_direction);
+ 281:main.c        **** //
+ 282:main.c        **** //                /* When turn completes, Directions sets g_direction back to 0 */
+ 283:main.c        **** //                if (g_direction == 0u){
+ 284:main.c        **** //                    pi.i = 0.0f; pi.u = 0.0f; pi.t_loss = 0.0f;  /* clear bias */
+ 285:main.c        **** //                    dir_latched_side = 0;                        /* ready next time */
+ 286:main.c        **** //                    
+ 287:main.c        **** //                    
+ 288:main.c        **** //                    turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+ 289:main.c        **** //                }
+ 290:main.c        **** //                CyDelay(LOOP_DT_MS);
+ 291:main.c        **** //                continue;  /* skip the rest this tick */
+ 292:main.c        **** //            }
+ 293:main.c        **** //        }
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 25
 
 
- 1120 013e 0021     		movs	r1, #0
- 1121 0140 0020     		movs	r0, #0
- 1122 0142 FFF7FEFF 		bl	Motors_SetPercent
- 1123              	.L77:
- 248:main.c        ****         }
- 249:main.c        **** 
- 250:main.c        ****         /* ---------------- Turn handling with arming delay (Option A) ---------------- */
- 251:main.c        ****         /* Arm once on the first detection (edge 0 -> 1/2) */
- 252:main.c        ****         if ((g_direction == 1u || g_direction == 2u) && dir_latched_side == 0){
- 1124              		.loc 1 252 0
- 1125 0146 3A4B     		ldr	r3, .L88+4
- 1126 0148 1B78     		ldrb	r3, [r3]
- 1127 014a DBB2     		uxtb	r3, r3
- 1128 014c 012B     		cmp	r3, #1
- 1129 014e 04D0     		beq	.L78
- 1130              		.loc 1 252 0 is_stmt 0 discriminator 2
- 1131 0150 374B     		ldr	r3, .L88+4
- 1132 0152 1B78     		ldrb	r3, [r3]
- 1133 0154 DBB2     		uxtb	r3, r3
- 1134 0156 022B     		cmp	r3, #2
- 1135 0158 0ED1     		bne	.L79
- 1136              	.L78:
- 1137              		.loc 1 252 0 discriminator 3
- 1138 015a 3F4B     		ldr	r3, .L88+44
- 1139 015c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 1140 015e 002B     		cmp	r3, #0
- 1141 0160 0AD1     		bne	.L79
- 253:main.c        ****             dir_latched_side = g_direction;          /* remember side */
- 1142              		.loc 1 253 0 is_stmt 1
- 1143 0162 334B     		ldr	r3, .L88+4
- 1144 0164 1B78     		ldrb	r3, [r3]
- 1145 0166 DAB2     		uxtb	r2, r3
- 1146 0168 3B4B     		ldr	r3, .L88+44
- 1147 016a 1A70     		strb	r2, [r3]
- 254:main.c        ****             dir_delay_ticks  = DIR_CALL_DELAY_TICKS; /* start countdown */
- 1148              		.loc 1 254 0
- 1149 016c 3B4B     		ldr	r3, .L88+48
- 1150 016e 0D22     		movs	r2, #13
- 1151 0170 1A80     		strh	r2, [r3]	@ movhi
- 255:main.c        ****             CyDelay(50);
- 1152              		.loc 1 255 0
- 1153 0172 3220     		movs	r0, #50
- 1154 0174 FFF7FEFF 		bl	CyDelay
- 1155              	.L79:
- 256:main.c        ****         }
- 257:main.c        ****         /* If request cleared during delay, cancel gracefully */
- 258:main.c        ****         if (g_direction == 0u && dir_latched_side != 0){
- 1156              		.loc 1 258 0
- 1157 0178 2D4B     		ldr	r3, .L88+4
- 1158 017a 1B78     		ldrb	r3, [r3]
- 1159 017c DBB2     		uxtb	r3, r3
- 1160 017e 002B     		cmp	r3, #0
- 1161 0180 09D1     		bne	.L80
- 1162              		.loc 1 258 0 is_stmt 0 discriminator 1
- 1163 0182 354B     		ldr	r3, .L88+44
- 1164 0184 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 1165 0186 002B     		cmp	r3, #0
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 26
+ 294:main.c        **** //        /* ---------------- end turn handling with delay ---------------- */
+ 295:main.c        **** //
+ 296:main.c        **** //        /* Straight run with PI steering */
+ 297:main.c        **** //        
+ 298:main.c        **** //        if(turn_cooldown_ticks > 0) {
+ 299:main.c        **** //            turn_cooldown_ticks--;
+ 300:main.c        **** //        }
+ 301:main.c        **** //        
+ 302:main.c        **** //        /*
+ 303:main.c        **** //        // Add bias when back right sensor is under line
+ 304:main.c        **** //        uint16_t V5 = Sensor_ComputePeakToPeak(4);
+ 305:main.c        **** //        sen5_on_line = (V5 > 10 && V5 < 100) ? 1u : 0u;
+ 306:main.c        **** //        if (sen5_on_line == 1) {
+ 307:main.c        **** //            Motors_SetPercent(0,25);
+ 308:main.c        **** //            //set_motors_with_trim_and_steer(50,50); 
+ 309:main.c        **** //            CyDelay(10);
+ 310:main.c        **** //        } */
+ 311:main.c        ****         
+ 312:main.c        ****         
+ 313:main.c        **** //        int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
+ 314:main.c        **** //        set_motors_with_trim_and_steer(center_duty_est, steer);
+ 315:main.c        **** //        
+ 316:main.c        **** //        
+ 317:main.c        **** //        /* Distance stop */    // g_dist_mm = total distance traveled
+ 318:main.c        **** //        g_stop_now = (g_dist_mm >= TARGET_DIST_MM) ? 1u : 0u;
+ 319:main.c        **** //        if (g_stop_now) {
+ 320:main.c        **** //            set_motors_symmetric(0);
+ 321:main.c        **** //            motor_enable(1u, 1u);
+ 322:main.c        **** //            g_direction = 0u;
+ 323:main.c        **** //            continue;
+ 324:main.c        **** //        }
+ 325:main.c        ****         
+ 326:main.c        ****         
+ 327:main.c        ****         
+ 328:main.c        ****         
+ 329:main.c        ****         
+ 330:main.c        ****         
+ 331:main.c        ****         
+ 332:main.c        ****         // PATHFINDING ALGORITHM
+ 333:main.c        ****         
+ 334:main.c        ****         if (CMD_STATES[i] == 0) {
+ 1074              		.loc 1 334 0
+ 1075 00f6 97F93330 		ldrsb	r3, [r7, #51]
+ 1076 00fa 07F13802 		add	r2, r7, #56
+ 1077 00fe 1344     		add	r3, r3, r2
+ 1078 0100 13F8303C 		ldrb	r3, [r3, #-48]	@ zero_extendqisi2
+ 1079 0104 002B     		cmp	r3, #0
+ 1080 0106 38D1     		bne	.L73
+ 1081              	.LBB4:
+ 335:main.c        ****             // Go STRAIGHT
+ 336:main.c        ****             int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
+ 1082              		.loc 1 336 0
+ 1083 0108 F988     		ldrh	r1, [r7, #6]
+ 1084 010a BA88     		ldrh	r2, [r7, #4]
+ 1085 010c 7B88     		ldrh	r3, [r7, #2]
+ 1086 010e 07F10C00 		add	r0, r7, #12
+ 1087 0112 FFF7FEFF 		bl	pi_step
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 26
 
 
- 1166 0188 05D0     		beq	.L80
- 259:main.c        ****             dir_latched_side = 0;
- 1167              		.loc 1 259 0 is_stmt 1
- 1168 018a 334B     		ldr	r3, .L88+44
- 1169 018c 0022     		movs	r2, #0
- 1170 018e 1A70     		strb	r2, [r3]
- 260:main.c        ****             dir_delay_ticks  = 0;
- 1171              		.loc 1 260 0
- 1172 0190 324B     		ldr	r3, .L88+48
- 1173 0192 0022     		movs	r2, #0
- 1174 0194 1A80     		strh	r2, [r3]	@ movhi
- 1175              	.L80:
- 261:main.c        ****         }
- 262:main.c        **** 
- 263:main.c        ****         if (g_direction == 1u || g_direction == 2u){
- 1176              		.loc 1 263 0
- 1177 0196 264B     		ldr	r3, .L88+4
- 1178 0198 1B78     		ldrb	r3, [r3]
- 1179 019a DBB2     		uxtb	r3, r3
- 1180 019c 012B     		cmp	r3, #1
- 1181 019e 04D0     		beq	.L81
- 1182              		.loc 1 263 0 is_stmt 0 discriminator 1
- 1183 01a0 234B     		ldr	r3, .L88+4
- 1184 01a2 1B78     		ldrb	r3, [r3]
- 1185 01a4 DBB2     		uxtb	r3, r3
- 1186 01a6 022B     		cmp	r3, #2
- 1187 01a8 25D1     		bne	.L82
- 1188              	.L81:
- 264:main.c        ****             if (dir_delay_ticks > 0){
- 1189              		.loc 1 264 0 is_stmt 1
- 1190 01aa 2C4B     		ldr	r3, .L88+48
- 1191 01ac 1B88     		ldrh	r3, [r3]
- 1192 01ae 002B     		cmp	r3, #0
- 1193 01b0 06D0     		beq	.L83
- 265:main.c        ****                 /* Still delaying: keep doing normal straight PI */
- 266:main.c        ****                 dir_delay_ticks--;
- 1194              		.loc 1 266 0
- 1195 01b2 2A4B     		ldr	r3, .L88+48
- 1196 01b4 1B88     		ldrh	r3, [r3]
- 1197 01b6 013B     		subs	r3, r3, #1
- 1198 01b8 9AB2     		uxth	r2, r3
- 1199 01ba 284B     		ldr	r3, .L88+48
- 1200 01bc 1A80     		strh	r2, [r3]	@ movhi
- 1201 01be 1AE0     		b	.L82
- 1202              	.L83:
- 267:main.c        ****             } else {
- 268:main.c        ****                 /* Delay elapsed: perform the maneuver */
- 269:main.c        ****                 Directions_Handle(&g_direction);
- 1203              		.loc 1 269 0
- 1204 01c0 1B48     		ldr	r0, .L88+4
- 1205 01c2 FFF7FEFF 		bl	Directions_Handle
- 270:main.c        **** 
- 271:main.c        ****                 /* When turn completes, Directions sets g_direction back to 0 */
- 272:main.c        ****                 if (g_direction == 0u){
- 1206              		.loc 1 272 0
- 1207 01c6 1A4B     		ldr	r3, .L88+4
- 1208 01c8 1B78     		ldrb	r3, [r3]
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 27
+ 1088 0116 7862     		str	r0, [r7, #36]
+ 337:main.c        ****             set_motors_with_trim_and_steer(center_duty_est, steer);
+ 1089              		.loc 1 337 0
+ 1090 0118 796A     		ldr	r1, [r7, #36]
+ 1091 011a 786B     		ldr	r0, [r7, #52]
+ 1092 011c FFF7FEFF 		bl	set_motors_with_trim_and_steer
+ 338:main.c        ****             
+ 339:main.c        ****             uint16_t V1 = Sensor_ComputePeakToPeak(4);
+ 1093              		.loc 1 339 0
+ 1094 0120 0420     		movs	r0, #4
+ 1095 0122 FFF7FEFF 		bl	Sensor_ComputePeakToPeak
+ 1096 0126 0346     		mov	r3, r0
+ 1097 0128 7B84     		strh	r3, [r7, #34]	@ movhi
+ 340:main.c        ****             sen1_on_line = (V1 > 10 && V1 < 100) ? 1u : 0u;
+ 1098              		.loc 1 340 0
+ 1099 012a 7B8C     		ldrh	r3, [r7, #34]
+ 1100 012c 0A2B     		cmp	r3, #10
+ 1101 012e 04D9     		bls	.L74
+ 1102              		.loc 1 340 0 is_stmt 0 discriminator 1
+ 1103 0130 7B8C     		ldrh	r3, [r7, #34]
+ 1104 0132 632B     		cmp	r3, #99
+ 1105 0134 01D8     		bhi	.L74
+ 1106              		.loc 1 340 0 discriminator 3
+ 1107 0136 0122     		movs	r2, #1
+ 1108 0138 00E0     		b	.L75
+ 1109              	.L74:
+ 1110              		.loc 1 340 0 discriminator 4
+ 1111 013a 0022     		movs	r2, #0
+ 1112              	.L75:
+ 1113              		.loc 1 340 0 discriminator 6
+ 1114 013c 744B     		ldr	r3, .L116+8
+ 1115 013e 1A70     		strb	r2, [r3]
+ 341:main.c        ****             uint16_t V2 = Sensor_ComputePeakToPeak(4);
+ 1116              		.loc 1 341 0 is_stmt 1 discriminator 6
+ 1117 0140 0420     		movs	r0, #4
+ 1118 0142 FFF7FEFF 		bl	Sensor_ComputePeakToPeak
+ 1119 0146 0346     		mov	r3, r0
+ 1120 0148 3B84     		strh	r3, [r7, #32]	@ movhi
+ 342:main.c        ****             sen2_on_line = (V2 > 10 && V2 < 100) ? 1u : 0u;
+ 1121              		.loc 1 342 0 discriminator 6
+ 1122 014a 3B8C     		ldrh	r3, [r7, #32]
+ 1123 014c 0A2B     		cmp	r3, #10
+ 1124 014e 04D9     		bls	.L76
+ 1125              		.loc 1 342 0 is_stmt 0 discriminator 1
+ 1126 0150 3B8C     		ldrh	r3, [r7, #32]
+ 1127 0152 632B     		cmp	r3, #99
+ 1128 0154 01D8     		bhi	.L76
+ 1129              		.loc 1 342 0 discriminator 3
+ 1130 0156 0122     		movs	r2, #1
+ 1131 0158 00E0     		b	.L77
+ 1132              	.L76:
+ 1133              		.loc 1 342 0 discriminator 4
+ 1134 015a 0022     		movs	r2, #0
+ 1135              	.L77:
+ 1136              		.loc 1 342 0 discriminator 6
+ 1137 015c 6D4B     		ldr	r3, .L116+12
+ 1138 015e 1A70     		strb	r2, [r3]
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 27
 
 
- 1209 01ca DBB2     		uxtb	r3, r3
- 1210 01cc 002B     		cmp	r3, #0
- 1211 01ce 0ED1     		bne	.L84
- 273:main.c        ****                     pi.i = 0.0f; pi.u = 0.0f; pi.t_loss = 0.0f;  /* clear bias */
- 1212              		.loc 1 273 0
- 1213 01d0 4FF00003 		mov	r3, #0
- 1214 01d4 FB60     		str	r3, [r7, #12]	@ float
- 1215 01d6 4FF00003 		mov	r3, #0
- 1216 01da 3B61     		str	r3, [r7, #16]	@ float
- 1217 01dc 4FF00003 		mov	r3, #0
- 1218 01e0 7B61     		str	r3, [r7, #20]	@ float
- 274:main.c        ****                     dir_latched_side = 0;                        /* ready next time */
- 1219              		.loc 1 274 0
- 1220 01e2 1D4B     		ldr	r3, .L88+44
- 1221 01e4 0022     		movs	r2, #0
- 1222 01e6 1A70     		strb	r2, [r3]
- 275:main.c        ****                     
- 276:main.c        ****                     
- 277:main.c        ****                     turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
- 1223              		.loc 1 277 0
- 1224 01e8 1D4B     		ldr	r3, .L88+52
- 1225 01ea 3222     		movs	r2, #50
- 1226 01ec 1A80     		strh	r2, [r3]	@ movhi
- 1227              	.L84:
- 278:main.c        ****                 }
- 279:main.c        ****                 CyDelay(LOOP_DT_MS);
- 1228              		.loc 1 279 0
- 1229 01ee 0820     		movs	r0, #8
- 1230 01f0 FFF7FEFF 		bl	CyDelay
- 280:main.c        ****                 continue;  /* skip the rest this tick */
- 1231              		.loc 1 280 0
- 1232 01f4 18E0     		b	.L86
- 1233              	.L82:
- 281:main.c        ****             }
- 282:main.c        ****         }
- 283:main.c        ****         /* ---------------- end turn handling with delay ---------------- */
- 284:main.c        **** 
- 285:main.c        ****         /* Straight run with PI steering */
- 286:main.c        ****         
- 287:main.c        ****         if(turn_cooldown_ticks > 0) {
- 1234              		.loc 1 287 0
- 1235 01f6 1A4B     		ldr	r3, .L88+52
- 1236 01f8 1B88     		ldrh	r3, [r3]
- 1237 01fa 002B     		cmp	r3, #0
- 1238 01fc 05D0     		beq	.L85
- 288:main.c        ****             turn_cooldown_ticks--;
- 1239              		.loc 1 288 0
- 1240 01fe 184B     		ldr	r3, .L88+52
- 1241 0200 1B88     		ldrh	r3, [r3]
- 1242 0202 013B     		subs	r3, r3, #1
- 1243 0204 9AB2     		uxth	r2, r3
- 1244 0206 164B     		ldr	r3, .L88+52
- 1245 0208 1A80     		strh	r2, [r3]	@ movhi
- 1246              	.L85:
- 289:main.c        ****         }
- 290:main.c        ****         
- 291:main.c        ****         /*if (sen5_on_line == 1) {
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 28
+ 343:main.c        ****             if (sen1_on_line == 1u || sen2_on_line == 1u) {
+ 1139              		.loc 1 343 0 is_stmt 1 discriminator 6
+ 1140 0160 6B4B     		ldr	r3, .L116+8
+ 1141 0162 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1142 0164 012B     		cmp	r3, #1
+ 1143 0166 04D0     		beq	.L78
+ 1144              		.loc 1 343 0 is_stmt 0 discriminator 1
+ 1145 0168 6A4B     		ldr	r3, .L116+12
+ 1146 016a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1147 016c 012B     		cmp	r3, #1
+ 1148 016e 40F0A481 		bne	.L80
+ 1149              	.L78:
+ 344:main.c        ****                 straight_complete = 1;
+ 1150              		.loc 1 344 0 is_stmt 1
+ 1151 0172 0123     		movs	r3, #1
+ 1152 0174 87F83230 		strb	r3, [r7, #50]
+ 1153 0178 9FE1     		b	.L80
+ 1154              	.L73:
+ 1155              	.LBE4:
+ 345:main.c        ****             }
+ 346:main.c        ****             
+ 347:main.c        ****         } else if((CMD_STATES[i] == 1)) {
+ 1156              		.loc 1 347 0
+ 1157 017a 97F93330 		ldrsb	r3, [r7, #51]
+ 1158 017e 07F13802 		add	r2, r7, #56
+ 1159 0182 1344     		add	r3, r3, r2
+ 1160 0184 13F8303C 		ldrb	r3, [r3, #-48]	@ zero_extendqisi2
+ 1161 0188 012B     		cmp	r3, #1
+ 1162 018a 5BD1     		bne	.L81
+ 348:main.c        ****             // Go LEFT
+ 349:main.c        ****             g_direction = 1u;
+ 1163              		.loc 1 349 0
+ 1164 018c 5F4B     		ldr	r3, .L116+4
+ 1165 018e 0122     		movs	r2, #1
+ 1166 0190 1A70     		strb	r2, [r3]
+ 350:main.c        ****             /* ---------------- Turn handling with arming delay (Option A) ---------------- */
+ 351:main.c        ****                 /* Arm once on the first detection (edge 0 -> 1/2) */
+ 352:main.c        ****                 if ((g_direction == 1u || g_direction == 2u) && dir_latched_side == 0){
+ 1167              		.loc 1 352 0
+ 1168 0192 5E4B     		ldr	r3, .L116+4
+ 1169 0194 1B78     		ldrb	r3, [r3]
+ 1170 0196 DBB2     		uxtb	r3, r3
+ 1171 0198 012B     		cmp	r3, #1
+ 1172 019a 04D0     		beq	.L82
+ 1173              		.loc 1 352 0 is_stmt 0 discriminator 2
+ 1174 019c 5B4B     		ldr	r3, .L116+4
+ 1175 019e 1B78     		ldrb	r3, [r3]
+ 1176 01a0 DBB2     		uxtb	r3, r3
+ 1177 01a2 022B     		cmp	r3, #2
+ 1178 01a4 0BD1     		bne	.L83
+ 1179              	.L82:
+ 1180              		.loc 1 352 0 discriminator 3
+ 1181 01a6 5C4B     		ldr	r3, .L116+16
+ 1182 01a8 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1183 01aa 002B     		cmp	r3, #0
+ 1184 01ac 07D1     		bne	.L83
+ 353:main.c        ****                     dir_latched_side = g_direction;          /* remember side */
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 28
 
 
- 292:main.c        ****            set_motors_with_trim_and_steer(80,-10); 
- 293:main.c        ****             CyDelay(50);
- 294:main.c        ****             set_motors_symmetric(0); 
- 295:main.c        ****         }*/
- 296:main.c        ****         
- 297:main.c        ****         
- 298:main.c        ****         int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
- 1247              		.loc 1 298 0
- 1248 020a 7989     		ldrh	r1, [r7, #10]
- 1249 020c 3A89     		ldrh	r2, [r7, #8]
- 1250 020e FB88     		ldrh	r3, [r7, #6]
- 1251 0210 07F10C00 		add	r0, r7, #12
- 1252 0214 FFF7FEFF 		bl	pi_step
- 1253 0218 B861     		str	r0, [r7, #24]
- 299:main.c        ****         set_motors_with_trim_and_steer(center_duty_est, steer);
- 1254              		.loc 1 299 0
- 1255 021a B969     		ldr	r1, [r7, #24]
- 1256 021c F869     		ldr	r0, [r7, #28]
- 1257 021e FFF7FEFF 		bl	set_motors_with_trim_and_steer
- 300:main.c        **** 
- 301:main.c        ****         CyDelay(LOOP_DT_MS);
- 1258              		.loc 1 301 0
- 1259 0222 0820     		movs	r0, #8
- 1260 0224 FFF7FEFF 		bl	CyDelay
- 1261              	.L86:
- 1262              	.LBE3:
- 302:main.c        ****     }
- 1263              		.loc 1 302 0 discriminator 1
- 1264 0228 46E7     		b	.L87
- 1265              	.L89:
- 1266 022a 00BF     		.align	2
+ 1185              		.loc 1 353 0 is_stmt 1
+ 1186 01ae 574B     		ldr	r3, .L116+4
+ 1187 01b0 1B78     		ldrb	r3, [r3]
+ 1188 01b2 DAB2     		uxtb	r2, r3
+ 1189 01b4 584B     		ldr	r3, .L116+16
+ 1190 01b6 1A70     		strb	r2, [r3]
+ 354:main.c        ****                     dir_delay_ticks  = DIR_CALL_DELAY_TICKS; /* start countdown */
+ 1191              		.loc 1 354 0
+ 1192 01b8 584B     		ldr	r3, .L116+20
+ 1193 01ba 0D22     		movs	r2, #13
+ 1194 01bc 1A80     		strh	r2, [r3]	@ movhi
+ 1195              	.L83:
+ 355:main.c        ****                     //CyDelay(50);
+ 356:main.c        ****                 }
+ 357:main.c        ****                 /* If request cleared during delay, cancel gracefully */
+ 358:main.c        ****                 if (g_direction == 0u && dir_latched_side != 0){
+ 1196              		.loc 1 358 0
+ 1197 01be 534B     		ldr	r3, .L116+4
+ 1198 01c0 1B78     		ldrb	r3, [r3]
+ 1199 01c2 DBB2     		uxtb	r3, r3
+ 1200 01c4 002B     		cmp	r3, #0
+ 1201 01c6 09D1     		bne	.L84
+ 1202              		.loc 1 358 0 is_stmt 0 discriminator 1
+ 1203 01c8 534B     		ldr	r3, .L116+16
+ 1204 01ca 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1205 01cc 002B     		cmp	r3, #0
+ 1206 01ce 05D0     		beq	.L84
+ 359:main.c        ****                     dir_latched_side = 0;
+ 1207              		.loc 1 359 0 is_stmt 1
+ 1208 01d0 514B     		ldr	r3, .L116+16
+ 1209 01d2 0022     		movs	r2, #0
+ 1210 01d4 1A70     		strb	r2, [r3]
+ 360:main.c        ****                     dir_delay_ticks  = 0;
+ 1211              		.loc 1 360 0
+ 1212 01d6 514B     		ldr	r3, .L116+20
+ 1213 01d8 0022     		movs	r2, #0
+ 1214 01da 1A80     		strh	r2, [r3]	@ movhi
+ 1215              	.L84:
+ 361:main.c        ****                 }
+ 362:main.c        **** 
+ 363:main.c        ****                 if (g_direction == 1u || g_direction == 2u){
+ 1216              		.loc 1 363 0
+ 1217 01dc 4B4B     		ldr	r3, .L116+4
+ 1218 01de 1B78     		ldrb	r3, [r3]
+ 1219 01e0 DBB2     		uxtb	r3, r3
+ 1220 01e2 012B     		cmp	r3, #1
+ 1221 01e4 04D0     		beq	.L85
+ 1222              		.loc 1 363 0 is_stmt 0 discriminator 1
+ 1223 01e6 494B     		ldr	r3, .L116+4
+ 1224 01e8 1B78     		ldrb	r3, [r3]
+ 1225 01ea DBB2     		uxtb	r3, r3
+ 1226 01ec 022B     		cmp	r3, #2
+ 1227 01ee 25D1     		bne	.L86
+ 1228              	.L85:
+ 364:main.c        ****                     if (dir_delay_ticks > 0){
+ 1229              		.loc 1 364 0 is_stmt 1
+ 1230 01f0 4A4B     		ldr	r3, .L116+20
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 29
+
+
+ 1231 01f2 1B88     		ldrh	r3, [r3]
+ 1232 01f4 002B     		cmp	r3, #0
+ 1233 01f6 06D0     		beq	.L87
+ 365:main.c        ****                         /* Still delaying: keep doing normal straight PI */
+ 366:main.c        ****                         dir_delay_ticks--;
+ 1234              		.loc 1 366 0
+ 1235 01f8 484B     		ldr	r3, .L116+20
+ 1236 01fa 1B88     		ldrh	r3, [r3]
+ 1237 01fc 013B     		subs	r3, r3, #1
+ 1238 01fe 9AB2     		uxth	r2, r3
+ 1239 0200 464B     		ldr	r3, .L116+20
+ 1240 0202 1A80     		strh	r2, [r3]	@ movhi
+ 1241 0204 1AE0     		b	.L86
+ 1242              	.L87:
+ 367:main.c        ****                     } else {
+ 368:main.c        ****                         /* Delay elapsed: perform the maneuver */
+ 369:main.c        ****                         Directions_Handle(&g_direction);
+ 1243              		.loc 1 369 0
+ 1244 0206 4148     		ldr	r0, .L116+4
+ 1245 0208 FFF7FEFF 		bl	Directions_Handle
+ 370:main.c        **** 
+ 371:main.c        ****                         /* When turn completes, Directions sets g_direction back to 0 */
+ 372:main.c        ****                         if (g_direction == 0u){
+ 1246              		.loc 1 372 0
+ 1247 020c 3F4B     		ldr	r3, .L116+4
+ 1248 020e 1B78     		ldrb	r3, [r3]
+ 1249 0210 DBB2     		uxtb	r3, r3
+ 1250 0212 002B     		cmp	r3, #0
+ 1251 0214 0ED1     		bne	.L88
+ 373:main.c        ****                             pi.i = 0.0f; pi.u = 0.0f; pi.t_loss = 0.0f;  /* clear bias */
+ 1252              		.loc 1 373 0
+ 1253 0216 4FF00003 		mov	r3, #0
+ 1254 021a FB60     		str	r3, [r7, #12]	@ float
+ 1255 021c 4FF00003 		mov	r3, #0
+ 1256 0220 3B61     		str	r3, [r7, #16]	@ float
+ 1257 0222 4FF00003 		mov	r3, #0
+ 1258 0226 7B61     		str	r3, [r7, #20]	@ float
+ 374:main.c        ****                             dir_latched_side = 0;                        /* ready next time */
+ 1259              		.loc 1 374 0
+ 1260 0228 3B4B     		ldr	r3, .L116+16
+ 1261 022a 0022     		movs	r2, #0
+ 1262 022c 1A70     		strb	r2, [r3]
+ 375:main.c        ****                             
+ 376:main.c        ****                             
+ 377:main.c        ****                             turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+ 1263              		.loc 1 377 0
+ 1264 022e 3C4B     		ldr	r3, .L116+24
+ 1265 0230 2622     		movs	r2, #38
+ 1266 0232 1A80     		strh	r2, [r3]	@ movhi
  1267              	.L88:
- 1268 022c 00000000 		.word	isr_qd_Handler
- 1269 0230 06000000 		.word	g_direction
- 1270 0234 08000000 		.word	g_dist_mm
- 1271 0238 3E420F00 		.word	999998
- 1272 023c 07000000 		.word	g_stop_now
- 1273 0240 00000000 		.word	sen1_on_line
- 1274 0244 01000000 		.word	sen2_on_line
- 1275 0248 02000000 		.word	sen3_on_line
- 1276 024c 03000000 		.word	sen4_on_line
- 1277 0250 04000000 		.word	sen5_on_line
- 1278 0254 05000000 		.word	sen6_on_line
- 1279 0258 0E000000 		.word	dir_latched_side
- 1280 025c 0C000000 		.word	dir_delay_ticks
- 1281 0260 10000000 		.word	turn_cooldown_ticks
- 1282              		.cfi_endproc
- 1283              	.LFE69:
- 1284              		.size	main, .-main
- 1285              		.text
- 1286              	.Letext0:
- 1287              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
- 1288              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
- 1289              		.file 4 "Generated_Source\\PSoC5/core_cm3.h"
- 1290              		.section	.debug_info,"",%progbits
- 1291              	.Ldebug_info0:
- 1292 0000 2A050000 		.4byte	0x52a
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 29
+ 378:main.c        ****                         }
+ 379:main.c        ****                         CyDelay(LOOP_DT_MS);
+ 1268              		.loc 1 379 0
+ 1269 0234 0820     		movs	r0, #8
+ 1270 0236 FFF7FEFF 		bl	CyDelay
+ 380:main.c        ****                         continue;  /* skip the rest this tick */
+ 1271              		.loc 1 380 0
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 30
 
 
- 1293 0004 0400     		.2byte	0x4
- 1294 0006 00000000 		.4byte	.Ldebug_abbrev0
- 1295 000a 04       		.byte	0x4
- 1296 000b 01       		.uleb128 0x1
- 1297 000c 30000000 		.4byte	.LASF56
- 1298 0010 0C       		.byte	0xc
- 1299 0011 BD020000 		.4byte	.LASF57
- 1300 0015 EB000000 		.4byte	.LASF58
- 1301 0019 00000000 		.4byte	.Ldebug_ranges0+0
- 1302 001d 00000000 		.4byte	0
- 1303 0021 00000000 		.4byte	.Ldebug_line0
- 1304 0025 02       		.uleb128 0x2
- 1305 0026 01       		.byte	0x1
- 1306 0027 06       		.byte	0x6
- 1307 0028 DF010000 		.4byte	.LASF0
- 1308 002c 03       		.uleb128 0x3
- 1309 002d 70010000 		.4byte	.LASF3
- 1310 0031 02       		.byte	0x2
- 1311 0032 1D       		.byte	0x1d
- 1312 0033 37000000 		.4byte	0x37
- 1313 0037 02       		.uleb128 0x2
- 1314 0038 01       		.byte	0x1
- 1315 0039 08       		.byte	0x8
- 1316 003a 87010000 		.4byte	.LASF1
- 1317 003e 02       		.uleb128 0x2
- 1318 003f 02       		.byte	0x2
- 1319 0040 05       		.byte	0x5
- 1320 0041 1D000000 		.4byte	.LASF2
- 1321 0045 03       		.uleb128 0x3
- 1322 0046 C3000000 		.4byte	.LASF4
- 1323 004a 02       		.byte	0x2
- 1324 004b 2B       		.byte	0x2b
- 1325 004c 50000000 		.4byte	0x50
- 1326 0050 02       		.uleb128 0x2
- 1327 0051 02       		.byte	0x2
- 1328 0052 07       		.byte	0x7
- 1329 0053 40020000 		.4byte	.LASF5
- 1330 0057 03       		.uleb128 0x3
- 1331 0058 1A030000 		.4byte	.LASF6
- 1332 005c 02       		.byte	0x2
- 1333 005d 3F       		.byte	0x3f
- 1334 005e 62000000 		.4byte	0x62
- 1335 0062 02       		.uleb128 0x2
- 1336 0063 04       		.byte	0x4
- 1337 0064 05       		.byte	0x5
- 1338 0065 57010000 		.4byte	.LASF7
- 1339 0069 02       		.uleb128 0x2
- 1340 006a 04       		.byte	0x4
- 1341 006b 07       		.byte	0x7
- 1342 006c C4020000 		.4byte	.LASF8
- 1343 0070 03       		.uleb128 0x3
- 1344 0071 60010000 		.4byte	.LASF9
- 1345 0075 02       		.byte	0x2
- 1346 0076 59       		.byte	0x59
- 1347 0077 7B000000 		.4byte	0x7b
- 1348 007b 02       		.uleb128 0x2
- 1349 007c 08       		.byte	0x8
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 30
+ 1272 023a 65E1     		b	.L114
+ 1273              	.L86:
+ 381:main.c        ****                     }
+ 382:main.c        ****                 }
+ 383:main.c        ****                 /* ---------------- end turn handling with delay ---------------- */
+ 384:main.c        ****                 turn_complete = 1;
+ 1274              		.loc 1 384 0
+ 1275 023c 0123     		movs	r3, #1
+ 1276 023e 87F83130 		strb	r3, [r7, #49]
+ 1277 0242 3AE1     		b	.L80
+ 1278              	.L81:
+ 385:main.c        ****             
+ 386:main.c        ****         } else if((CMD_STATES[i] == 2)) {
+ 1279              		.loc 1 386 0
+ 1280 0244 97F93330 		ldrsb	r3, [r7, #51]
+ 1281 0248 07F13802 		add	r2, r7, #56
+ 1282 024c 1344     		add	r3, r3, r2
+ 1283 024e 13F8303C 		ldrb	r3, [r3, #-48]	@ zero_extendqisi2
+ 1284 0252 022B     		cmp	r3, #2
+ 1285 0254 6AD1     		bne	.L90
+ 387:main.c        ****             // Go RIGHT
+ 388:main.c        ****             g_direction = 2u;
+ 1286              		.loc 1 388 0
+ 1287 0256 2D4B     		ldr	r3, .L116+4
+ 1288 0258 0222     		movs	r2, #2
+ 1289 025a 1A70     		strb	r2, [r3]
+ 389:main.c        ****             /* ---------------- Turn handling with arming delay (Option A) ---------------- */
+ 390:main.c        ****                 /* Arm once on the first detection (edge 0 -> 1/2) */
+ 391:main.c        ****                 if ((g_direction == 1u || g_direction == 2u) && dir_latched_side == 0){
+ 1290              		.loc 1 391 0
+ 1291 025c 2B4B     		ldr	r3, .L116+4
+ 1292 025e 1B78     		ldrb	r3, [r3]
+ 1293 0260 DBB2     		uxtb	r3, r3
+ 1294 0262 012B     		cmp	r3, #1
+ 1295 0264 04D0     		beq	.L91
+ 1296              		.loc 1 391 0 is_stmt 0 discriminator 2
+ 1297 0266 294B     		ldr	r3, .L116+4
+ 1298 0268 1B78     		ldrb	r3, [r3]
+ 1299 026a DBB2     		uxtb	r3, r3
+ 1300 026c 022B     		cmp	r3, #2
+ 1301 026e 0BD1     		bne	.L92
+ 1302              	.L91:
+ 1303              		.loc 1 391 0 discriminator 3
+ 1304 0270 294B     		ldr	r3, .L116+16
+ 1305 0272 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1306 0274 002B     		cmp	r3, #0
+ 1307 0276 07D1     		bne	.L92
+ 392:main.c        ****                     dir_latched_side = g_direction;          /* remember side */
+ 1308              		.loc 1 392 0 is_stmt 1
+ 1309 0278 244B     		ldr	r3, .L116+4
+ 1310 027a 1B78     		ldrb	r3, [r3]
+ 1311 027c DAB2     		uxtb	r2, r3
+ 1312 027e 264B     		ldr	r3, .L116+16
+ 1313 0280 1A70     		strb	r2, [r3]
+ 393:main.c        ****                     dir_delay_ticks  = DIR_CALL_DELAY_TICKS; /* start countdown */
+ 1314              		.loc 1 393 0
+ 1315 0282 264B     		ldr	r3, .L116+20
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 31
 
 
- 1350 007d 05       		.byte	0x5
- 1351 007e 3F010000 		.4byte	.LASF10
- 1352 0082 02       		.uleb128 0x2
- 1353 0083 08       		.byte	0x8
- 1354 0084 07       		.byte	0x7
- 1355 0085 EB010000 		.4byte	.LASF11
- 1356 0089 04       		.uleb128 0x4
- 1357 008a 04       		.byte	0x4
- 1358 008b 05       		.byte	0x5
- 1359 008c 696E7400 		.ascii	"int\000"
- 1360 0090 02       		.uleb128 0x2
- 1361 0091 04       		.byte	0x4
- 1362 0092 07       		.byte	0x7
- 1363 0093 0F020000 		.4byte	.LASF12
- 1364 0097 03       		.uleb128 0x3
- 1365 0098 D6000000 		.4byte	.LASF13
- 1366 009c 03       		.byte	0x3
- 1367 009d 18       		.byte	0x18
- 1368 009e 2C000000 		.4byte	0x2c
- 1369 00a2 03       		.uleb128 0x3
- 1370 00a3 22020000 		.4byte	.LASF14
- 1371 00a7 03       		.byte	0x3
- 1372 00a8 24       		.byte	0x24
- 1373 00a9 45000000 		.4byte	0x45
- 1374 00ad 03       		.uleb128 0x3
- 1375 00ae 7F020000 		.4byte	.LASF15
- 1376 00b2 03       		.byte	0x3
- 1377 00b3 2C       		.byte	0x2c
- 1378 00b4 57000000 		.4byte	0x57
- 1379 00b8 03       		.uleb128 0x3
- 1380 00b9 CE000000 		.4byte	.LASF16
- 1381 00bd 03       		.byte	0x3
- 1382 00be 38       		.byte	0x38
- 1383 00bf 70000000 		.4byte	0x70
- 1384 00c3 02       		.uleb128 0x2
- 1385 00c4 04       		.byte	0x4
- 1386 00c5 04       		.byte	0x4
- 1387 00c6 39010000 		.4byte	.LASF17
- 1388 00ca 02       		.uleb128 0x2
- 1389 00cb 08       		.byte	0x8
- 1390 00cc 04       		.byte	0x4
- 1391 00cd 46030000 		.4byte	.LASF18
- 1392 00d1 02       		.uleb128 0x2
- 1393 00d2 01       		.byte	0x1
- 1394 00d3 08       		.byte	0x8
- 1395 00d4 4D010000 		.4byte	.LASF19
- 1396 00d8 02       		.uleb128 0x2
- 1397 00d9 08       		.byte	0x8
- 1398 00da 04       		.byte	0x4
- 1399 00db 9A010000 		.4byte	.LASF20
- 1400 00df 02       		.uleb128 0x2
- 1401 00e0 04       		.byte	0x4
- 1402 00e1 07       		.byte	0x7
- 1403 00e2 27000000 		.4byte	.LASF21
- 1404 00e6 05       		.uleb128 0x5
- 1405 00e7 97000000 		.4byte	0x97
- 1406 00eb 06       		.uleb128 0x6
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 31
+ 1316 0284 0D22     		movs	r2, #13
+ 1317 0286 1A80     		strh	r2, [r3]	@ movhi
+ 1318              	.L92:
+ 394:main.c        ****                     //CyDelay(50);
+ 395:main.c        ****                 }
+ 396:main.c        ****                 /* If request cleared during delay, cancel gracefully */
+ 397:main.c        ****                 if (g_direction == 0u && dir_latched_side != 0){
+ 1319              		.loc 1 397 0
+ 1320 0288 204B     		ldr	r3, .L116+4
+ 1321 028a 1B78     		ldrb	r3, [r3]
+ 1322 028c DBB2     		uxtb	r3, r3
+ 1323 028e 002B     		cmp	r3, #0
+ 1324 0290 09D1     		bne	.L93
+ 1325              		.loc 1 397 0 is_stmt 0 discriminator 1
+ 1326 0292 214B     		ldr	r3, .L116+16
+ 1327 0294 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1328 0296 002B     		cmp	r3, #0
+ 1329 0298 05D0     		beq	.L93
+ 398:main.c        ****                     dir_latched_side = 0;
+ 1330              		.loc 1 398 0 is_stmt 1
+ 1331 029a 1F4B     		ldr	r3, .L116+16
+ 1332 029c 0022     		movs	r2, #0
+ 1333 029e 1A70     		strb	r2, [r3]
+ 399:main.c        ****                     dir_delay_ticks  = 0;
+ 1334              		.loc 1 399 0
+ 1335 02a0 1E4B     		ldr	r3, .L116+20
+ 1336 02a2 0022     		movs	r2, #0
+ 1337 02a4 1A80     		strh	r2, [r3]	@ movhi
+ 1338              	.L93:
+ 400:main.c        ****                 }
+ 401:main.c        **** 
+ 402:main.c        ****                 if (g_direction == 1u || g_direction == 2u){
+ 1339              		.loc 1 402 0
+ 1340 02a6 194B     		ldr	r3, .L116+4
+ 1341 02a8 1B78     		ldrb	r3, [r3]
+ 1342 02aa DBB2     		uxtb	r3, r3
+ 1343 02ac 012B     		cmp	r3, #1
+ 1344 02ae 04D0     		beq	.L94
+ 1345              		.loc 1 402 0 is_stmt 0 discriminator 1
+ 1346 02b0 164B     		ldr	r3, .L116+4
+ 1347 02b2 1B78     		ldrb	r3, [r3]
+ 1348 02b4 DBB2     		uxtb	r3, r3
+ 1349 02b6 022B     		cmp	r3, #2
+ 1350 02b8 34D1     		bne	.L95
+ 1351              	.L94:
+ 403:main.c        ****                     if (dir_delay_ticks > 0){
+ 1352              		.loc 1 403 0 is_stmt 1
+ 1353 02ba 184B     		ldr	r3, .L116+20
+ 1354 02bc 1B88     		ldrh	r3, [r3]
+ 1355 02be 002B     		cmp	r3, #0
+ 1356 02c0 06D0     		beq	.L96
+ 404:main.c        ****                         /* Still delaying: keep doing normal straight PI */
+ 405:main.c        ****                         dir_delay_ticks--;
+ 1357              		.loc 1 405 0
+ 1358 02c2 164B     		ldr	r3, .L116+20
+ 1359 02c4 1B88     		ldrh	r3, [r3]
+ 1360 02c6 013B     		subs	r3, r3, #1
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 32
 
 
- 1407 00ec 0C       		.byte	0xc
- 1408 00ed 01       		.byte	0x1
- 1409 00ee 93       		.byte	0x93
- 1410 00ef 14010000 		.4byte	0x114
- 1411 00f3 07       		.uleb128 0x7
- 1412 00f4 6900     		.ascii	"i\000"
- 1413 00f6 01       		.byte	0x1
- 1414 00f7 93       		.byte	0x93
- 1415 00f8 C3000000 		.4byte	0xc3
- 1416 00fc 00       		.byte	0
- 1417 00fd 07       		.uleb128 0x7
- 1418 00fe 7500     		.ascii	"u\000"
- 1419 0100 01       		.byte	0x1
- 1420 0101 93       		.byte	0x93
- 1421 0102 C3000000 		.4byte	0xc3
- 1422 0106 04       		.byte	0x4
- 1423 0107 08       		.uleb128 0x8
- 1424 0108 13030000 		.4byte	.LASF22
- 1425 010c 01       		.byte	0x1
- 1426 010d 93       		.byte	0x93
- 1427 010e C3000000 		.4byte	0xc3
- 1428 0112 08       		.byte	0x8
- 1429 0113 00       		.byte	0
- 1430 0114 03       		.uleb128 0x3
- 1431 0115 52010000 		.4byte	.LASF23
- 1432 0119 01       		.byte	0x1
- 1433 011a 93       		.byte	0x93
- 1434 011b EB000000 		.4byte	0xeb
- 1435 011f 09       		.uleb128 0x9
- 1436 0120 60020000 		.4byte	.LASF59
- 1437 0124 01       		.byte	0x1
- 1438 0125 49       		.byte	0x49
- 1439 0126 00000000 		.4byte	.LFB64
- 1440 012a 14010000 		.4byte	.LFE64-.LFB64
- 1441 012e 01       		.uleb128 0x1
- 1442 012f 9C       		.byte	0x9c
- 1443 0130 DA010000 		.4byte	0x1da
- 1444 0134 0A       		.uleb128 0xa
- 1445 0135 12000000 		.4byte	.LBB2
- 1446 0139 EA000000 		.4byte	.LBE2-.LBB2
- 1447 013d 0B       		.uleb128 0xb
- 1448 013e 95010000 		.4byte	.LASF24
- 1449 0142 01       		.byte	0x1
- 1450 0143 4C       		.byte	0x4c
- 1451 0144 AD000000 		.4byte	0xad
- 1452 0148 02       		.uleb128 0x2
- 1453 0149 91       		.byte	0x91
- 1454 014a 54       		.sleb128 -44
- 1455 014b 0B       		.uleb128 0xb
- 1456 014c DE000000 		.4byte	.LASF25
- 1457 0150 01       		.byte	0x1
- 1458 0151 4D       		.byte	0x4d
- 1459 0152 AD000000 		.4byte	0xad
- 1460 0156 02       		.uleb128 0x2
- 1461 0157 91       		.byte	0x91
- 1462 0158 50       		.sleb128 -48
- 1463 0159 0C       		.uleb128 0xc
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 32
+ 1361 02c8 9AB2     		uxth	r2, r3
+ 1362 02ca 144B     		ldr	r3, .L116+20
+ 1363 02cc 1A80     		strh	r2, [r3]	@ movhi
+ 1364 02ce 29E0     		b	.L95
+ 1365              	.L96:
+ 406:main.c        ****                     } else {
+ 407:main.c        ****                         /* Delay elapsed: perform the maneuver */
+ 408:main.c        ****                         Directions_Handle(&g_direction);
+ 1366              		.loc 1 408 0
+ 1367 02d0 0E48     		ldr	r0, .L116+4
+ 1368 02d2 FFF7FEFF 		bl	Directions_Handle
+ 409:main.c        **** 
+ 410:main.c        ****                         /* When turn completes, Directions sets g_direction back to 0 */
+ 411:main.c        ****                         if (g_direction == 0u){
+ 1369              		.loc 1 411 0
+ 1370 02d6 0D4B     		ldr	r3, .L116+4
+ 1371 02d8 1B78     		ldrb	r3, [r3]
+ 1372 02da DBB2     		uxtb	r3, r3
+ 1373 02dc 002B     		cmp	r3, #0
+ 1374 02de 0ED1     		bne	.L97
+ 412:main.c        ****                             pi.i = 0.0f; pi.u = 0.0f; pi.t_loss = 0.0f;  /* clear bias */
+ 1375              		.loc 1 412 0
+ 1376 02e0 4FF00003 		mov	r3, #0
+ 1377 02e4 FB60     		str	r3, [r7, #12]	@ float
+ 1378 02e6 4FF00003 		mov	r3, #0
+ 1379 02ea 3B61     		str	r3, [r7, #16]	@ float
+ 1380 02ec 4FF00003 		mov	r3, #0
+ 1381 02f0 7B61     		str	r3, [r7, #20]	@ float
+ 413:main.c        ****                             dir_latched_side = 0;                        /* ready next time */
+ 1382              		.loc 1 413 0
+ 1383 02f2 094B     		ldr	r3, .L116+16
+ 1384 02f4 0022     		movs	r2, #0
+ 1385 02f6 1A70     		strb	r2, [r3]
+ 414:main.c        ****                             
+ 415:main.c        ****                             
+ 416:main.c        ****                             turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+ 1386              		.loc 1 416 0
+ 1387 02f8 094B     		ldr	r3, .L116+24
+ 1388 02fa 2622     		movs	r2, #38
+ 1389 02fc 1A80     		strh	r2, [r3]	@ movhi
+ 1390              	.L97:
+ 417:main.c        ****                         }
+ 418:main.c        ****                         CyDelay(LOOP_DT_MS);
+ 1391              		.loc 1 418 0
+ 1392 02fe 0820     		movs	r0, #8
+ 1393 0300 FFF7FEFF 		bl	CyDelay
+ 419:main.c        ****                         continue;  /* skip the rest this tick */
+ 1394              		.loc 1 419 0
+ 1395 0304 00E1     		b	.L114
+ 1396              	.L117:
+ 1397 0306 00BF     		.align	2
+ 1398              	.L116:
+ 1399 0308 00000000 		.word	isr_qd_Handler
+ 1400 030c 06000000 		.word	g_direction
+ 1401 0310 00000000 		.word	sen1_on_line
+ 1402 0314 01000000 		.word	sen2_on_line
+ 1403 0318 0E000000 		.word	dir_latched_side
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 33
 
 
- 1464 015a 643100   		.ascii	"d1\000"
- 1465 015d 01       		.byte	0x1
- 1466 015e 4F       		.byte	0x4f
- 1467 015f AD000000 		.4byte	0xad
- 1468 0163 02       		.uleb128 0x2
- 1469 0164 91       		.byte	0x91
- 1470 0165 4C       		.sleb128 -52
- 1471 0166 0C       		.uleb128 0xc
- 1472 0167 643200   		.ascii	"d2\000"
- 1473 016a 01       		.byte	0x1
- 1474 016b 4F       		.byte	0x4f
- 1475 016c AD000000 		.4byte	0xad
- 1476 0170 02       		.uleb128 0x2
- 1477 0171 91       		.byte	0x91
- 1478 0172 48       		.sleb128 -56
- 1479 0173 0C       		.uleb128 0xc
- 1480 0174 613100   		.ascii	"a1\000"
- 1481 0177 01       		.byte	0x1
- 1482 0178 50       		.byte	0x50
- 1483 0179 AD000000 		.4byte	0xad
- 1484 017d 02       		.uleb128 0x2
- 1485 017e 91       		.byte	0x91
- 1486 017f 44       		.sleb128 -60
- 1487 0180 0C       		.uleb128 0xc
- 1488 0181 613200   		.ascii	"a2\000"
- 1489 0184 01       		.byte	0x1
- 1490 0185 51       		.byte	0x51
- 1491 0186 AD000000 		.4byte	0xad
- 1492 018a 02       		.uleb128 0x2
- 1493 018b 91       		.byte	0x91
- 1494 018c 40       		.sleb128 -64
- 1495 018d 0B       		.uleb128 0xb
- 1496 018e 64030000 		.4byte	.LASF26
- 1497 0192 01       		.byte	0x1
- 1498 0193 52       		.byte	0x52
- 1499 0194 AD000000 		.4byte	0xad
- 1500 0198 03       		.uleb128 0x3
- 1501 0199 91       		.byte	0x91
- 1502 019a BC7F     		.sleb128 -68
- 1503 019c 0B       		.uleb128 0xb
- 1504 019d D6020000 		.4byte	.LASF27
- 1505 01a1 01       		.byte	0x1
- 1506 01a2 53       		.byte	0x53
- 1507 01a3 AD000000 		.4byte	0xad
- 1508 01a7 03       		.uleb128 0x3
- 1509 01a8 91       		.byte	0x91
- 1510 01a9 B87F     		.sleb128 -72
- 1511 01ab 0C       		.uleb128 0xc
- 1512 01ac 6E756D00 		.ascii	"num\000"
- 1513 01b0 01       		.byte	0x1
- 1514 01b1 56       		.byte	0x56
- 1515 01b2 B8000000 		.4byte	0xb8
- 1516 01b6 03       		.uleb128 0x3
- 1517 01b7 91       		.byte	0x91
- 1518 01b8 B07F     		.sleb128 -80
- 1519 01ba 0B       		.uleb128 0xb
- 1520 01bb E3000000 		.4byte	.LASF28
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 33
+ 1404 031c 0C000000 		.word	dir_delay_ticks
+ 1405 0320 10000000 		.word	turn_cooldown_ticks
+ 1406              	.L95:
+ 420:main.c        ****                     }
+ 421:main.c        ****                 }
+ 422:main.c        ****                 /* ---------------- end turn handling with delay ---------------- */
+ 423:main.c        ****                 turn_complete = 1;
+ 1407              		.loc 1 423 0
+ 1408 0324 0123     		movs	r3, #1
+ 1409 0326 87F83130 		strb	r3, [r7, #49]
+ 1410 032a C6E0     		b	.L80
+ 1411              	.L90:
+ 424:main.c        ****             
+ 425:main.c        ****         } else if((CMD_STATES[i] == 3)) {
+ 1412              		.loc 1 425 0
+ 1413 032c 97F93330 		ldrsb	r3, [r7, #51]
+ 1414 0330 07F13802 		add	r2, r7, #56
+ 1415 0334 1344     		add	r3, r3, r2
+ 1416 0336 13F8303C 		ldrb	r3, [r3, #-48]	@ zero_extendqisi2
+ 1417 033a 032B     		cmp	r3, #3
+ 1418 033c 5BD1     		bne	.L98
+ 426:main.c        ****             // Do U-TURN
+ 427:main.c        ****             g_direction = 3u;
+ 1419              		.loc 1 427 0
+ 1420 033e 734B     		ldr	r3, .L118
+ 1421 0340 0322     		movs	r2, #3
+ 1422 0342 1A70     		strb	r2, [r3]
+ 428:main.c        ****             /* ---------------- Turn handling with arming delay (Option A) ---------------- */
+ 429:main.c        ****                 /* Arm once on the first detection (edge 0 -> 1/2) */
+ 430:main.c        ****                 if ((g_direction == 1u || g_direction == 2u) && dir_latched_side == 0){
+ 1423              		.loc 1 430 0
+ 1424 0344 714B     		ldr	r3, .L118
+ 1425 0346 1B78     		ldrb	r3, [r3]
+ 1426 0348 DBB2     		uxtb	r3, r3
+ 1427 034a 012B     		cmp	r3, #1
+ 1428 034c 04D0     		beq	.L99
+ 1429              		.loc 1 430 0 is_stmt 0 discriminator 2
+ 1430 034e 6F4B     		ldr	r3, .L118
+ 1431 0350 1B78     		ldrb	r3, [r3]
+ 1432 0352 DBB2     		uxtb	r3, r3
+ 1433 0354 022B     		cmp	r3, #2
+ 1434 0356 0BD1     		bne	.L100
+ 1435              	.L99:
+ 1436              		.loc 1 430 0 discriminator 3
+ 1437 0358 6D4B     		ldr	r3, .L118+4
+ 1438 035a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1439 035c 002B     		cmp	r3, #0
+ 1440 035e 07D1     		bne	.L100
+ 431:main.c        ****                     dir_latched_side = g_direction;          /* remember side */
+ 1441              		.loc 1 431 0 is_stmt 1
+ 1442 0360 6A4B     		ldr	r3, .L118
+ 1443 0362 1B78     		ldrb	r3, [r3]
+ 1444 0364 DAB2     		uxtb	r2, r3
+ 1445 0366 6A4B     		ldr	r3, .L118+4
+ 1446 0368 1A70     		strb	r2, [r3]
+ 432:main.c        ****                     dir_delay_ticks  = DIR_CALL_DELAY_TICKS; /* start countdown */
+ 1447              		.loc 1 432 0
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 34
 
 
- 1521 01bf 01       		.byte	0x1
- 1522 01c0 57       		.byte	0x57
- 1523 01c1 AD000000 		.4byte	0xad
- 1524 01c5 03       		.uleb128 0x3
- 1525 01c6 91       		.byte	0x91
- 1526 01c7 AC7F     		.sleb128 -84
- 1527 01c9 0B       		.uleb128 0xb
- 1528 01ca 9B020000 		.4byte	.LASF29
- 1529 01ce 01       		.byte	0x1
- 1530 01cf 58       		.byte	0x58
- 1531 01d0 AD000000 		.4byte	0xad
- 1532 01d4 03       		.uleb128 0x3
- 1533 01d5 91       		.byte	0x91
- 1534 01d6 A87F     		.sleb128 -88
- 1535 01d8 00       		.byte	0
- 1536 01d9 00       		.byte	0
- 1537 01da 0D       		.uleb128 0xd
- 1538 01db 24030000 		.4byte	.LASF33
- 1539 01df 01       		.byte	0x1
- 1540 01e0 67       		.byte	0x67
- 1541 01e1 C3000000 		.4byte	0xc3
- 1542 01e5 00000000 		.4byte	.LFB65
- 1543 01e9 44000000 		.4byte	.LFE65-.LFB65
- 1544 01ed 01       		.uleb128 0x1
- 1545 01ee 9C       		.byte	0x9c
- 1546 01ef 01020000 		.4byte	0x201
- 1547 01f3 0E       		.uleb128 0xe
- 1548 01f4 707000   		.ascii	"pp\000"
- 1549 01f7 01       		.byte	0x1
- 1550 01f8 67       		.byte	0x67
- 1551 01f9 A2000000 		.4byte	0xa2
- 1552 01fd 02       		.uleb128 0x2
- 1553 01fe 91       		.byte	0x91
- 1554 01ff 76       		.sleb128 -10
- 1555 0200 00       		.byte	0
- 1556 0201 0F       		.uleb128 0xf
- 1557 0202 E0020000 		.4byte	.LASF60
- 1558 0206 01       		.byte	0x1
- 1559 0207 6F       		.byte	0x6f
- 1560 0208 00000000 		.4byte	.LFB66
- 1561 020c 48010000 		.4byte	.LFE66-.LFB66
- 1562 0210 01       		.uleb128 0x1
- 1563 0211 9C       		.byte	0x9c
- 1564 0212 8F020000 		.4byte	0x28f
- 1565 0216 10       		.uleb128 0x10
- 1566 0217 17000000 		.4byte	.LASF30
- 1567 021b 01       		.byte	0x1
- 1568 021c 6F       		.byte	0x6f
- 1569 021d 8F020000 		.4byte	0x28f
- 1570 0221 02       		.uleb128 0x2
- 1571 0222 91       		.byte	0x91
- 1572 0223 64       		.sleb128 -28
- 1573 0224 10       		.uleb128 0x10
- 1574 0225 33010000 		.4byte	.LASF31
- 1575 0229 01       		.byte	0x1
- 1576 022a 6F       		.byte	0x6f
- 1577 022b 8F020000 		.4byte	0x28f
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 34
+ 1448 036a 6A4B     		ldr	r3, .L118+8
+ 1449 036c 0D22     		movs	r2, #13
+ 1450 036e 1A80     		strh	r2, [r3]	@ movhi
+ 1451              	.L100:
+ 433:main.c        ****                     //CyDelay(50);
+ 434:main.c        ****                 }
+ 435:main.c        ****                 /* If request cleared during delay, cancel gracefully */
+ 436:main.c        ****                 if (g_direction == 0u && dir_latched_side != 0){
+ 1452              		.loc 1 436 0
+ 1453 0370 664B     		ldr	r3, .L118
+ 1454 0372 1B78     		ldrb	r3, [r3]
+ 1455 0374 DBB2     		uxtb	r3, r3
+ 1456 0376 002B     		cmp	r3, #0
+ 1457 0378 09D1     		bne	.L101
+ 1458              		.loc 1 436 0 is_stmt 0 discriminator 1
+ 1459 037a 654B     		ldr	r3, .L118+4
+ 1460 037c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1461 037e 002B     		cmp	r3, #0
+ 1462 0380 05D0     		beq	.L101
+ 437:main.c        ****                     dir_latched_side = 0;
+ 1463              		.loc 1 437 0 is_stmt 1
+ 1464 0382 634B     		ldr	r3, .L118+4
+ 1465 0384 0022     		movs	r2, #0
+ 1466 0386 1A70     		strb	r2, [r3]
+ 438:main.c        ****                     dir_delay_ticks  = 0;
+ 1467              		.loc 1 438 0
+ 1468 0388 624B     		ldr	r3, .L118+8
+ 1469 038a 0022     		movs	r2, #0
+ 1470 038c 1A80     		strh	r2, [r3]	@ movhi
+ 1471              	.L101:
+ 439:main.c        ****                 }
+ 440:main.c        **** 
+ 441:main.c        ****                 if (g_direction == 1u || g_direction == 2u){
+ 1472              		.loc 1 441 0
+ 1473 038e 5F4B     		ldr	r3, .L118
+ 1474 0390 1B78     		ldrb	r3, [r3]
+ 1475 0392 DBB2     		uxtb	r3, r3
+ 1476 0394 012B     		cmp	r3, #1
+ 1477 0396 04D0     		beq	.L102
+ 1478              		.loc 1 441 0 is_stmt 0 discriminator 1
+ 1479 0398 5C4B     		ldr	r3, .L118
+ 1480 039a 1B78     		ldrb	r3, [r3]
+ 1481 039c DBB2     		uxtb	r3, r3
+ 1482 039e 022B     		cmp	r3, #2
+ 1483 03a0 25D1     		bne	.L103
+ 1484              	.L102:
+ 442:main.c        ****                     if (dir_delay_ticks > 0){
+ 1485              		.loc 1 442 0 is_stmt 1
+ 1486 03a2 5C4B     		ldr	r3, .L118+8
+ 1487 03a4 1B88     		ldrh	r3, [r3]
+ 1488 03a6 002B     		cmp	r3, #0
+ 1489 03a8 06D0     		beq	.L104
+ 443:main.c        ****                         /* Still delaying: keep doing normal straight PI */
+ 444:main.c        ****                         dir_delay_ticks--;
+ 1490              		.loc 1 444 0
+ 1491 03aa 5A4B     		ldr	r3, .L118+8
+ 1492 03ac 1B88     		ldrh	r3, [r3]
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 35
 
 
- 1578 022f 02       		.uleb128 0x2
- 1579 0230 91       		.byte	0x91
- 1580 0231 60       		.sleb128 -32
- 1581 0232 10       		.uleb128 0x10
- 1582 0233 1C020000 		.4byte	.LASF32
- 1583 0237 01       		.byte	0x1
- 1584 0238 6F       		.byte	0x6f
- 1585 0239 8F020000 		.4byte	0x28f
- 1586 023d 02       		.uleb128 0x2
- 1587 023e 91       		.byte	0x91
- 1588 023f 5C       		.sleb128 -36
- 1589 0240 0C       		.uleb128 0xc
- 1590 0241 563100   		.ascii	"V1\000"
- 1591 0244 01       		.byte	0x1
- 1592 0245 71       		.byte	0x71
- 1593 0246 A2000000 		.4byte	0xa2
- 1594 024a 02       		.uleb128 0x2
- 1595 024b 91       		.byte	0x91
- 1596 024c 76       		.sleb128 -10
- 1597 024d 0C       		.uleb128 0xc
- 1598 024e 563200   		.ascii	"V2\000"
- 1599 0251 01       		.byte	0x1
- 1600 0252 72       		.byte	0x72
- 1601 0253 A2000000 		.4byte	0xa2
- 1602 0257 02       		.uleb128 0x2
- 1603 0258 91       		.byte	0x91
- 1604 0259 74       		.sleb128 -12
- 1605 025a 0C       		.uleb128 0xc
- 1606 025b 563300   		.ascii	"V3\000"
- 1607 025e 01       		.byte	0x1
- 1608 025f 73       		.byte	0x73
- 1609 0260 A2000000 		.4byte	0xa2
- 1610 0264 02       		.uleb128 0x2
- 1611 0265 91       		.byte	0x91
- 1612 0266 72       		.sleb128 -14
- 1613 0267 0C       		.uleb128 0xc
- 1614 0268 563400   		.ascii	"V4\000"
- 1615 026b 01       		.byte	0x1
- 1616 026c 74       		.byte	0x74
- 1617 026d A2000000 		.4byte	0xa2
- 1618 0271 02       		.uleb128 0x2
- 1619 0272 91       		.byte	0x91
- 1620 0273 70       		.sleb128 -16
- 1621 0274 0C       		.uleb128 0xc
- 1622 0275 563500   		.ascii	"V5\000"
- 1623 0278 01       		.byte	0x1
- 1624 0279 75       		.byte	0x75
- 1625 027a A2000000 		.4byte	0xa2
- 1626 027e 02       		.uleb128 0x2
- 1627 027f 91       		.byte	0x91
- 1628 0280 6E       		.sleb128 -18
- 1629 0281 0C       		.uleb128 0xc
- 1630 0282 563600   		.ascii	"V6\000"
- 1631 0285 01       		.byte	0x1
- 1632 0286 76       		.byte	0x76
- 1633 0287 A2000000 		.4byte	0xa2
- 1634 028b 02       		.uleb128 0x2
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 35
+ 1493 03ae 013B     		subs	r3, r3, #1
+ 1494 03b0 9AB2     		uxth	r2, r3
+ 1495 03b2 584B     		ldr	r3, .L118+8
+ 1496 03b4 1A80     		strh	r2, [r3]	@ movhi
+ 1497 03b6 1AE0     		b	.L103
+ 1498              	.L104:
+ 445:main.c        ****                     } else {
+ 446:main.c        ****                         /* Delay elapsed: perform the maneuver */
+ 447:main.c        ****                         Directions_Handle(&g_direction);
+ 1499              		.loc 1 447 0
+ 1500 03b8 5448     		ldr	r0, .L118
+ 1501 03ba FFF7FEFF 		bl	Directions_Handle
+ 448:main.c        **** 
+ 449:main.c        ****                         /* When turn completes, Directions sets g_direction back to 0 */
+ 450:main.c        ****                         if (g_direction == 0u){
+ 1502              		.loc 1 450 0
+ 1503 03be 534B     		ldr	r3, .L118
+ 1504 03c0 1B78     		ldrb	r3, [r3]
+ 1505 03c2 DBB2     		uxtb	r3, r3
+ 1506 03c4 002B     		cmp	r3, #0
+ 1507 03c6 0ED1     		bne	.L105
+ 451:main.c        ****                             pi.i = 0.0f; pi.u = 0.0f; pi.t_loss = 0.0f;  /* clear bias */
+ 1508              		.loc 1 451 0
+ 1509 03c8 4FF00003 		mov	r3, #0
+ 1510 03cc FB60     		str	r3, [r7, #12]	@ float
+ 1511 03ce 4FF00003 		mov	r3, #0
+ 1512 03d2 3B61     		str	r3, [r7, #16]	@ float
+ 1513 03d4 4FF00003 		mov	r3, #0
+ 1514 03d8 7B61     		str	r3, [r7, #20]	@ float
+ 452:main.c        ****                             dir_latched_side = 0;                        /* ready next time */
+ 1515              		.loc 1 452 0
+ 1516 03da 4D4B     		ldr	r3, .L118+4
+ 1517 03dc 0022     		movs	r2, #0
+ 1518 03de 1A70     		strb	r2, [r3]
+ 453:main.c        ****                             
+ 454:main.c        ****                             
+ 455:main.c        ****                             turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+ 1519              		.loc 1 455 0
+ 1520 03e0 4D4B     		ldr	r3, .L118+12
+ 1521 03e2 2622     		movs	r2, #38
+ 1522 03e4 1A80     		strh	r2, [r3]	@ movhi
+ 1523              	.L105:
+ 456:main.c        ****                         }
+ 457:main.c        ****                         CyDelay(LOOP_DT_MS);
+ 1524              		.loc 1 457 0
+ 1525 03e6 0820     		movs	r0, #8
+ 1526 03e8 FFF7FEFF 		bl	CyDelay
+ 458:main.c        ****                         continue;  /* skip the rest this tick */
+ 1527              		.loc 1 458 0
+ 1528 03ec 8CE0     		b	.L114
+ 1529              	.L103:
+ 459:main.c        ****                     }
+ 460:main.c        ****                 }
+ 461:main.c        ****                 /* ---------------- end turn handling with delay ---------------- */
+ 462:main.c        ****                 uTurn_complete = 1;
+ 1530              		.loc 1 462 0
+ 1531 03ee 0123     		movs	r3, #1
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 36
 
 
- 1635 028c 91       		.byte	0x91
- 1636 028d 6C       		.sleb128 -20
- 1637 028e 00       		.byte	0
- 1638 028f 11       		.uleb128 0x11
- 1639 0290 04       		.byte	0x4
- 1640 0291 A2000000 		.4byte	0xa2
- 1641 0295 0D       		.uleb128 0xd
- 1642 0296 38020000 		.4byte	.LASF34
- 1643 029a 01       		.byte	0x1
- 1644 029b 94       		.byte	0x94
- 1645 029c C3000000 		.4byte	0xc3
- 1646 02a0 00000000 		.4byte	.LFB67
- 1647 02a4 3A000000 		.4byte	.LFE67-.LFB67
- 1648 02a8 01       		.uleb128 0x1
- 1649 02a9 9C       		.byte	0x9c
- 1650 02aa D5020000 		.4byte	0x2d5
- 1651 02ae 0E       		.uleb128 0xe
- 1652 02af 7800     		.ascii	"x\000"
- 1653 02b1 01       		.byte	0x1
- 1654 02b2 94       		.byte	0x94
- 1655 02b3 C3000000 		.4byte	0xc3
- 1656 02b7 02       		.uleb128 0x2
- 1657 02b8 91       		.byte	0x91
- 1658 02b9 74       		.sleb128 -12
- 1659 02ba 0E       		.uleb128 0xe
- 1660 02bb 6C6F00   		.ascii	"lo\000"
- 1661 02be 01       		.byte	0x1
- 1662 02bf 94       		.byte	0x94
- 1663 02c0 C3000000 		.4byte	0xc3
- 1664 02c4 02       		.uleb128 0x2
- 1665 02c5 91       		.byte	0x91
- 1666 02c6 70       		.sleb128 -16
- 1667 02c7 0E       		.uleb128 0xe
- 1668 02c8 686900   		.ascii	"hi\000"
- 1669 02cb 01       		.byte	0x1
- 1670 02cc 94       		.byte	0x94
- 1671 02cd C3000000 		.4byte	0xc3
- 1672 02d1 02       		.uleb128 0x2
- 1673 02d2 91       		.byte	0x91
- 1674 02d3 6C       		.sleb128 -20
- 1675 02d4 00       		.byte	0
- 1676 02d5 0D       		.uleb128 0xd
- 1677 02d6 87020000 		.4byte	.LASF35
- 1678 02da 01       		.byte	0x1
- 1679 02db 96       		.byte	0x96
- 1680 02dc 89000000 		.4byte	0x89
- 1681 02e0 00000000 		.4byte	.LFB68
- 1682 02e4 84020000 		.4byte	.LFE68-.LFB68
- 1683 02e8 01       		.uleb128 0x1
- 1684 02e9 9C       		.byte	0x9c
- 1685 02ea CB030000 		.4byte	0x3cb
- 1686 02ee 0E       		.uleb128 0xe
- 1687 02ef 706900   		.ascii	"pi\000"
- 1688 02f2 01       		.byte	0x1
- 1689 02f3 96       		.byte	0x96
- 1690 02f4 CB030000 		.4byte	0x3cb
- 1691 02f8 03       		.uleb128 0x3
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 36
+ 1532 03f0 87F83030 		strb	r3, [r7, #48]
+ 1533 03f4 61E0     		b	.L80
+ 1534              	.L98:
+ 463:main.c        ****             
+ 464:main.c        ****         } else if((CMD_STATES[i] == 5)) {
+ 1535              		.loc 1 464 0
+ 1536 03f6 97F93330 		ldrsb	r3, [r7, #51]
+ 1537 03fa 07F13802 		add	r2, r7, #56
+ 1538 03fe 1344     		add	r3, r3, r2
+ 1539 0400 13F8303C 		ldrb	r3, [r3, #-48]	@ zero_extendqisi2
+ 1540 0404 052B     		cmp	r3, #5
+ 1541 0406 29D1     		bne	.L106
+ 1542              	.LBB5:
+ 465:main.c        ****             // REACH FOOD
+ 466:main.c        ****             int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
+ 1543              		.loc 1 466 0
+ 1544 0408 F988     		ldrh	r1, [r7, #6]
+ 1545 040a BA88     		ldrh	r2, [r7, #4]
+ 1546 040c 7B88     		ldrh	r3, [r7, #2]
+ 1547 040e 07F10C00 		add	r0, r7, #12
+ 1548 0412 FFF7FEFF 		bl	pi_step
+ 1549 0416 F861     		str	r0, [r7, #28]
+ 467:main.c        ****             set_motors_with_trim_and_steer(center_duty_est, steer);
+ 1550              		.loc 1 467 0
+ 1551 0418 F969     		ldr	r1, [r7, #28]
+ 1552 041a 786B     		ldr	r0, [r7, #52]
+ 1553 041c FFF7FEFF 		bl	set_motors_with_trim_and_steer
+ 468:main.c        ****             target_dist = 500;  // in mm
+ 1554              		.loc 1 468 0
+ 1555 0420 4FF4FA73 		mov	r3, #500
+ 1556 0424 BB62     		str	r3, [r7, #40]
+ 469:main.c        ****             g_stop_now = (g_dist_mm >= target_dist) ? 1u : 0u;
+ 1557              		.loc 1 469 0
+ 1558 0426 3D4B     		ldr	r3, .L118+16
+ 1559 0428 1A68     		ldr	r2, [r3]
+ 1560 042a BB6A     		ldr	r3, [r7, #40]
+ 1561 042c 9A42     		cmp	r2, r3
+ 1562 042e 01DB     		blt	.L107
+ 1563              		.loc 1 469 0 is_stmt 0 discriminator 1
+ 1564 0430 0122     		movs	r2, #1
+ 1565 0432 00E0     		b	.L108
+ 1566              	.L107:
+ 1567              		.loc 1 469 0 discriminator 2
+ 1568 0434 0022     		movs	r2, #0
+ 1569              	.L108:
+ 1570              		.loc 1 469 0 discriminator 4
+ 1571 0436 3A4B     		ldr	r3, .L118+20
+ 1572 0438 1A70     		strb	r2, [r3]
+ 470:main.c        ****             if (g_stop_now) {
+ 1573              		.loc 1 470 0 is_stmt 1 discriminator 4
+ 1574 043a 394B     		ldr	r3, .L118+20
+ 1575 043c 1B78     		ldrb	r3, [r3]
+ 1576 043e DBB2     		uxtb	r3, r3
+ 1577 0440 002B     		cmp	r3, #0
+ 1578 0442 07D0     		beq	.L109
+ 471:main.c        ****                 set_motors_symmetric(0);
+ 1579              		.loc 1 471 0
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 37
 
 
- 1692 02f9 91       		.byte	0x91
- 1693 02fa BC7F     		.sleb128 -68
- 1694 02fc 10       		.uleb128 0x10
- 1695 02fd 17000000 		.4byte	.LASF30
- 1696 0301 01       		.byte	0x1
- 1697 0302 96       		.byte	0x96
- 1698 0303 A2000000 		.4byte	0xa2
- 1699 0307 03       		.uleb128 0x3
- 1700 0308 91       		.byte	0x91
- 1701 0309 BA7F     		.sleb128 -70
- 1702 030b 10       		.uleb128 0x10
- 1703 030c 33010000 		.4byte	.LASF31
- 1704 0310 01       		.byte	0x1
- 1705 0311 96       		.byte	0x96
- 1706 0312 A2000000 		.4byte	0xa2
- 1707 0316 03       		.uleb128 0x3
- 1708 0317 91       		.byte	0x91
- 1709 0318 B87F     		.sleb128 -72
- 1710 031a 10       		.uleb128 0x10
- 1711 031b 1C020000 		.4byte	.LASF32
- 1712 031f 01       		.byte	0x1
- 1713 0320 96       		.byte	0x96
- 1714 0321 A2000000 		.4byte	0xa2
- 1715 0325 03       		.uleb128 0x3
- 1716 0326 91       		.byte	0x91
- 1717 0327 B67F     		.sleb128 -74
- 1718 0329 0C       		.uleb128 0xc
- 1719 032a 633400   		.ascii	"c4\000"
- 1720 032d 01       		.byte	0x1
- 1721 032e 98       		.byte	0x98
- 1722 032f C3000000 		.4byte	0xc3
- 1723 0333 02       		.uleb128 0x2
- 1724 0334 91       		.byte	0x91
- 1725 0335 68       		.sleb128 -24
- 1726 0336 0C       		.uleb128 0xc
- 1727 0337 633500   		.ascii	"c5\000"
- 1728 033a 01       		.byte	0x1
- 1729 033b 99       		.byte	0x99
- 1730 033c C3000000 		.4byte	0xc3
- 1731 0340 02       		.uleb128 0x2
- 1732 0341 91       		.byte	0x91
- 1733 0342 64       		.sleb128 -28
- 1734 0343 0C       		.uleb128 0xc
- 1735 0344 633600   		.ascii	"c6\000"
- 1736 0347 01       		.byte	0x1
- 1737 0348 9A       		.byte	0x9a
- 1738 0349 C3000000 		.4byte	0xc3
- 1739 034d 02       		.uleb128 0x2
- 1740 034e 91       		.byte	0x91
- 1741 034f 60       		.sleb128 -32
- 1742 0350 0C       		.uleb128 0xc
- 1743 0351 73756D00 		.ascii	"sum\000"
- 1744 0355 01       		.byte	0x1
- 1745 0356 9B       		.byte	0x9b
- 1746 0357 C3000000 		.4byte	0xc3
- 1747 035b 02       		.uleb128 0x2
- 1748 035c 91       		.byte	0x91
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 37
+ 1580 0444 0020     		movs	r0, #0
+ 1581 0446 FFF7FEFF 		bl	set_motors_symmetric
+ 472:main.c        ****                 motor_enable(1u, 1u);
+ 1582              		.loc 1 472 0
+ 1583 044a 0121     		movs	r1, #1
+ 1584 044c 0120     		movs	r0, #1
+ 1585 044e FFF7FEFF 		bl	motor_enable
+ 473:main.c        ****                 continue;
+ 1586              		.loc 1 473 0
+ 1587 0452 59E0     		b	.L114
+ 1588              	.L109:
+ 474:main.c        ****             }
+ 475:main.c        ****             fruit_complete = 1;
+ 1589              		.loc 1 475 0
+ 1590 0454 0123     		movs	r3, #1
+ 1591 0456 87F82F30 		strb	r3, [r7, #47]
+ 1592              	.LBE5:
+ 1593 045a 2EE0     		b	.L80
+ 1594              	.L106:
+ 476:main.c        **** 
+ 477:main.c        ****         } else if((CMD_STATES[i] == 6)) {
+ 1595              		.loc 1 477 0
+ 1596 045c 97F93330 		ldrsb	r3, [r7, #51]
+ 1597 0460 07F13802 		add	r2, r7, #56
+ 1598 0464 1344     		add	r3, r3, r2
+ 1599 0466 13F8303C 		ldrb	r3, [r3, #-48]	@ zero_extendqisi2
+ 1600 046a 062B     		cmp	r3, #6
+ 1601 046c 25D1     		bne	.L80
+ 1602              	.LBB6:
+ 478:main.c        ****             // FINISH
+ 479:main.c        ****             int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
+ 1603              		.loc 1 479 0
+ 1604 046e F988     		ldrh	r1, [r7, #6]
+ 1605 0470 BA88     		ldrh	r2, [r7, #4]
+ 1606 0472 7B88     		ldrh	r3, [r7, #2]
+ 1607 0474 07F10C00 		add	r0, r7, #12
+ 1608 0478 FFF7FEFF 		bl	pi_step
+ 1609 047c B861     		str	r0, [r7, #24]
+ 480:main.c        ****             set_motors_with_trim_and_steer(center_duty_est, steer);
+ 1610              		.loc 1 480 0
+ 1611 047e B969     		ldr	r1, [r7, #24]
+ 1612 0480 786B     		ldr	r0, [r7, #52]
+ 1613 0482 FFF7FEFF 		bl	set_motors_with_trim_and_steer
+ 481:main.c        ****             target_dist = 500;  // in mm
+ 1614              		.loc 1 481 0
+ 1615 0486 4FF4FA73 		mov	r3, #500
+ 1616 048a BB62     		str	r3, [r7, #40]
+ 482:main.c        ****             g_stop_now = (g_dist_mm >= target_dist) ? 1u : 0u;
+ 1617              		.loc 1 482 0
+ 1618 048c 234B     		ldr	r3, .L118+16
+ 1619 048e 1A68     		ldr	r2, [r3]
+ 1620 0490 BB6A     		ldr	r3, [r7, #40]
+ 1621 0492 9A42     		cmp	r2, r3
+ 1622 0494 01DB     		blt	.L110
+ 1623              		.loc 1 482 0 is_stmt 0 discriminator 1
+ 1624 0496 0122     		movs	r2, #1
+ 1625 0498 00E0     		b	.L111
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 38
 
 
- 1749 035d 5C       		.sleb128 -36
- 1750 035e 0B       		.uleb128 0xb
- 1751 035f 00000000 		.4byte	.LASF36
- 1752 0363 01       		.byte	0x1
- 1753 0364 9C       		.byte	0x9c
- 1754 0365 D1030000 		.4byte	0x3d1
- 1755 0369 02       		.uleb128 0x2
- 1756 036a 91       		.byte	0x91
- 1757 036b 5B       		.sleb128 -37
- 1758 036c 0C       		.uleb128 0xc
- 1759 036d 706F7300 		.ascii	"pos\000"
- 1760 0371 01       		.byte	0x1
- 1761 0372 9E       		.byte	0x9e
- 1762 0373 C3000000 		.4byte	0xc3
- 1763 0377 02       		.uleb128 0x2
- 1764 0378 91       		.byte	0x91
- 1765 0379 6C       		.sleb128 -20
- 1766 037a 0C       		.uleb128 0xc
- 1767 037b 6500     		.ascii	"e\000"
- 1768 037d 01       		.byte	0x1
- 1769 037e A1       		.byte	0xa1
- 1770 037f C3000000 		.4byte	0xc3
- 1771 0383 02       		.uleb128 0x2
- 1772 0384 91       		.byte	0x91
- 1773 0385 54       		.sleb128 -44
- 1774 0386 0B       		.uleb128 0xb
- 1775 0387 B6020000 		.4byte	.LASF37
- 1776 038b 01       		.byte	0x1
- 1777 038c AA       		.byte	0xaa
- 1778 038d C3000000 		.4byte	0xc3
- 1779 0391 02       		.uleb128 0x2
- 1780 0392 91       		.byte	0x91
- 1781 0393 50       		.sleb128 -48
- 1782 0394 0B       		.uleb128 0xb
- 1783 0395 6A010000 		.4byte	.LASF38
- 1784 0399 01       		.byte	0x1
- 1785 039a AB       		.byte	0xab
- 1786 039b C3000000 		.4byte	0xc3
- 1787 039f 02       		.uleb128 0x2
- 1788 03a0 91       		.byte	0x91
- 1789 03a1 4C       		.sleb128 -52
- 1790 03a2 0C       		.uleb128 0xc
- 1791 03a3 7500     		.ascii	"u\000"
- 1792 03a5 01       		.byte	0x1
- 1793 03a6 AC       		.byte	0xac
- 1794 03a7 C3000000 		.4byte	0xc3
- 1795 03ab 02       		.uleb128 0x2
- 1796 03ac 91       		.byte	0x91
- 1797 03ad 48       		.sleb128 -56
- 1798 03ae 0B       		.uleb128 0xb
- 1799 03af 0C030000 		.4byte	.LASF39
- 1800 03b3 01       		.byte	0x1
- 1801 03b4 AE       		.byte	0xae
- 1802 03b5 D1030000 		.4byte	0x3d1
- 1803 03b9 02       		.uleb128 0x2
- 1804 03ba 91       		.byte	0x91
- 1805 03bb 47       		.sleb128 -57
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 38
+ 1626              	.L110:
+ 1627              		.loc 1 482 0 discriminator 2
+ 1628 049a 0022     		movs	r2, #0
+ 1629              	.L111:
+ 1630              		.loc 1 482 0 discriminator 4
+ 1631 049c 204B     		ldr	r3, .L118+20
+ 1632 049e 1A70     		strb	r2, [r3]
+ 483:main.c        ****             if (g_stop_now) {
+ 1633              		.loc 1 483 0 is_stmt 1 discriminator 4
+ 1634 04a0 1F4B     		ldr	r3, .L118+20
+ 1635 04a2 1B78     		ldrb	r3, [r3]
+ 1636 04a4 DBB2     		uxtb	r3, r3
+ 1637 04a6 002B     		cmp	r3, #0
+ 1638 04a8 07D0     		beq	.L80
+ 484:main.c        ****                 set_motors_symmetric(0);
+ 1639              		.loc 1 484 0
+ 1640 04aa 0020     		movs	r0, #0
+ 1641 04ac FFF7FEFF 		bl	set_motors_symmetric
+ 485:main.c        ****                 motor_enable(1u, 1u);
+ 1642              		.loc 1 485 0
+ 1643 04b0 0121     		movs	r1, #1
+ 1644 04b2 0120     		movs	r0, #1
+ 1645 04b4 FFF7FEFF 		bl	motor_enable
+ 486:main.c        ****                 continue;
+ 1646              		.loc 1 486 0
+ 1647 04b8 26E0     		b	.L114
+ 1648              	.L80:
+ 1649              	.LBE6:
+ 487:main.c        ****             }           
+ 488:main.c        ****         }
+ 489:main.c        ****         if (straight_complete == 1u || turn_complete == 1u || uTurn_complete == 1u || fruit_complet
+ 1650              		.loc 1 489 0
+ 1651 04ba 97F93230 		ldrsb	r3, [r7, #50]
+ 1652 04be 012B     		cmp	r3, #1
+ 1653 04c0 0BD0     		beq	.L112
+ 1654              		.loc 1 489 0 is_stmt 0 discriminator 1
+ 1655 04c2 97F93130 		ldrsb	r3, [r7, #49]
+ 1656 04c6 012B     		cmp	r3, #1
+ 1657 04c8 07D0     		beq	.L112
+ 1658              		.loc 1 489 0 discriminator 2
+ 1659 04ca 97F93030 		ldrsb	r3, [r7, #48]
+ 1660 04ce 012B     		cmp	r3, #1
+ 1661 04d0 03D0     		beq	.L112
+ 1662              		.loc 1 489 0 discriminator 3
+ 1663 04d2 97F92F30 		ldrsb	r3, [r7, #47]
+ 1664 04d6 012B     		cmp	r3, #1
+ 1665 04d8 13D1     		bne	.L113
+ 1666              	.L112:
+ 490:main.c        ****             
+ 491:main.c        ****             i += 1;
+ 1667              		.loc 1 491 0 is_stmt 1
+ 1668 04da 97F83330 		ldrb	r3, [r7, #51]	@ zero_extendqisi2
+ 1669 04de 0133     		adds	r3, r3, #1
+ 1670 04e0 DBB2     		uxtb	r3, r3
+ 1671 04e2 87F83330 		strb	r3, [r7, #51]
+ 492:main.c        ****             
+ 493:main.c        ****             straight_complete = 0;
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 39
 
 
- 1806 03bc 0B       		.uleb128 0xb
- 1807 03bd 3F030000 		.4byte	.LASF40
- 1808 03c1 01       		.byte	0x1
- 1809 03c2 AF       		.byte	0xaf
- 1810 03c3 D1030000 		.4byte	0x3d1
- 1811 03c7 02       		.uleb128 0x2
- 1812 03c8 91       		.byte	0x91
- 1813 03c9 46       		.sleb128 -58
- 1814 03ca 00       		.byte	0
- 1815 03cb 11       		.uleb128 0x11
- 1816 03cc 04       		.byte	0x4
- 1817 03cd 14010000 		.4byte	0x114
- 1818 03d1 02       		.uleb128 0x2
- 1819 03d2 01       		.byte	0x1
- 1820 03d3 02       		.byte	0x2
- 1821 03d4 95020000 		.4byte	.LASF41
- 1822 03d8 12       		.uleb128 0x12
- 1823 03d9 BE000000 		.4byte	.LASF61
- 1824 03dd 01       		.byte	0x1
- 1825 03de BC       		.byte	0xbc
- 1826 03df 89000000 		.4byte	0x89
- 1827 03e3 00000000 		.4byte	.LFB69
- 1828 03e7 64020000 		.4byte	.LFE69-.LFB69
- 1829 03eb 01       		.uleb128 0x1
- 1830 03ec 9C       		.byte	0x9c
- 1831 03ed 50040000 		.4byte	0x450
- 1832 03f1 0B       		.uleb128 0xb
- 1833 03f2 6F020000 		.4byte	.LASF42
- 1834 03f6 01       		.byte	0x1
- 1835 03f7 DA       		.byte	0xda
- 1836 03f8 89000000 		.4byte	0x89
- 1837 03fc 02       		.uleb128 0x2
- 1838 03fd 91       		.byte	0x91
- 1839 03fe 74       		.sleb128 -12
- 1840 03ff 0C       		.uleb128 0xc
- 1841 0400 706900   		.ascii	"pi\000"
- 1842 0403 01       		.byte	0x1
- 1843 0404 DF       		.byte	0xdf
- 1844 0405 14010000 		.4byte	0x114
- 1845 0409 02       		.uleb128 0x2
- 1846 040a 91       		.byte	0x91
- 1847 040b 64       		.sleb128 -28
- 1848 040c 0A       		.uleb128 0xa
- 1849 040d B8000000 		.4byte	.LBB3
- 1850 0411 70010000 		.4byte	.LBE3-.LBB3
- 1851 0415 0B       		.uleb128 0xb
- 1852 0416 17000000 		.4byte	.LASF30
- 1853 041a 01       		.byte	0x1
- 1854 041b F2       		.byte	0xf2
- 1855 041c A2000000 		.4byte	0xa2
- 1856 0420 02       		.uleb128 0x2
- 1857 0421 91       		.byte	0x91
- 1858 0422 62       		.sleb128 -30
- 1859 0423 0B       		.uleb128 0xb
- 1860 0424 33010000 		.4byte	.LASF31
- 1861 0428 01       		.byte	0x1
- 1862 0429 F2       		.byte	0xf2
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 39
+ 1672              		.loc 1 493 0
+ 1673 04e6 0023     		movs	r3, #0
+ 1674 04e8 87F83230 		strb	r3, [r7, #50]
+ 494:main.c        ****             turn_complete = 0;
+ 1675              		.loc 1 494 0
+ 1676 04ec 0023     		movs	r3, #0
+ 1677 04ee 87F83130 		strb	r3, [r7, #49]
+ 495:main.c        ****             uTurn_complete = 0;
+ 1678              		.loc 1 495 0
+ 1679 04f2 0023     		movs	r3, #0
+ 1680 04f4 87F83030 		strb	r3, [r7, #48]
+ 496:main.c        ****             fruit_complete = 0;
+ 1681              		.loc 1 496 0
+ 1682 04f8 0023     		movs	r3, #0
+ 1683 04fa 87F82F30 		strb	r3, [r7, #47]
+ 497:main.c        ****             
+ 498:main.c        ****             target_dist = 0;
+ 1684              		.loc 1 498 0
+ 1685 04fe 0023     		movs	r3, #0
+ 1686 0500 BB62     		str	r3, [r7, #40]
+ 1687              	.L113:
+ 499:main.c        ****         }
+ 500:main.c        **** 
+ 501:main.c        ****         CyDelay(LOOP_DT_MS);
+ 1688              		.loc 1 501 0
+ 1689 0502 0820     		movs	r0, #8
+ 1690 0504 FFF7FEFF 		bl	CyDelay
+ 1691              	.L114:
+ 1692              	.LBE3:
+ 502:main.c        ****     }
+ 1693              		.loc 1 502 0 discriminator 1
+ 1694 0508 E9E5     		b	.L115
+ 1695              	.L119:
+ 1696 050a 00BF     		.align	2
+ 1697              	.L118:
+ 1698 050c 06000000 		.word	g_direction
+ 1699 0510 0E000000 		.word	dir_latched_side
+ 1700 0514 0C000000 		.word	dir_delay_ticks
+ 1701 0518 10000000 		.word	turn_cooldown_ticks
+ 1702 051c 08000000 		.word	g_dist_mm
+ 1703 0520 07000000 		.word	g_stop_now
+ 1704              		.cfi_endproc
+ 1705              	.LFE69:
+ 1706              		.size	main, .-main
+ 1707              		.text
+ 1708              	.Letext0:
+ 1709              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 1710              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 1711              		.file 4 "Generated_Source\\PSoC5/core_cm3.h"
+ 1712              		.section	.debug_info,"",%progbits
+ 1713              	.Ldebug_info0:
+ 1714 0000 1D060000 		.4byte	0x61d
+ 1715 0004 0400     		.2byte	0x4
+ 1716 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 1717 000a 04       		.byte	0x4
+ 1718 000b 01       		.uleb128 0x1
+ 1719 000c 5D000000 		.4byte	.LASF64
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 40
 
 
- 1863 042a A2000000 		.4byte	0xa2
- 1864 042e 02       		.uleb128 0x2
- 1865 042f 91       		.byte	0x91
- 1866 0430 60       		.sleb128 -32
- 1867 0431 0B       		.uleb128 0xb
- 1868 0432 1C020000 		.4byte	.LASF32
- 1869 0436 01       		.byte	0x1
- 1870 0437 F2       		.byte	0xf2
- 1871 0438 A2000000 		.4byte	0xa2
- 1872 043c 02       		.uleb128 0x2
- 1873 043d 91       		.byte	0x91
- 1874 043e 5E       		.sleb128 -34
- 1875 043f 13       		.uleb128 0x13
- 1876 0440 8F020000 		.4byte	.LASF43
- 1877 0444 01       		.byte	0x1
- 1878 0445 2A01     		.2byte	0x12a
- 1879 0447 89000000 		.4byte	0x89
- 1880 044b 02       		.uleb128 0x2
- 1881 044c 91       		.byte	0x91
- 1882 044d 70       		.sleb128 -16
- 1883 044e 00       		.byte	0
- 1884 044f 00       		.byte	0
- 1885 0450 0B       		.uleb128 0xb
- 1886 0451 7A010000 		.4byte	.LASF44
- 1887 0455 01       		.byte	0x1
- 1888 0456 38       		.byte	0x38
- 1889 0457 97000000 		.4byte	0x97
- 1890 045b 05       		.uleb128 0x5
- 1891 045c 03       		.byte	0x3
- 1892 045d 00000000 		.4byte	sen1_on_line
- 1893 0461 0B       		.uleb128 0xb
- 1894 0462 A6010000 		.4byte	.LASF45
- 1895 0466 01       		.byte	0x1
- 1896 0467 38       		.byte	0x38
- 1897 0468 97000000 		.4byte	0x97
- 1898 046c 05       		.uleb128 0x5
- 1899 046d 03       		.byte	0x3
- 1900 046e 01000000 		.4byte	sen2_on_line
- 1901 0472 0B       		.uleb128 0xb
- 1902 0473 D2010000 		.4byte	.LASF46
- 1903 0477 01       		.byte	0x1
- 1904 0478 38       		.byte	0x38
- 1905 0479 97000000 		.4byte	0x97
- 1906 047d 05       		.uleb128 0x5
- 1907 047e 03       		.byte	0x3
- 1908 047f 02000000 		.4byte	sen3_on_line
- 1909 0483 0B       		.uleb128 0xb
- 1910 0484 02020000 		.4byte	.LASF47
- 1911 0488 01       		.byte	0x1
- 1912 0489 39       		.byte	0x39
- 1913 048a 97000000 		.4byte	0x97
- 1914 048e 05       		.uleb128 0x5
- 1915 048f 03       		.byte	0x3
- 1916 0490 03000000 		.4byte	sen4_on_line
- 1917 0494 0B       		.uleb128 0xb
- 1918 0495 2B020000 		.4byte	.LASF48
- 1919 0499 01       		.byte	0x1
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 40
+ 1720 0010 0C       		.byte	0xc
+ 1721 0011 0E030000 		.4byte	.LASF65
+ 1722 0015 4F010000 		.4byte	.LASF66
+ 1723 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 1724 001d 00000000 		.4byte	0
+ 1725 0021 00000000 		.4byte	.Ldebug_line0
+ 1726 0025 02       		.uleb128 0x2
+ 1727 0026 A8020000 		.4byte	.LASF0
+ 1728 002a 02       		.byte	0x2
+ 1729 002b 1B       		.byte	0x1b
+ 1730 002c 30000000 		.4byte	0x30
+ 1731 0030 03       		.uleb128 0x3
+ 1732 0031 01       		.byte	0x1
+ 1733 0032 06       		.byte	0x6
+ 1734 0033 1C020000 		.4byte	.LASF2
+ 1735 0037 02       		.uleb128 0x2
+ 1736 0038 9E010000 		.4byte	.LASF1
+ 1737 003c 02       		.byte	0x2
+ 1738 003d 1D       		.byte	0x1d
+ 1739 003e 42000000 		.4byte	0x42
+ 1740 0042 03       		.uleb128 0x3
+ 1741 0043 01       		.byte	0x1
+ 1742 0044 08       		.byte	0x8
+ 1743 0045 A8010000 		.4byte	.LASF3
+ 1744 0049 03       		.uleb128 0x3
+ 1745 004a 02       		.byte	0x2
+ 1746 004b 05       		.byte	0x5
+ 1747 004c 3C000000 		.4byte	.LASF4
+ 1748 0050 02       		.uleb128 0x2
+ 1749 0051 F0000000 		.4byte	.LASF5
+ 1750 0055 02       		.byte	0x2
+ 1751 0056 2B       		.byte	0x2b
+ 1752 0057 5B000000 		.4byte	0x5b
+ 1753 005b 03       		.uleb128 0x3
+ 1754 005c 02       		.byte	0x2
+ 1755 005d 07       		.byte	0x7
+ 1756 005e 88020000 		.4byte	.LASF6
+ 1757 0062 02       		.uleb128 0x2
+ 1758 0063 6B030000 		.4byte	.LASF7
+ 1759 0067 02       		.byte	0x2
+ 1760 0068 3F       		.byte	0x3f
+ 1761 0069 6D000000 		.4byte	0x6d
+ 1762 006d 03       		.uleb128 0x3
+ 1763 006e 04       		.byte	0x4
+ 1764 006f 05       		.byte	0x5
+ 1765 0070 3C010000 		.4byte	.LASF8
+ 1766 0074 03       		.uleb128 0x3
+ 1767 0075 04       		.byte	0x4
+ 1768 0076 07       		.byte	0x7
+ 1769 0077 15030000 		.4byte	.LASF9
+ 1770 007b 02       		.uleb128 0x2
+ 1771 007c 45010000 		.4byte	.LASF10
+ 1772 0080 02       		.byte	0x2
+ 1773 0081 59       		.byte	0x59
+ 1774 0082 86000000 		.4byte	0x86
+ 1775 0086 03       		.uleb128 0x3
+ 1776 0087 08       		.byte	0x8
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 41
 
 
- 1920 049a 39       		.byte	0x39
- 1921 049b 97000000 		.4byte	0x97
- 1922 049f 05       		.uleb128 0x5
- 1923 04a0 03       		.byte	0x3
- 1924 04a1 04000000 		.4byte	sen5_on_line
- 1925 04a5 0B       		.uleb128 0xb
- 1926 04a6 53020000 		.4byte	.LASF49
- 1927 04aa 01       		.byte	0x1
- 1928 04ab 39       		.byte	0x39
- 1929 04ac 97000000 		.4byte	0x97
- 1930 04b0 05       		.uleb128 0x5
- 1931 04b1 03       		.byte	0x3
- 1932 04b2 05000000 		.4byte	sen6_on_line
- 1933 04b6 0B       		.uleb128 0xb
- 1934 04b7 33030000 		.4byte	.LASF50
- 1935 04bb 01       		.byte	0x1
- 1936 04bc 3C       		.byte	0x3c
- 1937 04bd E6000000 		.4byte	0xe6
- 1938 04c1 05       		.uleb128 0x5
- 1939 04c2 03       		.byte	0x3
- 1940 04c3 06000000 		.4byte	g_direction
- 1941 04c7 0B       		.uleb128 0xb
- 1942 04c8 B3010000 		.4byte	.LASF51
- 1943 04cc 01       		.byte	0x1
- 1944 04cd 3D       		.byte	0x3d
- 1945 04ce E6000000 		.4byte	0xe6
- 1946 04d2 05       		.uleb128 0x5
- 1947 04d3 03       		.byte	0x3
- 1948 04d4 07000000 		.4byte	g_stop_now
- 1949 04d8 0B       		.uleb128 0xb
- 1950 04d9 4D030000 		.4byte	.LASF52
- 1951 04dd 01       		.byte	0x1
- 1952 04de 3E       		.byte	0x3e
- 1953 04df E9040000 		.4byte	0x4e9
- 1954 04e3 05       		.uleb128 0x5
- 1955 04e4 03       		.byte	0x3
- 1956 04e5 08000000 		.4byte	g_dist_mm
- 1957 04e9 05       		.uleb128 0x5
- 1958 04ea AD000000 		.4byte	0xad
- 1959 04ee 0B       		.uleb128 0xb
- 1960 04ef A6020000 		.4byte	.LASF53
- 1961 04f3 01       		.byte	0x1
- 1962 04f4 41       		.byte	0x41
- 1963 04f5 A2000000 		.4byte	0xa2
- 1964 04f9 05       		.uleb128 0x5
- 1965 04fa 03       		.byte	0x3
- 1966 04fb 0C000000 		.4byte	dir_delay_ticks
- 1967 04ff 0B       		.uleb128 0xb
- 1968 0500 06000000 		.4byte	.LASF54
- 1969 0504 01       		.byte	0x1
- 1970 0505 42       		.byte	0x42
- 1971 0506 97000000 		.4byte	0x97
- 1972 050a 05       		.uleb128 0x5
- 1973 050b 03       		.byte	0x3
- 1974 050c 0E000000 		.4byte	dir_latched_side
- 1975 0510 0B       		.uleb128 0xb
- 1976 0511 BE010000 		.4byte	.LASF55
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 41
+ 1777 0088 05       		.byte	0x5
+ 1778 0089 24010000 		.4byte	.LASF11
+ 1779 008d 03       		.uleb128 0x3
+ 1780 008e 08       		.byte	0x8
+ 1781 008f 07       		.byte	0x7
+ 1782 0090 28020000 		.4byte	.LASF12
+ 1783 0094 04       		.uleb128 0x4
+ 1784 0095 04       		.byte	0x4
+ 1785 0096 05       		.byte	0x5
+ 1786 0097 696E7400 		.ascii	"int\000"
+ 1787 009b 03       		.uleb128 0x3
+ 1788 009c 04       		.byte	0x4
+ 1789 009d 07       		.byte	0x7
+ 1790 009e 4C020000 		.4byte	.LASF13
+ 1791 00a2 02       		.uleb128 0x2
+ 1792 00a3 35000000 		.4byte	.LASF14
+ 1793 00a7 03       		.byte	0x3
+ 1794 00a8 14       		.byte	0x14
+ 1795 00a9 25000000 		.4byte	0x25
+ 1796 00ad 02       		.uleb128 0x2
+ 1797 00ae 03010000 		.4byte	.LASF15
+ 1798 00b2 03       		.byte	0x3
+ 1799 00b3 18       		.byte	0x18
+ 1800 00b4 37000000 		.4byte	0x37
+ 1801 00b8 02       		.uleb128 0x2
+ 1802 00b9 5F020000 		.4byte	.LASF16
+ 1803 00bd 03       		.byte	0x3
+ 1804 00be 24       		.byte	0x24
+ 1805 00bf 50000000 		.4byte	0x50
+ 1806 00c3 02       		.uleb128 0x2
+ 1807 00c4 D0020000 		.4byte	.LASF17
+ 1808 00c8 03       		.byte	0x3
+ 1809 00c9 2C       		.byte	0x2c
+ 1810 00ca 62000000 		.4byte	0x62
+ 1811 00ce 02       		.uleb128 0x2
+ 1812 00cf FB000000 		.4byte	.LASF18
+ 1813 00d3 03       		.byte	0x3
+ 1814 00d4 38       		.byte	0x38
+ 1815 00d5 7B000000 		.4byte	0x7b
+ 1816 00d9 03       		.uleb128 0x3
+ 1817 00da 04       		.byte	0x4
+ 1818 00db 04       		.byte	0x4
+ 1819 00dc 1E010000 		.4byte	.LASF19
+ 1820 00e0 03       		.uleb128 0x3
+ 1821 00e1 08       		.byte	0x8
+ 1822 00e2 04       		.byte	0x4
+ 1823 00e3 97030000 		.4byte	.LASF20
+ 1824 00e7 03       		.uleb128 0x3
+ 1825 00e8 01       		.byte	0x1
+ 1826 00e9 08       		.byte	0x8
+ 1827 00ea 32010000 		.4byte	.LASF21
+ 1828 00ee 03       		.uleb128 0x3
+ 1829 00ef 08       		.byte	0x8
+ 1830 00f0 04       		.byte	0x4
+ 1831 00f1 D7010000 		.4byte	.LASF22
+ 1832 00f5 03       		.uleb128 0x3
+ 1833 00f6 04       		.byte	0x4
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 42
 
 
- 1977 0515 01       		.byte	0x1
- 1978 0516 45       		.byte	0x45
- 1979 0517 A2000000 		.4byte	0xa2
- 1980 051b 05       		.uleb128 0x5
- 1981 051c 03       		.byte	0x3
- 1982 051d 10000000 		.4byte	turn_cooldown_ticks
- 1983 0521 14       		.uleb128 0x14
- 1984 0522 57030000 		.4byte	.LASF62
- 1985 0526 04       		.byte	0x4
- 1986 0527 1207     		.2byte	0x712
- 1987 0529 E9040000 		.4byte	0x4e9
- 1988 052d 00       		.byte	0
- 1989              		.section	.debug_abbrev,"",%progbits
- 1990              	.Ldebug_abbrev0:
- 1991 0000 01       		.uleb128 0x1
- 1992 0001 11       		.uleb128 0x11
- 1993 0002 01       		.byte	0x1
- 1994 0003 25       		.uleb128 0x25
- 1995 0004 0E       		.uleb128 0xe
- 1996 0005 13       		.uleb128 0x13
- 1997 0006 0B       		.uleb128 0xb
- 1998 0007 03       		.uleb128 0x3
- 1999 0008 0E       		.uleb128 0xe
- 2000 0009 1B       		.uleb128 0x1b
- 2001 000a 0E       		.uleb128 0xe
- 2002 000b 55       		.uleb128 0x55
- 2003 000c 17       		.uleb128 0x17
- 2004 000d 11       		.uleb128 0x11
- 2005 000e 01       		.uleb128 0x1
- 2006 000f 10       		.uleb128 0x10
- 2007 0010 17       		.uleb128 0x17
- 2008 0011 00       		.byte	0
- 2009 0012 00       		.byte	0
- 2010 0013 02       		.uleb128 0x2
- 2011 0014 24       		.uleb128 0x24
- 2012 0015 00       		.byte	0
- 2013 0016 0B       		.uleb128 0xb
- 2014 0017 0B       		.uleb128 0xb
- 2015 0018 3E       		.uleb128 0x3e
- 2016 0019 0B       		.uleb128 0xb
- 2017 001a 03       		.uleb128 0x3
- 2018 001b 0E       		.uleb128 0xe
- 2019 001c 00       		.byte	0
- 2020 001d 00       		.byte	0
- 2021 001e 03       		.uleb128 0x3
- 2022 001f 16       		.uleb128 0x16
- 2023 0020 00       		.byte	0
- 2024 0021 03       		.uleb128 0x3
- 2025 0022 0E       		.uleb128 0xe
- 2026 0023 3A       		.uleb128 0x3a
- 2027 0024 0B       		.uleb128 0xb
- 2028 0025 3B       		.uleb128 0x3b
- 2029 0026 0B       		.uleb128 0xb
- 2030 0027 49       		.uleb128 0x49
- 2031 0028 13       		.uleb128 0x13
- 2032 0029 00       		.byte	0
- 2033 002a 00       		.byte	0
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 42
+ 1834 00f7 07       		.byte	0x7
+ 1835 00f8 54000000 		.4byte	.LASF23
+ 1836 00fc 05       		.uleb128 0x5
+ 1837 00fd AD000000 		.4byte	0xad
+ 1838 0101 06       		.uleb128 0x6
+ 1839 0102 0C       		.byte	0xc
+ 1840 0103 01       		.byte	0x1
+ 1841 0104 93       		.byte	0x93
+ 1842 0105 2A010000 		.4byte	0x12a
+ 1843 0109 07       		.uleb128 0x7
+ 1844 010a 6900     		.ascii	"i\000"
+ 1845 010c 01       		.byte	0x1
+ 1846 010d 93       		.byte	0x93
+ 1847 010e D9000000 		.4byte	0xd9
+ 1848 0112 00       		.byte	0
+ 1849 0113 07       		.uleb128 0x7
+ 1850 0114 7500     		.ascii	"u\000"
+ 1851 0116 01       		.byte	0x1
+ 1852 0117 93       		.byte	0x93
+ 1853 0118 D9000000 		.4byte	0xd9
+ 1854 011c 04       		.byte	0x4
+ 1855 011d 08       		.uleb128 0x8
+ 1856 011e 64030000 		.4byte	.LASF24
+ 1857 0122 01       		.byte	0x1
+ 1858 0123 93       		.byte	0x93
+ 1859 0124 D9000000 		.4byte	0xd9
+ 1860 0128 08       		.byte	0x8
+ 1861 0129 00       		.byte	0
+ 1862 012a 02       		.uleb128 0x2
+ 1863 012b 37010000 		.4byte	.LASF25
+ 1864 012f 01       		.byte	0x1
+ 1865 0130 93       		.byte	0x93
+ 1866 0131 01010000 		.4byte	0x101
+ 1867 0135 09       		.uleb128 0x9
+ 1868 0136 B1020000 		.4byte	.LASF67
+ 1869 013a 01       		.byte	0x1
+ 1870 013b 49       		.byte	0x49
+ 1871 013c 00000000 		.4byte	.LFB64
+ 1872 0140 14010000 		.4byte	.LFE64-.LFB64
+ 1873 0144 01       		.uleb128 0x1
+ 1874 0145 9C       		.byte	0x9c
+ 1875 0146 F0010000 		.4byte	0x1f0
+ 1876 014a 0A       		.uleb128 0xa
+ 1877 014b 12000000 		.4byte	.LBB2
+ 1878 014f EA000000 		.4byte	.LBE2-.LBB2
+ 1879 0153 0B       		.uleb128 0xb
+ 1880 0154 D2010000 		.4byte	.LASF26
+ 1881 0158 01       		.byte	0x1
+ 1882 0159 4C       		.byte	0x4c
+ 1883 015a C3000000 		.4byte	0xc3
+ 1884 015e 02       		.uleb128 0x2
+ 1885 015f 91       		.byte	0x91
+ 1886 0160 54       		.sleb128 -44
+ 1887 0161 0B       		.uleb128 0xb
+ 1888 0162 0B010000 		.4byte	.LASF27
+ 1889 0166 01       		.byte	0x1
+ 1890 0167 4D       		.byte	0x4d
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 43
 
 
- 2034 002b 04       		.uleb128 0x4
- 2035 002c 24       		.uleb128 0x24
- 2036 002d 00       		.byte	0
- 2037 002e 0B       		.uleb128 0xb
- 2038 002f 0B       		.uleb128 0xb
- 2039 0030 3E       		.uleb128 0x3e
- 2040 0031 0B       		.uleb128 0xb
- 2041 0032 03       		.uleb128 0x3
- 2042 0033 08       		.uleb128 0x8
- 2043 0034 00       		.byte	0
- 2044 0035 00       		.byte	0
- 2045 0036 05       		.uleb128 0x5
- 2046 0037 35       		.uleb128 0x35
- 2047 0038 00       		.byte	0
- 2048 0039 49       		.uleb128 0x49
- 2049 003a 13       		.uleb128 0x13
- 2050 003b 00       		.byte	0
- 2051 003c 00       		.byte	0
- 2052 003d 06       		.uleb128 0x6
- 2053 003e 13       		.uleb128 0x13
- 2054 003f 01       		.byte	0x1
- 2055 0040 0B       		.uleb128 0xb
- 2056 0041 0B       		.uleb128 0xb
- 2057 0042 3A       		.uleb128 0x3a
- 2058 0043 0B       		.uleb128 0xb
- 2059 0044 3B       		.uleb128 0x3b
- 2060 0045 0B       		.uleb128 0xb
- 2061 0046 01       		.uleb128 0x1
- 2062 0047 13       		.uleb128 0x13
- 2063 0048 00       		.byte	0
- 2064 0049 00       		.byte	0
- 2065 004a 07       		.uleb128 0x7
- 2066 004b 0D       		.uleb128 0xd
- 2067 004c 00       		.byte	0
- 2068 004d 03       		.uleb128 0x3
- 2069 004e 08       		.uleb128 0x8
- 2070 004f 3A       		.uleb128 0x3a
- 2071 0050 0B       		.uleb128 0xb
- 2072 0051 3B       		.uleb128 0x3b
- 2073 0052 0B       		.uleb128 0xb
- 2074 0053 49       		.uleb128 0x49
- 2075 0054 13       		.uleb128 0x13
- 2076 0055 38       		.uleb128 0x38
- 2077 0056 0B       		.uleb128 0xb
- 2078 0057 00       		.byte	0
- 2079 0058 00       		.byte	0
- 2080 0059 08       		.uleb128 0x8
- 2081 005a 0D       		.uleb128 0xd
- 2082 005b 00       		.byte	0
- 2083 005c 03       		.uleb128 0x3
- 2084 005d 0E       		.uleb128 0xe
- 2085 005e 3A       		.uleb128 0x3a
- 2086 005f 0B       		.uleb128 0xb
- 2087 0060 3B       		.uleb128 0x3b
- 2088 0061 0B       		.uleb128 0xb
- 2089 0062 49       		.uleb128 0x49
- 2090 0063 13       		.uleb128 0x13
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 43
+ 1891 0168 C3000000 		.4byte	0xc3
+ 1892 016c 02       		.uleb128 0x2
+ 1893 016d 91       		.byte	0x91
+ 1894 016e 50       		.sleb128 -48
+ 1895 016f 0C       		.uleb128 0xc
+ 1896 0170 643100   		.ascii	"d1\000"
+ 1897 0173 01       		.byte	0x1
+ 1898 0174 4F       		.byte	0x4f
+ 1899 0175 C3000000 		.4byte	0xc3
+ 1900 0179 02       		.uleb128 0x2
+ 1901 017a 91       		.byte	0x91
+ 1902 017b 4C       		.sleb128 -52
+ 1903 017c 0C       		.uleb128 0xc
+ 1904 017d 643200   		.ascii	"d2\000"
+ 1905 0180 01       		.byte	0x1
+ 1906 0181 4F       		.byte	0x4f
+ 1907 0182 C3000000 		.4byte	0xc3
+ 1908 0186 02       		.uleb128 0x2
+ 1909 0187 91       		.byte	0x91
+ 1910 0188 48       		.sleb128 -56
+ 1911 0189 0C       		.uleb128 0xc
+ 1912 018a 613100   		.ascii	"a1\000"
+ 1913 018d 01       		.byte	0x1
+ 1914 018e 50       		.byte	0x50
+ 1915 018f C3000000 		.4byte	0xc3
+ 1916 0193 02       		.uleb128 0x2
+ 1917 0194 91       		.byte	0x91
+ 1918 0195 44       		.sleb128 -60
+ 1919 0196 0C       		.uleb128 0xc
+ 1920 0197 613200   		.ascii	"a2\000"
+ 1921 019a 01       		.byte	0x1
+ 1922 019b 51       		.byte	0x51
+ 1923 019c C3000000 		.4byte	0xc3
+ 1924 01a0 02       		.uleb128 0x2
+ 1925 01a1 91       		.byte	0x91
+ 1926 01a2 40       		.sleb128 -64
+ 1927 01a3 0B       		.uleb128 0xb
+ 1928 01a4 C1030000 		.4byte	.LASF28
+ 1929 01a8 01       		.byte	0x1
+ 1930 01a9 52       		.byte	0x52
+ 1931 01aa C3000000 		.4byte	0xc3
+ 1932 01ae 03       		.uleb128 0x3
+ 1933 01af 91       		.byte	0x91
+ 1934 01b0 BC7F     		.sleb128 -68
+ 1935 01b2 0B       		.uleb128 0xb
+ 1936 01b3 27030000 		.4byte	.LASF29
+ 1937 01b7 01       		.byte	0x1
+ 1938 01b8 53       		.byte	0x53
+ 1939 01b9 C3000000 		.4byte	0xc3
+ 1940 01bd 03       		.uleb128 0x3
+ 1941 01be 91       		.byte	0x91
+ 1942 01bf B87F     		.sleb128 -72
+ 1943 01c1 0C       		.uleb128 0xc
+ 1944 01c2 6E756D00 		.ascii	"num\000"
+ 1945 01c6 01       		.byte	0x1
+ 1946 01c7 56       		.byte	0x56
+ 1947 01c8 CE000000 		.4byte	0xce
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 44
 
 
- 2091 0064 38       		.uleb128 0x38
- 2092 0065 0B       		.uleb128 0xb
- 2093 0066 00       		.byte	0
- 2094 0067 00       		.byte	0
- 2095 0068 09       		.uleb128 0x9
- 2096 0069 2E       		.uleb128 0x2e
- 2097 006a 01       		.byte	0x1
- 2098 006b 3F       		.uleb128 0x3f
- 2099 006c 19       		.uleb128 0x19
- 2100 006d 03       		.uleb128 0x3
- 2101 006e 0E       		.uleb128 0xe
- 2102 006f 3A       		.uleb128 0x3a
- 2103 0070 0B       		.uleb128 0xb
- 2104 0071 3B       		.uleb128 0x3b
- 2105 0072 0B       		.uleb128 0xb
- 2106 0073 27       		.uleb128 0x27
- 2107 0074 19       		.uleb128 0x19
- 2108 0075 11       		.uleb128 0x11
- 2109 0076 01       		.uleb128 0x1
- 2110 0077 12       		.uleb128 0x12
- 2111 0078 06       		.uleb128 0x6
- 2112 0079 40       		.uleb128 0x40
- 2113 007a 18       		.uleb128 0x18
- 2114 007b 9642     		.uleb128 0x2116
- 2115 007d 19       		.uleb128 0x19
- 2116 007e 01       		.uleb128 0x1
- 2117 007f 13       		.uleb128 0x13
- 2118 0080 00       		.byte	0
- 2119 0081 00       		.byte	0
- 2120 0082 0A       		.uleb128 0xa
- 2121 0083 0B       		.uleb128 0xb
- 2122 0084 01       		.byte	0x1
- 2123 0085 11       		.uleb128 0x11
- 2124 0086 01       		.uleb128 0x1
- 2125 0087 12       		.uleb128 0x12
- 2126 0088 06       		.uleb128 0x6
- 2127 0089 00       		.byte	0
- 2128 008a 00       		.byte	0
- 2129 008b 0B       		.uleb128 0xb
- 2130 008c 34       		.uleb128 0x34
- 2131 008d 00       		.byte	0
- 2132 008e 03       		.uleb128 0x3
- 2133 008f 0E       		.uleb128 0xe
- 2134 0090 3A       		.uleb128 0x3a
- 2135 0091 0B       		.uleb128 0xb
- 2136 0092 3B       		.uleb128 0x3b
- 2137 0093 0B       		.uleb128 0xb
- 2138 0094 49       		.uleb128 0x49
- 2139 0095 13       		.uleb128 0x13
- 2140 0096 02       		.uleb128 0x2
- 2141 0097 18       		.uleb128 0x18
- 2142 0098 00       		.byte	0
- 2143 0099 00       		.byte	0
- 2144 009a 0C       		.uleb128 0xc
- 2145 009b 34       		.uleb128 0x34
- 2146 009c 00       		.byte	0
- 2147 009d 03       		.uleb128 0x3
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 44
+ 1948 01cc 03       		.uleb128 0x3
+ 1949 01cd 91       		.byte	0x91
+ 1950 01ce B07F     		.sleb128 -80
+ 1951 01d0 0B       		.uleb128 0xb
+ 1952 01d1 10010000 		.4byte	.LASF30
+ 1953 01d5 01       		.byte	0x1
+ 1954 01d6 57       		.byte	0x57
+ 1955 01d7 C3000000 		.4byte	0xc3
+ 1956 01db 03       		.uleb128 0x3
+ 1957 01dc 91       		.byte	0x91
+ 1958 01dd AC7F     		.sleb128 -84
+ 1959 01df 0B       		.uleb128 0xb
+ 1960 01e0 EC020000 		.4byte	.LASF31
+ 1961 01e4 01       		.byte	0x1
+ 1962 01e5 58       		.byte	0x58
+ 1963 01e6 C3000000 		.4byte	0xc3
+ 1964 01ea 03       		.uleb128 0x3
+ 1965 01eb 91       		.byte	0x91
+ 1966 01ec A87F     		.sleb128 -88
+ 1967 01ee 00       		.byte	0
+ 1968 01ef 00       		.byte	0
+ 1969 01f0 0D       		.uleb128 0xd
+ 1970 01f1 75030000 		.4byte	.LASF35
+ 1971 01f5 01       		.byte	0x1
+ 1972 01f6 67       		.byte	0x67
+ 1973 01f7 D9000000 		.4byte	0xd9
+ 1974 01fb 00000000 		.4byte	.LFB65
+ 1975 01ff 44000000 		.4byte	.LFE65-.LFB65
+ 1976 0203 01       		.uleb128 0x1
+ 1977 0204 9C       		.byte	0x9c
+ 1978 0205 17020000 		.4byte	0x217
+ 1979 0209 0E       		.uleb128 0xe
+ 1980 020a 707000   		.ascii	"pp\000"
+ 1981 020d 01       		.byte	0x1
+ 1982 020e 67       		.byte	0x67
+ 1983 020f B8000000 		.4byte	0xb8
+ 1984 0213 02       		.uleb128 0x2
+ 1985 0214 91       		.byte	0x91
+ 1986 0215 76       		.sleb128 -10
+ 1987 0216 00       		.byte	0
+ 1988 0217 0F       		.uleb128 0xf
+ 1989 0218 31030000 		.4byte	.LASF68
+ 1990 021c 01       		.byte	0x1
+ 1991 021d 6F       		.byte	0x6f
+ 1992 021e 00000000 		.4byte	.LFB66
+ 1993 0222 48010000 		.4byte	.LFE66-.LFB66
+ 1994 0226 01       		.uleb128 0x1
+ 1995 0227 9C       		.byte	0x9c
+ 1996 0228 A5020000 		.4byte	0x2a5
+ 1997 022c 10       		.uleb128 0x10
+ 1998 022d 2F000000 		.4byte	.LASF32
+ 1999 0231 01       		.byte	0x1
+ 2000 0232 6F       		.byte	0x6f
+ 2001 0233 A5020000 		.4byte	0x2a5
+ 2002 0237 02       		.uleb128 0x2
+ 2003 0238 91       		.byte	0x91
+ 2004 0239 64       		.sleb128 -28
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 45
 
 
- 2148 009e 08       		.uleb128 0x8
- 2149 009f 3A       		.uleb128 0x3a
- 2150 00a0 0B       		.uleb128 0xb
- 2151 00a1 3B       		.uleb128 0x3b
- 2152 00a2 0B       		.uleb128 0xb
- 2153 00a3 49       		.uleb128 0x49
- 2154 00a4 13       		.uleb128 0x13
- 2155 00a5 02       		.uleb128 0x2
- 2156 00a6 18       		.uleb128 0x18
- 2157 00a7 00       		.byte	0
- 2158 00a8 00       		.byte	0
- 2159 00a9 0D       		.uleb128 0xd
- 2160 00aa 2E       		.uleb128 0x2e
- 2161 00ab 01       		.byte	0x1
- 2162 00ac 03       		.uleb128 0x3
- 2163 00ad 0E       		.uleb128 0xe
- 2164 00ae 3A       		.uleb128 0x3a
- 2165 00af 0B       		.uleb128 0xb
- 2166 00b0 3B       		.uleb128 0x3b
- 2167 00b1 0B       		.uleb128 0xb
- 2168 00b2 27       		.uleb128 0x27
- 2169 00b3 19       		.uleb128 0x19
- 2170 00b4 49       		.uleb128 0x49
- 2171 00b5 13       		.uleb128 0x13
- 2172 00b6 11       		.uleb128 0x11
- 2173 00b7 01       		.uleb128 0x1
- 2174 00b8 12       		.uleb128 0x12
- 2175 00b9 06       		.uleb128 0x6
- 2176 00ba 40       		.uleb128 0x40
- 2177 00bb 18       		.uleb128 0x18
- 2178 00bc 9642     		.uleb128 0x2116
- 2179 00be 19       		.uleb128 0x19
- 2180 00bf 01       		.uleb128 0x1
- 2181 00c0 13       		.uleb128 0x13
- 2182 00c1 00       		.byte	0
- 2183 00c2 00       		.byte	0
- 2184 00c3 0E       		.uleb128 0xe
- 2185 00c4 05       		.uleb128 0x5
- 2186 00c5 00       		.byte	0
- 2187 00c6 03       		.uleb128 0x3
- 2188 00c7 08       		.uleb128 0x8
- 2189 00c8 3A       		.uleb128 0x3a
- 2190 00c9 0B       		.uleb128 0xb
- 2191 00ca 3B       		.uleb128 0x3b
- 2192 00cb 0B       		.uleb128 0xb
- 2193 00cc 49       		.uleb128 0x49
- 2194 00cd 13       		.uleb128 0x13
- 2195 00ce 02       		.uleb128 0x2
- 2196 00cf 18       		.uleb128 0x18
- 2197 00d0 00       		.byte	0
- 2198 00d1 00       		.byte	0
- 2199 00d2 0F       		.uleb128 0xf
- 2200 00d3 2E       		.uleb128 0x2e
- 2201 00d4 01       		.byte	0x1
- 2202 00d5 03       		.uleb128 0x3
- 2203 00d6 0E       		.uleb128 0xe
- 2204 00d7 3A       		.uleb128 0x3a
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 45
+ 2005 023a 10       		.uleb128 0x10
+ 2006 023b 18010000 		.4byte	.LASF33
+ 2007 023f 01       		.byte	0x1
+ 2008 0240 6F       		.byte	0x6f
+ 2009 0241 A5020000 		.4byte	0x2a5
+ 2010 0245 02       		.uleb128 0x2
+ 2011 0246 91       		.byte	0x91
+ 2012 0247 60       		.sleb128 -32
+ 2013 0248 10       		.uleb128 0x10
+ 2014 0249 59020000 		.4byte	.LASF34
+ 2015 024d 01       		.byte	0x1
+ 2016 024e 6F       		.byte	0x6f
+ 2017 024f A5020000 		.4byte	0x2a5
+ 2018 0253 02       		.uleb128 0x2
+ 2019 0254 91       		.byte	0x91
+ 2020 0255 5C       		.sleb128 -36
+ 2021 0256 0C       		.uleb128 0xc
+ 2022 0257 563100   		.ascii	"V1\000"
+ 2023 025a 01       		.byte	0x1
+ 2024 025b 71       		.byte	0x71
+ 2025 025c B8000000 		.4byte	0xb8
+ 2026 0260 02       		.uleb128 0x2
+ 2027 0261 91       		.byte	0x91
+ 2028 0262 76       		.sleb128 -10
+ 2029 0263 0C       		.uleb128 0xc
+ 2030 0264 563200   		.ascii	"V2\000"
+ 2031 0267 01       		.byte	0x1
+ 2032 0268 72       		.byte	0x72
+ 2033 0269 B8000000 		.4byte	0xb8
+ 2034 026d 02       		.uleb128 0x2
+ 2035 026e 91       		.byte	0x91
+ 2036 026f 74       		.sleb128 -12
+ 2037 0270 0C       		.uleb128 0xc
+ 2038 0271 563300   		.ascii	"V3\000"
+ 2039 0274 01       		.byte	0x1
+ 2040 0275 73       		.byte	0x73
+ 2041 0276 B8000000 		.4byte	0xb8
+ 2042 027a 02       		.uleb128 0x2
+ 2043 027b 91       		.byte	0x91
+ 2044 027c 72       		.sleb128 -14
+ 2045 027d 0C       		.uleb128 0xc
+ 2046 027e 563400   		.ascii	"V4\000"
+ 2047 0281 01       		.byte	0x1
+ 2048 0282 74       		.byte	0x74
+ 2049 0283 B8000000 		.4byte	0xb8
+ 2050 0287 02       		.uleb128 0x2
+ 2051 0288 91       		.byte	0x91
+ 2052 0289 70       		.sleb128 -16
+ 2053 028a 0C       		.uleb128 0xc
+ 2054 028b 563500   		.ascii	"V5\000"
+ 2055 028e 01       		.byte	0x1
+ 2056 028f 75       		.byte	0x75
+ 2057 0290 B8000000 		.4byte	0xb8
+ 2058 0294 02       		.uleb128 0x2
+ 2059 0295 91       		.byte	0x91
+ 2060 0296 6E       		.sleb128 -18
+ 2061 0297 0C       		.uleb128 0xc
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 46
 
 
- 2205 00d8 0B       		.uleb128 0xb
- 2206 00d9 3B       		.uleb128 0x3b
- 2207 00da 0B       		.uleb128 0xb
- 2208 00db 27       		.uleb128 0x27
- 2209 00dc 19       		.uleb128 0x19
- 2210 00dd 11       		.uleb128 0x11
- 2211 00de 01       		.uleb128 0x1
- 2212 00df 12       		.uleb128 0x12
- 2213 00e0 06       		.uleb128 0x6
- 2214 00e1 40       		.uleb128 0x40
- 2215 00e2 18       		.uleb128 0x18
- 2216 00e3 9642     		.uleb128 0x2116
- 2217 00e5 19       		.uleb128 0x19
- 2218 00e6 01       		.uleb128 0x1
- 2219 00e7 13       		.uleb128 0x13
- 2220 00e8 00       		.byte	0
- 2221 00e9 00       		.byte	0
- 2222 00ea 10       		.uleb128 0x10
- 2223 00eb 05       		.uleb128 0x5
- 2224 00ec 00       		.byte	0
- 2225 00ed 03       		.uleb128 0x3
- 2226 00ee 0E       		.uleb128 0xe
- 2227 00ef 3A       		.uleb128 0x3a
- 2228 00f0 0B       		.uleb128 0xb
- 2229 00f1 3B       		.uleb128 0x3b
- 2230 00f2 0B       		.uleb128 0xb
- 2231 00f3 49       		.uleb128 0x49
- 2232 00f4 13       		.uleb128 0x13
- 2233 00f5 02       		.uleb128 0x2
- 2234 00f6 18       		.uleb128 0x18
- 2235 00f7 00       		.byte	0
- 2236 00f8 00       		.byte	0
- 2237 00f9 11       		.uleb128 0x11
- 2238 00fa 0F       		.uleb128 0xf
- 2239 00fb 00       		.byte	0
- 2240 00fc 0B       		.uleb128 0xb
- 2241 00fd 0B       		.uleb128 0xb
- 2242 00fe 49       		.uleb128 0x49
- 2243 00ff 13       		.uleb128 0x13
- 2244 0100 00       		.byte	0
- 2245 0101 00       		.byte	0
- 2246 0102 12       		.uleb128 0x12
- 2247 0103 2E       		.uleb128 0x2e
- 2248 0104 01       		.byte	0x1
- 2249 0105 3F       		.uleb128 0x3f
- 2250 0106 19       		.uleb128 0x19
- 2251 0107 03       		.uleb128 0x3
- 2252 0108 0E       		.uleb128 0xe
- 2253 0109 3A       		.uleb128 0x3a
- 2254 010a 0B       		.uleb128 0xb
- 2255 010b 3B       		.uleb128 0x3b
- 2256 010c 0B       		.uleb128 0xb
- 2257 010d 27       		.uleb128 0x27
- 2258 010e 19       		.uleb128 0x19
- 2259 010f 49       		.uleb128 0x49
- 2260 0110 13       		.uleb128 0x13
- 2261 0111 11       		.uleb128 0x11
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 46
+ 2062 0298 563600   		.ascii	"V6\000"
+ 2063 029b 01       		.byte	0x1
+ 2064 029c 76       		.byte	0x76
+ 2065 029d B8000000 		.4byte	0xb8
+ 2066 02a1 02       		.uleb128 0x2
+ 2067 02a2 91       		.byte	0x91
+ 2068 02a3 6C       		.sleb128 -20
+ 2069 02a4 00       		.byte	0
+ 2070 02a5 11       		.uleb128 0x11
+ 2071 02a6 04       		.byte	0x4
+ 2072 02a7 B8000000 		.4byte	0xb8
+ 2073 02ab 0D       		.uleb128 0xd
+ 2074 02ac 75020000 		.4byte	.LASF36
+ 2075 02b0 01       		.byte	0x1
+ 2076 02b1 94       		.byte	0x94
+ 2077 02b2 D9000000 		.4byte	0xd9
+ 2078 02b6 00000000 		.4byte	.LFB67
+ 2079 02ba 3A000000 		.4byte	.LFE67-.LFB67
+ 2080 02be 01       		.uleb128 0x1
+ 2081 02bf 9C       		.byte	0x9c
+ 2082 02c0 EB020000 		.4byte	0x2eb
+ 2083 02c4 0E       		.uleb128 0xe
+ 2084 02c5 7800     		.ascii	"x\000"
+ 2085 02c7 01       		.byte	0x1
+ 2086 02c8 94       		.byte	0x94
+ 2087 02c9 D9000000 		.4byte	0xd9
+ 2088 02cd 02       		.uleb128 0x2
+ 2089 02ce 91       		.byte	0x91
+ 2090 02cf 74       		.sleb128 -12
+ 2091 02d0 0E       		.uleb128 0xe
+ 2092 02d1 6C6F00   		.ascii	"lo\000"
+ 2093 02d4 01       		.byte	0x1
+ 2094 02d5 94       		.byte	0x94
+ 2095 02d6 D9000000 		.4byte	0xd9
+ 2096 02da 02       		.uleb128 0x2
+ 2097 02db 91       		.byte	0x91
+ 2098 02dc 70       		.sleb128 -16
+ 2099 02dd 0E       		.uleb128 0xe
+ 2100 02de 686900   		.ascii	"hi\000"
+ 2101 02e1 01       		.byte	0x1
+ 2102 02e2 94       		.byte	0x94
+ 2103 02e3 D9000000 		.4byte	0xd9
+ 2104 02e7 02       		.uleb128 0x2
+ 2105 02e8 91       		.byte	0x91
+ 2106 02e9 6C       		.sleb128 -20
+ 2107 02ea 00       		.byte	0
+ 2108 02eb 0D       		.uleb128 0xd
+ 2109 02ec D8020000 		.4byte	.LASF37
+ 2110 02f0 01       		.byte	0x1
+ 2111 02f1 96       		.byte	0x96
+ 2112 02f2 94000000 		.4byte	0x94
+ 2113 02f6 00000000 		.4byte	.LFB68
+ 2114 02fa 88020000 		.4byte	.LFE68-.LFB68
+ 2115 02fe 01       		.uleb128 0x1
+ 2116 02ff 9C       		.byte	0x9c
+ 2117 0300 E1030000 		.4byte	0x3e1
+ 2118 0304 0E       		.uleb128 0xe
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 47
 
 
- 2262 0112 01       		.uleb128 0x1
- 2263 0113 12       		.uleb128 0x12
- 2264 0114 06       		.uleb128 0x6
- 2265 0115 40       		.uleb128 0x40
- 2266 0116 18       		.uleb128 0x18
- 2267 0117 9642     		.uleb128 0x2116
- 2268 0119 19       		.uleb128 0x19
- 2269 011a 01       		.uleb128 0x1
- 2270 011b 13       		.uleb128 0x13
- 2271 011c 00       		.byte	0
- 2272 011d 00       		.byte	0
- 2273 011e 13       		.uleb128 0x13
- 2274 011f 34       		.uleb128 0x34
- 2275 0120 00       		.byte	0
- 2276 0121 03       		.uleb128 0x3
- 2277 0122 0E       		.uleb128 0xe
- 2278 0123 3A       		.uleb128 0x3a
- 2279 0124 0B       		.uleb128 0xb
- 2280 0125 3B       		.uleb128 0x3b
- 2281 0126 05       		.uleb128 0x5
- 2282 0127 49       		.uleb128 0x49
- 2283 0128 13       		.uleb128 0x13
- 2284 0129 02       		.uleb128 0x2
- 2285 012a 18       		.uleb128 0x18
- 2286 012b 00       		.byte	0
- 2287 012c 00       		.byte	0
- 2288 012d 14       		.uleb128 0x14
- 2289 012e 34       		.uleb128 0x34
- 2290 012f 00       		.byte	0
- 2291 0130 03       		.uleb128 0x3
- 2292 0131 0E       		.uleb128 0xe
- 2293 0132 3A       		.uleb128 0x3a
- 2294 0133 0B       		.uleb128 0xb
- 2295 0134 3B       		.uleb128 0x3b
- 2296 0135 05       		.uleb128 0x5
- 2297 0136 49       		.uleb128 0x49
- 2298 0137 13       		.uleb128 0x13
- 2299 0138 3F       		.uleb128 0x3f
- 2300 0139 19       		.uleb128 0x19
- 2301 013a 3C       		.uleb128 0x3c
- 2302 013b 19       		.uleb128 0x19
- 2303 013c 00       		.byte	0
- 2304 013d 00       		.byte	0
- 2305 013e 00       		.byte	0
- 2306              		.section	.debug_aranges,"",%progbits
- 2307 0000 44000000 		.4byte	0x44
- 2308 0004 0200     		.2byte	0x2
- 2309 0006 00000000 		.4byte	.Ldebug_info0
- 2310 000a 04       		.byte	0x4
- 2311 000b 00       		.byte	0
- 2312 000c 0000     		.2byte	0
- 2313 000e 0000     		.2byte	0
- 2314 0010 00000000 		.4byte	.LFB64
- 2315 0014 14010000 		.4byte	.LFE64-.LFB64
- 2316 0018 00000000 		.4byte	.LFB65
- 2317 001c 44000000 		.4byte	.LFE65-.LFB65
- 2318 0020 00000000 		.4byte	.LFB66
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 47
+ 2119 0305 706900   		.ascii	"pi\000"
+ 2120 0308 01       		.byte	0x1
+ 2121 0309 96       		.byte	0x96
+ 2122 030a E1030000 		.4byte	0x3e1
+ 2123 030e 03       		.uleb128 0x3
+ 2124 030f 91       		.byte	0x91
+ 2125 0310 BC7F     		.sleb128 -68
+ 2126 0312 10       		.uleb128 0x10
+ 2127 0313 2F000000 		.4byte	.LASF32
+ 2128 0317 01       		.byte	0x1
+ 2129 0318 96       		.byte	0x96
+ 2130 0319 B8000000 		.4byte	0xb8
+ 2131 031d 03       		.uleb128 0x3
+ 2132 031e 91       		.byte	0x91
+ 2133 031f BA7F     		.sleb128 -70
+ 2134 0321 10       		.uleb128 0x10
+ 2135 0322 18010000 		.4byte	.LASF33
+ 2136 0326 01       		.byte	0x1
+ 2137 0327 96       		.byte	0x96
+ 2138 0328 B8000000 		.4byte	0xb8
+ 2139 032c 03       		.uleb128 0x3
+ 2140 032d 91       		.byte	0x91
+ 2141 032e B87F     		.sleb128 -72
+ 2142 0330 10       		.uleb128 0x10
+ 2143 0331 59020000 		.4byte	.LASF34
+ 2144 0335 01       		.byte	0x1
+ 2145 0336 96       		.byte	0x96
+ 2146 0337 B8000000 		.4byte	0xb8
+ 2147 033b 03       		.uleb128 0x3
+ 2148 033c 91       		.byte	0x91
+ 2149 033d B67F     		.sleb128 -74
+ 2150 033f 0C       		.uleb128 0xc
+ 2151 0340 633400   		.ascii	"c4\000"
+ 2152 0343 01       		.byte	0x1
+ 2153 0344 98       		.byte	0x98
+ 2154 0345 D9000000 		.4byte	0xd9
+ 2155 0349 02       		.uleb128 0x2
+ 2156 034a 91       		.byte	0x91
+ 2157 034b 68       		.sleb128 -24
+ 2158 034c 0C       		.uleb128 0xc
+ 2159 034d 633500   		.ascii	"c5\000"
+ 2160 0350 01       		.byte	0x1
+ 2161 0351 99       		.byte	0x99
+ 2162 0352 D9000000 		.4byte	0xd9
+ 2163 0356 02       		.uleb128 0x2
+ 2164 0357 91       		.byte	0x91
+ 2165 0358 64       		.sleb128 -28
+ 2166 0359 0C       		.uleb128 0xc
+ 2167 035a 633600   		.ascii	"c6\000"
+ 2168 035d 01       		.byte	0x1
+ 2169 035e 9A       		.byte	0x9a
+ 2170 035f D9000000 		.4byte	0xd9
+ 2171 0363 02       		.uleb128 0x2
+ 2172 0364 91       		.byte	0x91
+ 2173 0365 60       		.sleb128 -32
+ 2174 0366 0C       		.uleb128 0xc
+ 2175 0367 73756D00 		.ascii	"sum\000"
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 48
 
 
- 2319 0024 48010000 		.4byte	.LFE66-.LFB66
- 2320 0028 00000000 		.4byte	.LFB67
- 2321 002c 3A000000 		.4byte	.LFE67-.LFB67
- 2322 0030 00000000 		.4byte	.LFB68
- 2323 0034 84020000 		.4byte	.LFE68-.LFB68
- 2324 0038 00000000 		.4byte	.LFB69
- 2325 003c 64020000 		.4byte	.LFE69-.LFB69
- 2326 0040 00000000 		.4byte	0
- 2327 0044 00000000 		.4byte	0
- 2328              		.section	.debug_ranges,"",%progbits
- 2329              	.Ldebug_ranges0:
- 2330 0000 00000000 		.4byte	.LFB64
- 2331 0004 14010000 		.4byte	.LFE64
- 2332 0008 00000000 		.4byte	.LFB65
- 2333 000c 44000000 		.4byte	.LFE65
- 2334 0010 00000000 		.4byte	.LFB66
- 2335 0014 48010000 		.4byte	.LFE66
- 2336 0018 00000000 		.4byte	.LFB67
- 2337 001c 3A000000 		.4byte	.LFE67
- 2338 0020 00000000 		.4byte	.LFB68
- 2339 0024 84020000 		.4byte	.LFE68
- 2340 0028 00000000 		.4byte	.LFB69
- 2341 002c 64020000 		.4byte	.LFE69
- 2342 0030 00000000 		.4byte	0
- 2343 0034 00000000 		.4byte	0
- 2344              		.section	.debug_line,"",%progbits
- 2345              	.Ldebug_line0:
- 2346 0000 C4030000 		.section	.debug_str,"MS",%progbits,1
- 2346      02003F01 
- 2346      00000201 
- 2346      FB0E0D00 
- 2346      01010101 
- 2347              	.LASF36:
- 2348 0000 76616C69 		.ascii	"valid\000"
- 2348      6400
- 2349              	.LASF54:
- 2350 0006 6469725F 		.ascii	"dir_latched_side\000"
- 2350      6C617463 
- 2350      6865645F 
- 2350      73696465 
- 2350      00
- 2351              	.LASF30:
- 2352 0017 56345F70 		.ascii	"V4_pp\000"
- 2352      7000
- 2353              	.LASF2:
- 2354 001d 73686F72 		.ascii	"short int\000"
- 2354      7420696E 
- 2354      7400
- 2355              	.LASF21:
- 2356 0027 73697A65 		.ascii	"sizetype\000"
- 2356      74797065 
- 2356      00
- 2357              	.LASF56:
- 2358 0030 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
- 2358      43313120 
- 2358      352E342E 
- 2358      31203230 
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 48
+ 2176 036b 01       		.byte	0x1
+ 2177 036c 9B       		.byte	0x9b
+ 2178 036d D9000000 		.4byte	0xd9
+ 2179 0371 02       		.uleb128 0x2
+ 2180 0372 91       		.byte	0x91
+ 2181 0373 5C       		.sleb128 -36
+ 2182 0374 0B       		.uleb128 0xb
+ 2183 0375 00000000 		.4byte	.LASF38
+ 2184 0379 01       		.byte	0x1
+ 2185 037a 9C       		.byte	0x9c
+ 2186 037b E7030000 		.4byte	0x3e7
+ 2187 037f 02       		.uleb128 0x2
+ 2188 0380 91       		.byte	0x91
+ 2189 0381 5B       		.sleb128 -37
+ 2190 0382 0C       		.uleb128 0xc
+ 2191 0383 706F7300 		.ascii	"pos\000"
+ 2192 0387 01       		.byte	0x1
+ 2193 0388 9E       		.byte	0x9e
+ 2194 0389 D9000000 		.4byte	0xd9
+ 2195 038d 02       		.uleb128 0x2
+ 2196 038e 91       		.byte	0x91
+ 2197 038f 6C       		.sleb128 -20
+ 2198 0390 0C       		.uleb128 0xc
+ 2199 0391 6500     		.ascii	"e\000"
+ 2200 0393 01       		.byte	0x1
+ 2201 0394 A1       		.byte	0xa1
+ 2202 0395 D9000000 		.4byte	0xd9
+ 2203 0399 02       		.uleb128 0x2
+ 2204 039a 91       		.byte	0x91
+ 2205 039b 54       		.sleb128 -44
+ 2206 039c 0B       		.uleb128 0xb
+ 2207 039d 07030000 		.4byte	.LASF39
+ 2208 03a1 01       		.byte	0x1
+ 2209 03a2 AA       		.byte	0xaa
+ 2210 03a3 D9000000 		.4byte	0xd9
+ 2211 03a7 02       		.uleb128 0x2
+ 2212 03a8 91       		.byte	0x91
+ 2213 03a9 50       		.sleb128 -48
+ 2214 03aa 0B       		.uleb128 0xb
+ 2215 03ab 06000000 		.4byte	.LASF40
+ 2216 03af 01       		.byte	0x1
+ 2217 03b0 AB       		.byte	0xab
+ 2218 03b1 D9000000 		.4byte	0xd9
+ 2219 03b5 02       		.uleb128 0x2
+ 2220 03b6 91       		.byte	0x91
+ 2221 03b7 4C       		.sleb128 -52
+ 2222 03b8 0C       		.uleb128 0xc
+ 2223 03b9 7500     		.ascii	"u\000"
+ 2224 03bb 01       		.byte	0x1
+ 2225 03bc AC       		.byte	0xac
+ 2226 03bd D9000000 		.4byte	0xd9
+ 2227 03c1 02       		.uleb128 0x2
+ 2228 03c2 91       		.byte	0x91
+ 2229 03c3 48       		.sleb128 -56
+ 2230 03c4 0B       		.uleb128 0xb
+ 2231 03c5 5D030000 		.4byte	.LASF41
+ 2232 03c9 01       		.byte	0x1
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 49
 
 
- 2358      31363036 
- 2359 0063 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
- 2359      20726576 
- 2359      6973696F 
- 2359      6E203233 
- 2359      37373135 
- 2360 0096 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
- 2360      66756E63 
- 2360      74696F6E 
- 2360      2D736563 
- 2360      74696F6E 
- 2361              	.LASF61:
- 2362 00be 6D61696E 		.ascii	"main\000"
- 2362      00
- 2363              	.LASF4:
- 2364 00c3 5F5F7569 		.ascii	"__uint16_t\000"
- 2364      6E743136 
- 2364      5F7400
- 2365              	.LASF16:
- 2366 00ce 696E7436 		.ascii	"int64_t\000"
- 2366      345F7400 
- 2367              	.LASF13:
- 2368 00d6 75696E74 		.ascii	"uint8_t\000"
- 2368      385F7400 
- 2369              	.LASF25:
- 2370 00de 72617732 		.ascii	"raw2\000"
- 2370      00
- 2371              	.LASF28:
- 2372 00e3 646D6D5F 		.ascii	"dmm_abs\000"
- 2372      61627300 
- 2373              	.LASF58:
- 2374 00eb 433A5C55 		.ascii	"C:\\Users\\yram171\\Downloads\\Compsys-301-CODE\\YA"
- 2374      73657273 
- 2374      5C797261 
- 2374      6D313731 
- 2374      5C446F77 
- 2375 0119 53482043 		.ascii	"SH Code\\CS301_Class.cydsn\000"
- 2375      6F64655C 
- 2375      43533330 
- 2375      315F436C 
- 2375      6173732E 
- 2376              	.LASF31:
- 2377 0133 56355F70 		.ascii	"V5_pp\000"
- 2377      7000
- 2378              	.LASF17:
- 2379 0139 666C6F61 		.ascii	"float\000"
- 2379      7400
- 2380              	.LASF10:
- 2381 013f 6C6F6E67 		.ascii	"long long int\000"
- 2381      206C6F6E 
- 2381      6720696E 
- 2381      7400
- 2382              	.LASF19:
- 2383 014d 63686172 		.ascii	"char\000"
- 2383      00
- 2384              	.LASF23:
- 2385 0152 70695F74 		.ascii	"pi_t\000"
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 49
+ 2233 03ca AE       		.byte	0xae
+ 2234 03cb E7030000 		.4byte	0x3e7
+ 2235 03cf 02       		.uleb128 0x2
+ 2236 03d0 91       		.byte	0x91
+ 2237 03d1 47       		.sleb128 -57
+ 2238 03d2 0B       		.uleb128 0xb
+ 2239 03d3 90030000 		.4byte	.LASF42
+ 2240 03d7 01       		.byte	0x1
+ 2241 03d8 AF       		.byte	0xaf
+ 2242 03d9 E7030000 		.4byte	0x3e7
+ 2243 03dd 02       		.uleb128 0x2
+ 2244 03de 91       		.byte	0x91
+ 2245 03df 46       		.sleb128 -58
+ 2246 03e0 00       		.byte	0
+ 2247 03e1 11       		.uleb128 0x11
+ 2248 03e2 04       		.byte	0x4
+ 2249 03e3 2A010000 		.4byte	0x12a
+ 2250 03e7 03       		.uleb128 0x3
+ 2251 03e8 01       		.byte	0x1
+ 2252 03e9 02       		.byte	0x2
+ 2253 03ea E6020000 		.4byte	.LASF43
+ 2254 03ee 12       		.uleb128 0x12
+ 2255 03ef EB000000 		.4byte	.LASF69
+ 2256 03f3 01       		.byte	0x1
+ 2257 03f4 BC       		.byte	0xbc
+ 2258 03f5 94000000 		.4byte	0x94
+ 2259 03f9 00000000 		.4byte	.LFB69
+ 2260 03fd 24050000 		.4byte	.LFE69-.LFB69
+ 2261 0401 01       		.uleb128 0x1
+ 2262 0402 9C       		.byte	0x9c
+ 2263 0403 29050000 		.4byte	0x529
+ 2264 0407 0B       		.uleb128 0xb
+ 2265 0408 C0020000 		.4byte	.LASF44
+ 2266 040c 01       		.byte	0x1
+ 2267 040d DA       		.byte	0xda
+ 2268 040e 94000000 		.4byte	0x94
+ 2269 0412 02       		.uleb128 0x2
+ 2270 0413 91       		.byte	0x91
+ 2271 0414 74       		.sleb128 -12
+ 2272 0415 0C       		.uleb128 0xc
+ 2273 0416 706900   		.ascii	"pi\000"
+ 2274 0419 01       		.byte	0x1
+ 2275 041a DF       		.byte	0xdf
+ 2276 041b 2A010000 		.4byte	0x12a
+ 2277 041f 02       		.uleb128 0x2
+ 2278 0420 91       		.byte	0x91
+ 2279 0421 4C       		.sleb128 -52
+ 2280 0422 0B       		.uleb128 0xb
+ 2281 0423 7D020000 		.4byte	.LASF45
+ 2282 0427 01       		.byte	0x1
+ 2283 0428 F4       		.byte	0xf4
+ 2284 0429 3E050000 		.4byte	0x53e
+ 2285 042d 02       		.uleb128 0x2
+ 2286 042e 91       		.byte	0x91
+ 2287 042f 48       		.sleb128 -56
+ 2288 0430 0C       		.uleb128 0xc
+ 2289 0431 6900     		.ascii	"i\000"
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 50
 
 
- 2385      00
- 2386              	.LASF7:
- 2387 0157 6C6F6E67 		.ascii	"long int\000"
- 2387      20696E74 
- 2387      00
- 2388              	.LASF9:
- 2389 0160 5F5F696E 		.ascii	"__int64_t\000"
- 2389      7436345F 
- 2389      7400
- 2390              	.LASF38:
- 2391 016a 755F7261 		.ascii	"u_raw\000"
- 2391      7700
- 2392              	.LASF3:
- 2393 0170 5F5F7569 		.ascii	"__uint8_t\000"
- 2393      6E74385F 
- 2393      7400
- 2394              	.LASF44:
- 2395 017a 73656E31 		.ascii	"sen1_on_line\000"
- 2395      5F6F6E5F 
- 2395      6C696E65 
- 2395      00
- 2396              	.LASF1:
- 2397 0187 756E7369 		.ascii	"unsigned char\000"
- 2397      676E6564 
- 2397      20636861 
- 2397      7200
- 2398              	.LASF24:
- 2399 0195 72617731 		.ascii	"raw1\000"
- 2399      00
- 2400              	.LASF20:
- 2401 019a 6C6F6E67 		.ascii	"long double\000"
- 2401      20646F75 
- 2401      626C6500 
- 2402              	.LASF45:
- 2403 01a6 73656E32 		.ascii	"sen2_on_line\000"
- 2403      5F6F6E5F 
- 2403      6C696E65 
- 2403      00
- 2404              	.LASF51:
- 2405 01b3 675F7374 		.ascii	"g_stop_now\000"
- 2405      6F705F6E 
- 2405      6F7700
- 2406              	.LASF55:
- 2407 01be 7475726E 		.ascii	"turn_cooldown_ticks\000"
- 2407      5F636F6F 
- 2407      6C646F77 
- 2407      6E5F7469 
- 2407      636B7300 
- 2408              	.LASF46:
- 2409 01d2 73656E33 		.ascii	"sen3_on_line\000"
- 2409      5F6F6E5F 
- 2409      6C696E65 
- 2409      00
- 2410              	.LASF0:
- 2411 01df 7369676E 		.ascii	"signed char\000"
- 2411      65642063 
- 2411      68617200 
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 50
+ 2290 0433 01       		.byte	0x1
+ 2291 0434 F6       		.byte	0xf6
+ 2292 0435 A2000000 		.4byte	0xa2
+ 2293 0439 02       		.uleb128 0x2
+ 2294 043a 91       		.byte	0x91
+ 2295 043b 73       		.sleb128 -13
+ 2296 043c 0B       		.uleb128 0xb
+ 2297 043d B5030000 		.4byte	.LASF46
+ 2298 0441 01       		.byte	0x1
+ 2299 0442 F7       		.byte	0xf7
+ 2300 0443 C3000000 		.4byte	0xc3
+ 2301 0447 02       		.uleb128 0x2
+ 2302 0448 91       		.byte	0x91
+ 2303 0449 68       		.sleb128 -24
+ 2304 044a 0B       		.uleb128 0xb
+ 2305 044b 1D000000 		.4byte	.LASF47
+ 2306 044f 01       		.byte	0x1
+ 2307 0450 F9       		.byte	0xf9
+ 2308 0451 A2000000 		.4byte	0xa2
+ 2309 0455 02       		.uleb128 0x2
+ 2310 0456 91       		.byte	0x91
+ 2311 0457 72       		.sleb128 -14
+ 2312 0458 0B       		.uleb128 0xb
+ 2313 0459 46000000 		.4byte	.LASF48
+ 2314 045d 01       		.byte	0x1
+ 2315 045e FA       		.byte	0xfa
+ 2316 045f A2000000 		.4byte	0xa2
+ 2317 0463 02       		.uleb128 0x2
+ 2318 0464 91       		.byte	0x91
+ 2319 0465 71       		.sleb128 -15
+ 2320 0466 0B       		.uleb128 0xb
+ 2321 0467 CA030000 		.4byte	.LASF49
+ 2322 046b 01       		.byte	0x1
+ 2323 046c FB       		.byte	0xfb
+ 2324 046d A2000000 		.4byte	0xa2
+ 2325 0471 02       		.uleb128 0x2
+ 2326 0472 91       		.byte	0x91
+ 2327 0473 70       		.sleb128 -16
+ 2328 0474 0B       		.uleb128 0xb
+ 2329 0475 C3010000 		.4byte	.LASF50
+ 2330 0479 01       		.byte	0x1
+ 2331 047a FC       		.byte	0xfc
+ 2332 047b A2000000 		.4byte	0xa2
+ 2333 047f 02       		.uleb128 0x2
+ 2334 0480 91       		.byte	0x91
+ 2335 0481 6F       		.sleb128 -17
+ 2336 0482 0A       		.uleb128 0xa
+ 2337 0483 DE000000 		.4byte	.LBB3
+ 2338 0487 2A040000 		.4byte	.LBE3-.LBB3
+ 2339 048b 13       		.uleb128 0x13
+ 2340 048c 2F000000 		.4byte	.LASF32
+ 2341 0490 01       		.byte	0x1
+ 2342 0491 0101     		.2byte	0x101
+ 2343 0493 B8000000 		.4byte	0xb8
+ 2344 0497 02       		.uleb128 0x2
+ 2345 0498 91       		.byte	0x91
+ 2346 0499 46       		.sleb128 -58
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 51
 
 
- 2412              	.LASF11:
- 2413 01eb 6C6F6E67 		.ascii	"long long unsigned int\000"
- 2413      206C6F6E 
- 2413      6720756E 
- 2413      7369676E 
- 2413      65642069 
- 2414              	.LASF47:
- 2415 0202 73656E34 		.ascii	"sen4_on_line\000"
- 2415      5F6F6E5F 
- 2415      6C696E65 
- 2415      00
- 2416              	.LASF12:
- 2417 020f 756E7369 		.ascii	"unsigned int\000"
- 2417      676E6564 
- 2417      20696E74 
- 2417      00
- 2418              	.LASF32:
- 2419 021c 56365F70 		.ascii	"V6_pp\000"
- 2419      7000
- 2420              	.LASF14:
- 2421 0222 75696E74 		.ascii	"uint16_t\000"
- 2421      31365F74 
- 2421      00
- 2422              	.LASF48:
- 2423 022b 73656E35 		.ascii	"sen5_on_line\000"
- 2423      5F6F6E5F 
- 2423      6C696E65 
- 2423      00
- 2424              	.LASF34:
- 2425 0238 5F636C61 		.ascii	"_clampf\000"
- 2425      6D706600 
- 2426              	.LASF5:
- 2427 0240 73686F72 		.ascii	"short unsigned int\000"
- 2427      7420756E 
- 2427      7369676E 
- 2427      65642069 
- 2427      6E7400
- 2428              	.LASF49:
- 2429 0253 73656E36 		.ascii	"sen6_on_line\000"
- 2429      5F6F6E5F 
- 2429      6C696E65 
- 2429      00
- 2430              	.LASF59:
- 2431 0260 6973725F 		.ascii	"isr_qd_Handler\000"
- 2431      71645F48 
- 2431      616E646C 
- 2431      657200
- 2432              	.LASF42:
- 2433 026f 63656E74 		.ascii	"center_duty_est\000"
- 2433      65725F64 
- 2433      7574795F 
- 2433      65737400 
- 2434              	.LASF15:
- 2435 027f 696E7433 		.ascii	"int32_t\000"
- 2435      325F7400 
- 2436              	.LASF35:
- 2437 0287 70695F73 		.ascii	"pi_step\000"
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 51
+ 2347 049a 13       		.uleb128 0x13
+ 2348 049b 18010000 		.4byte	.LASF33
+ 2349 049f 01       		.byte	0x1
+ 2350 04a0 0101     		.2byte	0x101
+ 2351 04a2 B8000000 		.4byte	0xb8
+ 2352 04a6 02       		.uleb128 0x2
+ 2353 04a7 91       		.byte	0x91
+ 2354 04a8 44       		.sleb128 -60
+ 2355 04a9 13       		.uleb128 0x13
+ 2356 04aa 59020000 		.4byte	.LASF34
+ 2357 04ae 01       		.byte	0x1
+ 2358 04af 0101     		.2byte	0x101
+ 2359 04b1 B8000000 		.4byte	0xb8
+ 2360 04b5 02       		.uleb128 0x2
+ 2361 04b6 91       		.byte	0x91
+ 2362 04b7 42       		.sleb128 -62
+ 2363 04b8 14       		.uleb128 0x14
+ 2364 04b9 08010000 		.4byte	.LBB4
+ 2365 04bd 72000000 		.4byte	.LBE4-.LBB4
+ 2366 04c1 F1040000 		.4byte	0x4f1
+ 2367 04c5 13       		.uleb128 0x13
+ 2368 04c6 E0020000 		.4byte	.LASF51
+ 2369 04ca 01       		.byte	0x1
+ 2370 04cb 5001     		.2byte	0x150
+ 2371 04cd 94000000 		.4byte	0x94
+ 2372 04d1 02       		.uleb128 0x2
+ 2373 04d2 91       		.byte	0x91
+ 2374 04d3 64       		.sleb128 -28
+ 2375 04d4 15       		.uleb128 0x15
+ 2376 04d5 563100   		.ascii	"V1\000"
+ 2377 04d8 01       		.byte	0x1
+ 2378 04d9 5301     		.2byte	0x153
+ 2379 04db B8000000 		.4byte	0xb8
+ 2380 04df 02       		.uleb128 0x2
+ 2381 04e0 91       		.byte	0x91
+ 2382 04e1 62       		.sleb128 -30
+ 2383 04e2 15       		.uleb128 0x15
+ 2384 04e3 563200   		.ascii	"V2\000"
+ 2385 04e6 01       		.byte	0x1
+ 2386 04e7 5501     		.2byte	0x155
+ 2387 04e9 B8000000 		.4byte	0xb8
+ 2388 04ed 02       		.uleb128 0x2
+ 2389 04ee 91       		.byte	0x91
+ 2390 04ef 60       		.sleb128 -32
+ 2391 04f0 00       		.byte	0
+ 2392 04f1 14       		.uleb128 0x14
+ 2393 04f2 08040000 		.4byte	.LBB5
+ 2394 04f6 52000000 		.4byte	.LBE5-.LBB5
+ 2395 04fa 0E050000 		.4byte	0x50e
+ 2396 04fe 13       		.uleb128 0x13
+ 2397 04ff E0020000 		.4byte	.LASF51
+ 2398 0503 01       		.byte	0x1
+ 2399 0504 D201     		.2byte	0x1d2
+ 2400 0506 94000000 		.4byte	0x94
+ 2401 050a 02       		.uleb128 0x2
+ 2402 050b 91       		.byte	0x91
+ 2403 050c 5C       		.sleb128 -36
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 52
 
 
- 2437      74657000 
- 2438              	.LASF43:
- 2439 028f 73746565 		.ascii	"steer\000"
- 2439      7200
- 2440              	.LASF41:
- 2441 0295 5F426F6F 		.ascii	"_Bool\000"
- 2441      6C00
- 2442              	.LASF29:
- 2443 029b 646D6D5F 		.ascii	"dmm_signed\000"
- 2443      7369676E 
- 2443      656400
- 2444              	.LASF53:
- 2445 02a6 6469725F 		.ascii	"dir_delay_ticks\000"
- 2445      64656C61 
- 2445      795F7469 
- 2445      636B7300 
- 2446              	.LASF37:
- 2447 02b6 695F6E65 		.ascii	"i_next\000"
- 2447      787400
- 2448              	.LASF57:
- 2449 02bd 6D61696E 		.ascii	"main.c\000"
- 2449      2E6300
- 2450              	.LASF8:
- 2451 02c4 6C6F6E67 		.ascii	"long unsigned int\000"
- 2451      20756E73 
- 2451      69676E65 
- 2451      6420696E 
- 2451      7400
- 2452              	.LASF27:
- 2453 02d6 64617667 		.ascii	"davg_sign\000"
- 2453      5F736967 
- 2453      6E00
- 2454              	.LASF60:
- 2455 02e0 6C696768 		.ascii	"light_sensors_update_and_maybe_request_turn\000"
- 2455      745F7365 
- 2455      6E736F72 
- 2455      735F7570 
- 2455      64617465 
- 2456              	.LASF39:
- 2457 030c 7361745F 		.ascii	"sat_hi\000"
- 2457      686900
- 2458              	.LASF22:
- 2459 0313 745F6C6F 		.ascii	"t_loss\000"
- 2459      737300
- 2460              	.LASF6:
- 2461 031a 5F5F696E 		.ascii	"__int32_t\000"
- 2461      7433325F 
- 2461      7400
- 2462              	.LASF33:
- 2463 0324 6E6F726D 		.ascii	"norm01_from_pp\000"
- 2463      30315F66 
- 2463      726F6D5F 
- 2463      707000
- 2464              	.LASF50:
- 2465 0333 675F6469 		.ascii	"g_direction\000"
- 2465      72656374 
- 2465      696F6E00 
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cciv11Ls.s 			page 52
+ 2404 050d 00       		.byte	0
+ 2405 050e 0A       		.uleb128 0xa
+ 2406 050f 6E040000 		.4byte	.LBB6
+ 2407 0513 4C000000 		.4byte	.LBE6-.LBB6
+ 2408 0517 13       		.uleb128 0x13
+ 2409 0518 E0020000 		.4byte	.LASF51
+ 2410 051c 01       		.byte	0x1
+ 2411 051d DF01     		.2byte	0x1df
+ 2412 051f 94000000 		.4byte	0x94
+ 2413 0523 02       		.uleb128 0x2
+ 2414 0524 91       		.byte	0x91
+ 2415 0525 58       		.sleb128 -40
+ 2416 0526 00       		.byte	0
+ 2417 0527 00       		.byte	0
+ 2418 0528 00       		.byte	0
+ 2419 0529 16       		.uleb128 0x16
+ 2420 052a 39050000 		.4byte	0x539
+ 2421 052e 39050000 		.4byte	0x539
+ 2422 0532 17       		.uleb128 0x17
+ 2423 0533 F5000000 		.4byte	0xf5
+ 2424 0537 00       		.byte	0
+ 2425 0538 00       		.byte	0
+ 2426 0539 18       		.uleb128 0x18
+ 2427 053a AD000000 		.4byte	0xad
+ 2428 053e 18       		.uleb128 0x18
+ 2429 053f 29050000 		.4byte	0x529
+ 2430 0543 0B       		.uleb128 0xb
+ 2431 0544 B6010000 		.4byte	.LASF52
+ 2432 0548 01       		.byte	0x1
+ 2433 0549 38       		.byte	0x38
+ 2434 054a AD000000 		.4byte	0xad
+ 2435 054e 05       		.uleb128 0x5
+ 2436 054f 03       		.byte	0x3
+ 2437 0550 00000000 		.4byte	sen1_on_line
+ 2438 0554 0B       		.uleb128 0xb
+ 2439 0555 E3010000 		.4byte	.LASF53
+ 2440 0559 01       		.byte	0x1
+ 2441 055a 38       		.byte	0x38
+ 2442 055b AD000000 		.4byte	0xad
+ 2443 055f 05       		.uleb128 0x5
+ 2444 0560 03       		.byte	0x3
+ 2445 0561 01000000 		.4byte	sen2_on_line
+ 2446 0565 0B       		.uleb128 0xb
+ 2447 0566 0F020000 		.4byte	.LASF54
+ 2448 056a 01       		.byte	0x1
+ 2449 056b 38       		.byte	0x38
+ 2450 056c AD000000 		.4byte	0xad
+ 2451 0570 05       		.uleb128 0x5
+ 2452 0571 03       		.byte	0x3
+ 2453 0572 02000000 		.4byte	sen3_on_line
+ 2454 0576 0B       		.uleb128 0xb
+ 2455 0577 3F020000 		.4byte	.LASF55
+ 2456 057b 01       		.byte	0x1
+ 2457 057c 39       		.byte	0x39
+ 2458 057d AD000000 		.4byte	0xad
+ 2459 0581 05       		.uleb128 0x5
+ 2460 0582 03       		.byte	0x3
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 53
 
 
- 2466              	.LASF40:
- 2467 033f 7361745F 		.ascii	"sat_lo\000"
- 2467      6C6F00
- 2468              	.LASF18:
- 2469 0346 646F7562 		.ascii	"double\000"
- 2469      6C6500
- 2470              	.LASF52:
- 2471 034d 675F6469 		.ascii	"g_dist_mm\000"
- 2471      73745F6D 
- 2471      6D00
- 2472              	.LASF62:
- 2473 0357 49544D5F 		.ascii	"ITM_RxBuffer\000"
- 2473      52784275 
- 2473      66666572 
- 2473      00
- 2474              	.LASF26:
- 2475 0364 64617667 		.ascii	"davg_abs\000"
- 2475      5F616273 
- 2475      00
- 2476              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
+ 2461 0583 03000000 		.4byte	sen4_on_line
+ 2462 0587 0B       		.uleb128 0xb
+ 2463 0588 68020000 		.4byte	.LASF56
+ 2464 058c 01       		.byte	0x1
+ 2465 058d 39       		.byte	0x39
+ 2466 058e AD000000 		.4byte	0xad
+ 2467 0592 05       		.uleb128 0x5
+ 2468 0593 03       		.byte	0x3
+ 2469 0594 04000000 		.4byte	sen5_on_line
+ 2470 0598 0B       		.uleb128 0xb
+ 2471 0599 9B020000 		.4byte	.LASF57
+ 2472 059d 01       		.byte	0x1
+ 2473 059e 39       		.byte	0x39
+ 2474 059f AD000000 		.4byte	0xad
+ 2475 05a3 05       		.uleb128 0x5
+ 2476 05a4 03       		.byte	0x3
+ 2477 05a5 05000000 		.4byte	sen6_on_line
+ 2478 05a9 0B       		.uleb128 0xb
+ 2479 05aa 84030000 		.4byte	.LASF58
+ 2480 05ae 01       		.byte	0x1
+ 2481 05af 3C       		.byte	0x3c
+ 2482 05b0 FC000000 		.4byte	0xfc
+ 2483 05b4 05       		.uleb128 0x5
+ 2484 05b5 03       		.byte	0x3
+ 2485 05b6 06000000 		.4byte	g_direction
+ 2486 05ba 0B       		.uleb128 0xb
+ 2487 05bb F0010000 		.4byte	.LASF59
+ 2488 05bf 01       		.byte	0x1
+ 2489 05c0 3D       		.byte	0x3d
+ 2490 05c1 FC000000 		.4byte	0xfc
+ 2491 05c5 05       		.uleb128 0x5
+ 2492 05c6 03       		.byte	0x3
+ 2493 05c7 07000000 		.4byte	g_stop_now
+ 2494 05cb 0B       		.uleb128 0xb
+ 2495 05cc 9E030000 		.4byte	.LASF60
+ 2496 05d0 01       		.byte	0x1
+ 2497 05d1 3E       		.byte	0x3e
+ 2498 05d2 DC050000 		.4byte	0x5dc
+ 2499 05d6 05       		.uleb128 0x5
+ 2500 05d7 03       		.byte	0x3
+ 2501 05d8 08000000 		.4byte	g_dist_mm
+ 2502 05dc 05       		.uleb128 0x5
+ 2503 05dd C3000000 		.4byte	0xc3
+ 2504 05e1 0B       		.uleb128 0xb
+ 2505 05e2 F7020000 		.4byte	.LASF61
+ 2506 05e6 01       		.byte	0x1
+ 2507 05e7 41       		.byte	0x41
+ 2508 05e8 B8000000 		.4byte	0xb8
+ 2509 05ec 05       		.uleb128 0x5
+ 2510 05ed 03       		.byte	0x3
+ 2511 05ee 0C000000 		.4byte	dir_delay_ticks
+ 2512 05f2 0B       		.uleb128 0xb
+ 2513 05f3 0C000000 		.4byte	.LASF62
+ 2514 05f7 01       		.byte	0x1
+ 2515 05f8 42       		.byte	0x42
+ 2516 05f9 AD000000 		.4byte	0xad
+ 2517 05fd 05       		.uleb128 0x5
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 54
+
+
+ 2518 05fe 03       		.byte	0x3
+ 2519 05ff 0E000000 		.4byte	dir_latched_side
+ 2520 0603 0B       		.uleb128 0xb
+ 2521 0604 FB010000 		.4byte	.LASF63
+ 2522 0608 01       		.byte	0x1
+ 2523 0609 45       		.byte	0x45
+ 2524 060a B8000000 		.4byte	0xb8
+ 2525 060e 05       		.uleb128 0x5
+ 2526 060f 03       		.byte	0x3
+ 2527 0610 10000000 		.4byte	turn_cooldown_ticks
+ 2528 0614 19       		.uleb128 0x19
+ 2529 0615 A8030000 		.4byte	.LASF70
+ 2530 0619 04       		.byte	0x4
+ 2531 061a 1207     		.2byte	0x712
+ 2532 061c DC050000 		.4byte	0x5dc
+ 2533 0620 00       		.byte	0
+ 2534              		.section	.debug_abbrev,"",%progbits
+ 2535              	.Ldebug_abbrev0:
+ 2536 0000 01       		.uleb128 0x1
+ 2537 0001 11       		.uleb128 0x11
+ 2538 0002 01       		.byte	0x1
+ 2539 0003 25       		.uleb128 0x25
+ 2540 0004 0E       		.uleb128 0xe
+ 2541 0005 13       		.uleb128 0x13
+ 2542 0006 0B       		.uleb128 0xb
+ 2543 0007 03       		.uleb128 0x3
+ 2544 0008 0E       		.uleb128 0xe
+ 2545 0009 1B       		.uleb128 0x1b
+ 2546 000a 0E       		.uleb128 0xe
+ 2547 000b 55       		.uleb128 0x55
+ 2548 000c 17       		.uleb128 0x17
+ 2549 000d 11       		.uleb128 0x11
+ 2550 000e 01       		.uleb128 0x1
+ 2551 000f 10       		.uleb128 0x10
+ 2552 0010 17       		.uleb128 0x17
+ 2553 0011 00       		.byte	0
+ 2554 0012 00       		.byte	0
+ 2555 0013 02       		.uleb128 0x2
+ 2556 0014 16       		.uleb128 0x16
+ 2557 0015 00       		.byte	0
+ 2558 0016 03       		.uleb128 0x3
+ 2559 0017 0E       		.uleb128 0xe
+ 2560 0018 3A       		.uleb128 0x3a
+ 2561 0019 0B       		.uleb128 0xb
+ 2562 001a 3B       		.uleb128 0x3b
+ 2563 001b 0B       		.uleb128 0xb
+ 2564 001c 49       		.uleb128 0x49
+ 2565 001d 13       		.uleb128 0x13
+ 2566 001e 00       		.byte	0
+ 2567 001f 00       		.byte	0
+ 2568 0020 03       		.uleb128 0x3
+ 2569 0021 24       		.uleb128 0x24
+ 2570 0022 00       		.byte	0
+ 2571 0023 0B       		.uleb128 0xb
+ 2572 0024 0B       		.uleb128 0xb
+ 2573 0025 3E       		.uleb128 0x3e
+ 2574 0026 0B       		.uleb128 0xb
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 55
+
+
+ 2575 0027 03       		.uleb128 0x3
+ 2576 0028 0E       		.uleb128 0xe
+ 2577 0029 00       		.byte	0
+ 2578 002a 00       		.byte	0
+ 2579 002b 04       		.uleb128 0x4
+ 2580 002c 24       		.uleb128 0x24
+ 2581 002d 00       		.byte	0
+ 2582 002e 0B       		.uleb128 0xb
+ 2583 002f 0B       		.uleb128 0xb
+ 2584 0030 3E       		.uleb128 0x3e
+ 2585 0031 0B       		.uleb128 0xb
+ 2586 0032 03       		.uleb128 0x3
+ 2587 0033 08       		.uleb128 0x8
+ 2588 0034 00       		.byte	0
+ 2589 0035 00       		.byte	0
+ 2590 0036 05       		.uleb128 0x5
+ 2591 0037 35       		.uleb128 0x35
+ 2592 0038 00       		.byte	0
+ 2593 0039 49       		.uleb128 0x49
+ 2594 003a 13       		.uleb128 0x13
+ 2595 003b 00       		.byte	0
+ 2596 003c 00       		.byte	0
+ 2597 003d 06       		.uleb128 0x6
+ 2598 003e 13       		.uleb128 0x13
+ 2599 003f 01       		.byte	0x1
+ 2600 0040 0B       		.uleb128 0xb
+ 2601 0041 0B       		.uleb128 0xb
+ 2602 0042 3A       		.uleb128 0x3a
+ 2603 0043 0B       		.uleb128 0xb
+ 2604 0044 3B       		.uleb128 0x3b
+ 2605 0045 0B       		.uleb128 0xb
+ 2606 0046 01       		.uleb128 0x1
+ 2607 0047 13       		.uleb128 0x13
+ 2608 0048 00       		.byte	0
+ 2609 0049 00       		.byte	0
+ 2610 004a 07       		.uleb128 0x7
+ 2611 004b 0D       		.uleb128 0xd
+ 2612 004c 00       		.byte	0
+ 2613 004d 03       		.uleb128 0x3
+ 2614 004e 08       		.uleb128 0x8
+ 2615 004f 3A       		.uleb128 0x3a
+ 2616 0050 0B       		.uleb128 0xb
+ 2617 0051 3B       		.uleb128 0x3b
+ 2618 0052 0B       		.uleb128 0xb
+ 2619 0053 49       		.uleb128 0x49
+ 2620 0054 13       		.uleb128 0x13
+ 2621 0055 38       		.uleb128 0x38
+ 2622 0056 0B       		.uleb128 0xb
+ 2623 0057 00       		.byte	0
+ 2624 0058 00       		.byte	0
+ 2625 0059 08       		.uleb128 0x8
+ 2626 005a 0D       		.uleb128 0xd
+ 2627 005b 00       		.byte	0
+ 2628 005c 03       		.uleb128 0x3
+ 2629 005d 0E       		.uleb128 0xe
+ 2630 005e 3A       		.uleb128 0x3a
+ 2631 005f 0B       		.uleb128 0xb
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 56
+
+
+ 2632 0060 3B       		.uleb128 0x3b
+ 2633 0061 0B       		.uleb128 0xb
+ 2634 0062 49       		.uleb128 0x49
+ 2635 0063 13       		.uleb128 0x13
+ 2636 0064 38       		.uleb128 0x38
+ 2637 0065 0B       		.uleb128 0xb
+ 2638 0066 00       		.byte	0
+ 2639 0067 00       		.byte	0
+ 2640 0068 09       		.uleb128 0x9
+ 2641 0069 2E       		.uleb128 0x2e
+ 2642 006a 01       		.byte	0x1
+ 2643 006b 3F       		.uleb128 0x3f
+ 2644 006c 19       		.uleb128 0x19
+ 2645 006d 03       		.uleb128 0x3
+ 2646 006e 0E       		.uleb128 0xe
+ 2647 006f 3A       		.uleb128 0x3a
+ 2648 0070 0B       		.uleb128 0xb
+ 2649 0071 3B       		.uleb128 0x3b
+ 2650 0072 0B       		.uleb128 0xb
+ 2651 0073 27       		.uleb128 0x27
+ 2652 0074 19       		.uleb128 0x19
+ 2653 0075 11       		.uleb128 0x11
+ 2654 0076 01       		.uleb128 0x1
+ 2655 0077 12       		.uleb128 0x12
+ 2656 0078 06       		.uleb128 0x6
+ 2657 0079 40       		.uleb128 0x40
+ 2658 007a 18       		.uleb128 0x18
+ 2659 007b 9642     		.uleb128 0x2116
+ 2660 007d 19       		.uleb128 0x19
+ 2661 007e 01       		.uleb128 0x1
+ 2662 007f 13       		.uleb128 0x13
+ 2663 0080 00       		.byte	0
+ 2664 0081 00       		.byte	0
+ 2665 0082 0A       		.uleb128 0xa
+ 2666 0083 0B       		.uleb128 0xb
+ 2667 0084 01       		.byte	0x1
+ 2668 0085 11       		.uleb128 0x11
+ 2669 0086 01       		.uleb128 0x1
+ 2670 0087 12       		.uleb128 0x12
+ 2671 0088 06       		.uleb128 0x6
+ 2672 0089 00       		.byte	0
+ 2673 008a 00       		.byte	0
+ 2674 008b 0B       		.uleb128 0xb
+ 2675 008c 34       		.uleb128 0x34
+ 2676 008d 00       		.byte	0
+ 2677 008e 03       		.uleb128 0x3
+ 2678 008f 0E       		.uleb128 0xe
+ 2679 0090 3A       		.uleb128 0x3a
+ 2680 0091 0B       		.uleb128 0xb
+ 2681 0092 3B       		.uleb128 0x3b
+ 2682 0093 0B       		.uleb128 0xb
+ 2683 0094 49       		.uleb128 0x49
+ 2684 0095 13       		.uleb128 0x13
+ 2685 0096 02       		.uleb128 0x2
+ 2686 0097 18       		.uleb128 0x18
+ 2687 0098 00       		.byte	0
+ 2688 0099 00       		.byte	0
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 57
+
+
+ 2689 009a 0C       		.uleb128 0xc
+ 2690 009b 34       		.uleb128 0x34
+ 2691 009c 00       		.byte	0
+ 2692 009d 03       		.uleb128 0x3
+ 2693 009e 08       		.uleb128 0x8
+ 2694 009f 3A       		.uleb128 0x3a
+ 2695 00a0 0B       		.uleb128 0xb
+ 2696 00a1 3B       		.uleb128 0x3b
+ 2697 00a2 0B       		.uleb128 0xb
+ 2698 00a3 49       		.uleb128 0x49
+ 2699 00a4 13       		.uleb128 0x13
+ 2700 00a5 02       		.uleb128 0x2
+ 2701 00a6 18       		.uleb128 0x18
+ 2702 00a7 00       		.byte	0
+ 2703 00a8 00       		.byte	0
+ 2704 00a9 0D       		.uleb128 0xd
+ 2705 00aa 2E       		.uleb128 0x2e
+ 2706 00ab 01       		.byte	0x1
+ 2707 00ac 03       		.uleb128 0x3
+ 2708 00ad 0E       		.uleb128 0xe
+ 2709 00ae 3A       		.uleb128 0x3a
+ 2710 00af 0B       		.uleb128 0xb
+ 2711 00b0 3B       		.uleb128 0x3b
+ 2712 00b1 0B       		.uleb128 0xb
+ 2713 00b2 27       		.uleb128 0x27
+ 2714 00b3 19       		.uleb128 0x19
+ 2715 00b4 49       		.uleb128 0x49
+ 2716 00b5 13       		.uleb128 0x13
+ 2717 00b6 11       		.uleb128 0x11
+ 2718 00b7 01       		.uleb128 0x1
+ 2719 00b8 12       		.uleb128 0x12
+ 2720 00b9 06       		.uleb128 0x6
+ 2721 00ba 40       		.uleb128 0x40
+ 2722 00bb 18       		.uleb128 0x18
+ 2723 00bc 9642     		.uleb128 0x2116
+ 2724 00be 19       		.uleb128 0x19
+ 2725 00bf 01       		.uleb128 0x1
+ 2726 00c0 13       		.uleb128 0x13
+ 2727 00c1 00       		.byte	0
+ 2728 00c2 00       		.byte	0
+ 2729 00c3 0E       		.uleb128 0xe
+ 2730 00c4 05       		.uleb128 0x5
+ 2731 00c5 00       		.byte	0
+ 2732 00c6 03       		.uleb128 0x3
+ 2733 00c7 08       		.uleb128 0x8
+ 2734 00c8 3A       		.uleb128 0x3a
+ 2735 00c9 0B       		.uleb128 0xb
+ 2736 00ca 3B       		.uleb128 0x3b
+ 2737 00cb 0B       		.uleb128 0xb
+ 2738 00cc 49       		.uleb128 0x49
+ 2739 00cd 13       		.uleb128 0x13
+ 2740 00ce 02       		.uleb128 0x2
+ 2741 00cf 18       		.uleb128 0x18
+ 2742 00d0 00       		.byte	0
+ 2743 00d1 00       		.byte	0
+ 2744 00d2 0F       		.uleb128 0xf
+ 2745 00d3 2E       		.uleb128 0x2e
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 58
+
+
+ 2746 00d4 01       		.byte	0x1
+ 2747 00d5 03       		.uleb128 0x3
+ 2748 00d6 0E       		.uleb128 0xe
+ 2749 00d7 3A       		.uleb128 0x3a
+ 2750 00d8 0B       		.uleb128 0xb
+ 2751 00d9 3B       		.uleb128 0x3b
+ 2752 00da 0B       		.uleb128 0xb
+ 2753 00db 27       		.uleb128 0x27
+ 2754 00dc 19       		.uleb128 0x19
+ 2755 00dd 11       		.uleb128 0x11
+ 2756 00de 01       		.uleb128 0x1
+ 2757 00df 12       		.uleb128 0x12
+ 2758 00e0 06       		.uleb128 0x6
+ 2759 00e1 40       		.uleb128 0x40
+ 2760 00e2 18       		.uleb128 0x18
+ 2761 00e3 9642     		.uleb128 0x2116
+ 2762 00e5 19       		.uleb128 0x19
+ 2763 00e6 01       		.uleb128 0x1
+ 2764 00e7 13       		.uleb128 0x13
+ 2765 00e8 00       		.byte	0
+ 2766 00e9 00       		.byte	0
+ 2767 00ea 10       		.uleb128 0x10
+ 2768 00eb 05       		.uleb128 0x5
+ 2769 00ec 00       		.byte	0
+ 2770 00ed 03       		.uleb128 0x3
+ 2771 00ee 0E       		.uleb128 0xe
+ 2772 00ef 3A       		.uleb128 0x3a
+ 2773 00f0 0B       		.uleb128 0xb
+ 2774 00f1 3B       		.uleb128 0x3b
+ 2775 00f2 0B       		.uleb128 0xb
+ 2776 00f3 49       		.uleb128 0x49
+ 2777 00f4 13       		.uleb128 0x13
+ 2778 00f5 02       		.uleb128 0x2
+ 2779 00f6 18       		.uleb128 0x18
+ 2780 00f7 00       		.byte	0
+ 2781 00f8 00       		.byte	0
+ 2782 00f9 11       		.uleb128 0x11
+ 2783 00fa 0F       		.uleb128 0xf
+ 2784 00fb 00       		.byte	0
+ 2785 00fc 0B       		.uleb128 0xb
+ 2786 00fd 0B       		.uleb128 0xb
+ 2787 00fe 49       		.uleb128 0x49
+ 2788 00ff 13       		.uleb128 0x13
+ 2789 0100 00       		.byte	0
+ 2790 0101 00       		.byte	0
+ 2791 0102 12       		.uleb128 0x12
+ 2792 0103 2E       		.uleb128 0x2e
+ 2793 0104 01       		.byte	0x1
+ 2794 0105 3F       		.uleb128 0x3f
+ 2795 0106 19       		.uleb128 0x19
+ 2796 0107 03       		.uleb128 0x3
+ 2797 0108 0E       		.uleb128 0xe
+ 2798 0109 3A       		.uleb128 0x3a
+ 2799 010a 0B       		.uleb128 0xb
+ 2800 010b 3B       		.uleb128 0x3b
+ 2801 010c 0B       		.uleb128 0xb
+ 2802 010d 27       		.uleb128 0x27
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 59
+
+
+ 2803 010e 19       		.uleb128 0x19
+ 2804 010f 49       		.uleb128 0x49
+ 2805 0110 13       		.uleb128 0x13
+ 2806 0111 11       		.uleb128 0x11
+ 2807 0112 01       		.uleb128 0x1
+ 2808 0113 12       		.uleb128 0x12
+ 2809 0114 06       		.uleb128 0x6
+ 2810 0115 40       		.uleb128 0x40
+ 2811 0116 18       		.uleb128 0x18
+ 2812 0117 9642     		.uleb128 0x2116
+ 2813 0119 19       		.uleb128 0x19
+ 2814 011a 01       		.uleb128 0x1
+ 2815 011b 13       		.uleb128 0x13
+ 2816 011c 00       		.byte	0
+ 2817 011d 00       		.byte	0
+ 2818 011e 13       		.uleb128 0x13
+ 2819 011f 34       		.uleb128 0x34
+ 2820 0120 00       		.byte	0
+ 2821 0121 03       		.uleb128 0x3
+ 2822 0122 0E       		.uleb128 0xe
+ 2823 0123 3A       		.uleb128 0x3a
+ 2824 0124 0B       		.uleb128 0xb
+ 2825 0125 3B       		.uleb128 0x3b
+ 2826 0126 05       		.uleb128 0x5
+ 2827 0127 49       		.uleb128 0x49
+ 2828 0128 13       		.uleb128 0x13
+ 2829 0129 02       		.uleb128 0x2
+ 2830 012a 18       		.uleb128 0x18
+ 2831 012b 00       		.byte	0
+ 2832 012c 00       		.byte	0
+ 2833 012d 14       		.uleb128 0x14
+ 2834 012e 0B       		.uleb128 0xb
+ 2835 012f 01       		.byte	0x1
+ 2836 0130 11       		.uleb128 0x11
+ 2837 0131 01       		.uleb128 0x1
+ 2838 0132 12       		.uleb128 0x12
+ 2839 0133 06       		.uleb128 0x6
+ 2840 0134 01       		.uleb128 0x1
+ 2841 0135 13       		.uleb128 0x13
+ 2842 0136 00       		.byte	0
+ 2843 0137 00       		.byte	0
+ 2844 0138 15       		.uleb128 0x15
+ 2845 0139 34       		.uleb128 0x34
+ 2846 013a 00       		.byte	0
+ 2847 013b 03       		.uleb128 0x3
+ 2848 013c 08       		.uleb128 0x8
+ 2849 013d 3A       		.uleb128 0x3a
+ 2850 013e 0B       		.uleb128 0xb
+ 2851 013f 3B       		.uleb128 0x3b
+ 2852 0140 05       		.uleb128 0x5
+ 2853 0141 49       		.uleb128 0x49
+ 2854 0142 13       		.uleb128 0x13
+ 2855 0143 02       		.uleb128 0x2
+ 2856 0144 18       		.uleb128 0x18
+ 2857 0145 00       		.byte	0
+ 2858 0146 00       		.byte	0
+ 2859 0147 16       		.uleb128 0x16
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 60
+
+
+ 2860 0148 01       		.uleb128 0x1
+ 2861 0149 01       		.byte	0x1
+ 2862 014a 49       		.uleb128 0x49
+ 2863 014b 13       		.uleb128 0x13
+ 2864 014c 01       		.uleb128 0x1
+ 2865 014d 13       		.uleb128 0x13
+ 2866 014e 00       		.byte	0
+ 2867 014f 00       		.byte	0
+ 2868 0150 17       		.uleb128 0x17
+ 2869 0151 21       		.uleb128 0x21
+ 2870 0152 00       		.byte	0
+ 2871 0153 49       		.uleb128 0x49
+ 2872 0154 13       		.uleb128 0x13
+ 2873 0155 2F       		.uleb128 0x2f
+ 2874 0156 0B       		.uleb128 0xb
+ 2875 0157 00       		.byte	0
+ 2876 0158 00       		.byte	0
+ 2877 0159 18       		.uleb128 0x18
+ 2878 015a 26       		.uleb128 0x26
+ 2879 015b 00       		.byte	0
+ 2880 015c 49       		.uleb128 0x49
+ 2881 015d 13       		.uleb128 0x13
+ 2882 015e 00       		.byte	0
+ 2883 015f 00       		.byte	0
+ 2884 0160 19       		.uleb128 0x19
+ 2885 0161 34       		.uleb128 0x34
+ 2886 0162 00       		.byte	0
+ 2887 0163 03       		.uleb128 0x3
+ 2888 0164 0E       		.uleb128 0xe
+ 2889 0165 3A       		.uleb128 0x3a
+ 2890 0166 0B       		.uleb128 0xb
+ 2891 0167 3B       		.uleb128 0x3b
+ 2892 0168 05       		.uleb128 0x5
+ 2893 0169 49       		.uleb128 0x49
+ 2894 016a 13       		.uleb128 0x13
+ 2895 016b 3F       		.uleb128 0x3f
+ 2896 016c 19       		.uleb128 0x19
+ 2897 016d 3C       		.uleb128 0x3c
+ 2898 016e 19       		.uleb128 0x19
+ 2899 016f 00       		.byte	0
+ 2900 0170 00       		.byte	0
+ 2901 0171 00       		.byte	0
+ 2902              		.section	.debug_aranges,"",%progbits
+ 2903 0000 44000000 		.4byte	0x44
+ 2904 0004 0200     		.2byte	0x2
+ 2905 0006 00000000 		.4byte	.Ldebug_info0
+ 2906 000a 04       		.byte	0x4
+ 2907 000b 00       		.byte	0
+ 2908 000c 0000     		.2byte	0
+ 2909 000e 0000     		.2byte	0
+ 2910 0010 00000000 		.4byte	.LFB64
+ 2911 0014 14010000 		.4byte	.LFE64-.LFB64
+ 2912 0018 00000000 		.4byte	.LFB65
+ 2913 001c 44000000 		.4byte	.LFE65-.LFB65
+ 2914 0020 00000000 		.4byte	.LFB66
+ 2915 0024 48010000 		.4byte	.LFE66-.LFB66
+ 2916 0028 00000000 		.4byte	.LFB67
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 61
+
+
+ 2917 002c 3A000000 		.4byte	.LFE67-.LFB67
+ 2918 0030 00000000 		.4byte	.LFB68
+ 2919 0034 88020000 		.4byte	.LFE68-.LFB68
+ 2920 0038 00000000 		.4byte	.LFB69
+ 2921 003c 24050000 		.4byte	.LFE69-.LFB69
+ 2922 0040 00000000 		.4byte	0
+ 2923 0044 00000000 		.4byte	0
+ 2924              		.section	.debug_ranges,"",%progbits
+ 2925              	.Ldebug_ranges0:
+ 2926 0000 00000000 		.4byte	.LFB64
+ 2927 0004 14010000 		.4byte	.LFE64
+ 2928 0008 00000000 		.4byte	.LFB65
+ 2929 000c 44000000 		.4byte	.LFE65
+ 2930 0010 00000000 		.4byte	.LFB66
+ 2931 0014 48010000 		.4byte	.LFE66
+ 2932 0018 00000000 		.4byte	.LFB67
+ 2933 001c 3A000000 		.4byte	.LFE67
+ 2934 0020 00000000 		.4byte	.LFB68
+ 2935 0024 88020000 		.4byte	.LFE68
+ 2936 0028 00000000 		.4byte	.LFB69
+ 2937 002c 24050000 		.4byte	.LFE69
+ 2938 0030 00000000 		.4byte	0
+ 2939 0034 00000000 		.4byte	0
+ 2940              		.section	.debug_line,"",%progbits
+ 2941              	.Ldebug_line0:
+ 2942 0000 8A040000 		.section	.debug_str,"MS",%progbits,1
+ 2942      02003F01 
+ 2942      00000201 
+ 2942      FB0E0D00 
+ 2942      01010101 
+ 2943              	.LASF38:
+ 2944 0000 76616C69 		.ascii	"valid\000"
+ 2944      6400
+ 2945              	.LASF40:
+ 2946 0006 755F7261 		.ascii	"u_raw\000"
+ 2946      7700
+ 2947              	.LASF62:
+ 2948 000c 6469725F 		.ascii	"dir_latched_side\000"
+ 2948      6C617463 
+ 2948      6865645F 
+ 2948      73696465 
+ 2948      00
+ 2949              	.LASF47:
+ 2950 001d 73747261 		.ascii	"straight_complete\000"
+ 2950      69676874 
+ 2950      5F636F6D 
+ 2950      706C6574 
+ 2950      6500
+ 2951              	.LASF32:
+ 2952 002f 56345F70 		.ascii	"V4_pp\000"
+ 2952      7000
+ 2953              	.LASF14:
+ 2954 0035 696E7438 		.ascii	"int8_t\000"
+ 2954      5F7400
+ 2955              	.LASF4:
+ 2956 003c 73686F72 		.ascii	"short int\000"
+ 2956      7420696E 
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 62
+
+
+ 2956      7400
+ 2957              	.LASF48:
+ 2958 0046 7475726E 		.ascii	"turn_complete\000"
+ 2958      5F636F6D 
+ 2958      706C6574 
+ 2958      6500
+ 2959              	.LASF23:
+ 2960 0054 73697A65 		.ascii	"sizetype\000"
+ 2960      74797065 
+ 2960      00
+ 2961              	.LASF64:
+ 2962 005d 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 2962      43313120 
+ 2962      352E342E 
+ 2962      31203230 
+ 2962      31363036 
+ 2963 0090 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 2963      20726576 
+ 2963      6973696F 
+ 2963      6E203233 
+ 2963      37373135 
+ 2964 00c3 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 2964      66756E63 
+ 2964      74696F6E 
+ 2964      2D736563 
+ 2964      74696F6E 
+ 2965              	.LASF69:
+ 2966 00eb 6D61696E 		.ascii	"main\000"
+ 2966      00
+ 2967              	.LASF5:
+ 2968 00f0 5F5F7569 		.ascii	"__uint16_t\000"
+ 2968      6E743136 
+ 2968      5F7400
+ 2969              	.LASF18:
+ 2970 00fb 696E7436 		.ascii	"int64_t\000"
+ 2970      345F7400 
+ 2971              	.LASF15:
+ 2972 0103 75696E74 		.ascii	"uint8_t\000"
+ 2972      385F7400 
+ 2973              	.LASF27:
+ 2974 010b 72617732 		.ascii	"raw2\000"
+ 2974      00
+ 2975              	.LASF30:
+ 2976 0110 646D6D5F 		.ascii	"dmm_abs\000"
+ 2976      61627300 
+ 2977              	.LASF33:
+ 2978 0118 56355F70 		.ascii	"V5_pp\000"
+ 2978      7000
+ 2979              	.LASF19:
+ 2980 011e 666C6F61 		.ascii	"float\000"
+ 2980      7400
+ 2981              	.LASF11:
+ 2982 0124 6C6F6E67 		.ascii	"long long int\000"
+ 2982      206C6F6E 
+ 2982      6720696E 
+ 2982      7400
+ 2983              	.LASF21:
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 63
+
+
+ 2984 0132 63686172 		.ascii	"char\000"
+ 2984      00
+ 2985              	.LASF25:
+ 2986 0137 70695F74 		.ascii	"pi_t\000"
+ 2986      00
+ 2987              	.LASF8:
+ 2988 013c 6C6F6E67 		.ascii	"long int\000"
+ 2988      20696E74 
+ 2988      00
+ 2989              	.LASF10:
+ 2990 0145 5F5F696E 		.ascii	"__int64_t\000"
+ 2990      7436345F 
+ 2990      7400
+ 2991              	.LASF66:
+ 2992 014f 433A5C55 		.ascii	"C:\\Users\\yram171\\Downloads\\latest\\Compsys-301-"
+ 2992      73657273 
+ 2992      5C797261 
+ 2992      6D313731 
+ 2992      5C446F77 
+ 2993 017d 434F4445 		.ascii	"CODE\\YASH Code\\CS301_Class.cydsn\000"
+ 2993      5C594153 
+ 2993      4820436F 
+ 2993      64655C43 
+ 2993      53333031 
+ 2994              	.LASF1:
+ 2995 019e 5F5F7569 		.ascii	"__uint8_t\000"
+ 2995      6E74385F 
+ 2995      7400
+ 2996              	.LASF3:
+ 2997 01a8 756E7369 		.ascii	"unsigned char\000"
+ 2997      676E6564 
+ 2997      20636861 
+ 2997      7200
+ 2998              	.LASF52:
+ 2999 01b6 73656E31 		.ascii	"sen1_on_line\000"
+ 2999      5F6F6E5F 
+ 2999      6C696E65 
+ 2999      00
+ 3000              	.LASF50:
+ 3001 01c3 66727569 		.ascii	"fruit_complete\000"
+ 3001      745F636F 
+ 3001      6D706C65 
+ 3001      746500
+ 3002              	.LASF26:
+ 3003 01d2 72617731 		.ascii	"raw1\000"
+ 3003      00
+ 3004              	.LASF22:
+ 3005 01d7 6C6F6E67 		.ascii	"long double\000"
+ 3005      20646F75 
+ 3005      626C6500 
+ 3006              	.LASF53:
+ 3007 01e3 73656E32 		.ascii	"sen2_on_line\000"
+ 3007      5F6F6E5F 
+ 3007      6C696E65 
+ 3007      00
+ 3008              	.LASF59:
+ 3009 01f0 675F7374 		.ascii	"g_stop_now\000"
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 64
+
+
+ 3009      6F705F6E 
+ 3009      6F7700
+ 3010              	.LASF63:
+ 3011 01fb 7475726E 		.ascii	"turn_cooldown_ticks\000"
+ 3011      5F636F6F 
+ 3011      6C646F77 
+ 3011      6E5F7469 
+ 3011      636B7300 
+ 3012              	.LASF54:
+ 3013 020f 73656E33 		.ascii	"sen3_on_line\000"
+ 3013      5F6F6E5F 
+ 3013      6C696E65 
+ 3013      00
+ 3014              	.LASF2:
+ 3015 021c 7369676E 		.ascii	"signed char\000"
+ 3015      65642063 
+ 3015      68617200 
+ 3016              	.LASF12:
+ 3017 0228 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 3017      206C6F6E 
+ 3017      6720756E 
+ 3017      7369676E 
+ 3017      65642069 
+ 3018              	.LASF55:
+ 3019 023f 73656E34 		.ascii	"sen4_on_line\000"
+ 3019      5F6F6E5F 
+ 3019      6C696E65 
+ 3019      00
+ 3020              	.LASF13:
+ 3021 024c 756E7369 		.ascii	"unsigned int\000"
+ 3021      676E6564 
+ 3021      20696E74 
+ 3021      00
+ 3022              	.LASF34:
+ 3023 0259 56365F70 		.ascii	"V6_pp\000"
+ 3023      7000
+ 3024              	.LASF16:
+ 3025 025f 75696E74 		.ascii	"uint16_t\000"
+ 3025      31365F74 
+ 3025      00
+ 3026              	.LASF56:
+ 3027 0268 73656E35 		.ascii	"sen5_on_line\000"
+ 3027      5F6F6E5F 
+ 3027      6C696E65 
+ 3027      00
+ 3028              	.LASF36:
+ 3029 0275 5F636C61 		.ascii	"_clampf\000"
+ 3029      6D706600 
+ 3030              	.LASF45:
+ 3031 027d 434D445F 		.ascii	"CMD_STATES\000"
+ 3031      53544154 
+ 3031      455300
+ 3032              	.LASF6:
+ 3033 0288 73686F72 		.ascii	"short unsigned int\000"
+ 3033      7420756E 
+ 3033      7369676E 
+ 3033      65642069 
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 65
+
+
+ 3033      6E7400
+ 3034              	.LASF57:
+ 3035 029b 73656E36 		.ascii	"sen6_on_line\000"
+ 3035      5F6F6E5F 
+ 3035      6C696E65 
+ 3035      00
+ 3036              	.LASF0:
+ 3037 02a8 5F5F696E 		.ascii	"__int8_t\000"
+ 3037      74385F74 
+ 3037      00
+ 3038              	.LASF67:
+ 3039 02b1 6973725F 		.ascii	"isr_qd_Handler\000"
+ 3039      71645F48 
+ 3039      616E646C 
+ 3039      657200
+ 3040              	.LASF44:
+ 3041 02c0 63656E74 		.ascii	"center_duty_est\000"
+ 3041      65725F64 
+ 3041      7574795F 
+ 3041      65737400 
+ 3042              	.LASF17:
+ 3043 02d0 696E7433 		.ascii	"int32_t\000"
+ 3043      325F7400 
+ 3044              	.LASF37:
+ 3045 02d8 70695F73 		.ascii	"pi_step\000"
+ 3045      74657000 
+ 3046              	.LASF51:
+ 3047 02e0 73746565 		.ascii	"steer\000"
+ 3047      7200
+ 3048              	.LASF43:
+ 3049 02e6 5F426F6F 		.ascii	"_Bool\000"
+ 3049      6C00
+ 3050              	.LASF31:
+ 3051 02ec 646D6D5F 		.ascii	"dmm_signed\000"
+ 3051      7369676E 
+ 3051      656400
+ 3052              	.LASF61:
+ 3053 02f7 6469725F 		.ascii	"dir_delay_ticks\000"
+ 3053      64656C61 
+ 3053      795F7469 
+ 3053      636B7300 
+ 3054              	.LASF39:
+ 3055 0307 695F6E65 		.ascii	"i_next\000"
+ 3055      787400
+ 3056              	.LASF65:
+ 3057 030e 6D61696E 		.ascii	"main.c\000"
+ 3057      2E6300
+ 3058              	.LASF9:
+ 3059 0315 6C6F6E67 		.ascii	"long unsigned int\000"
+ 3059      20756E73 
+ 3059      69676E65 
+ 3059      6420696E 
+ 3059      7400
+ 3060              	.LASF29:
+ 3061 0327 64617667 		.ascii	"davg_sign\000"
+ 3061      5F736967 
+ 3061      6E00
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccySRM71.s 			page 66
+
+
+ 3062              	.LASF68:
+ 3063 0331 6C696768 		.ascii	"light_sensors_update_and_maybe_request_turn\000"
+ 3063      745F7365 
+ 3063      6E736F72 
+ 3063      735F7570 
+ 3063      64617465 
+ 3064              	.LASF41:
+ 3065 035d 7361745F 		.ascii	"sat_hi\000"
+ 3065      686900
+ 3066              	.LASF24:
+ 3067 0364 745F6C6F 		.ascii	"t_loss\000"
+ 3067      737300
+ 3068              	.LASF7:
+ 3069 036b 5F5F696E 		.ascii	"__int32_t\000"
+ 3069      7433325F 
+ 3069      7400
+ 3070              	.LASF35:
+ 3071 0375 6E6F726D 		.ascii	"norm01_from_pp\000"
+ 3071      30315F66 
+ 3071      726F6D5F 
+ 3071      707000
+ 3072              	.LASF58:
+ 3073 0384 675F6469 		.ascii	"g_direction\000"
+ 3073      72656374 
+ 3073      696F6E00 
+ 3074              	.LASF42:
+ 3075 0390 7361745F 		.ascii	"sat_lo\000"
+ 3075      6C6F00
+ 3076              	.LASF20:
+ 3077 0397 646F7562 		.ascii	"double\000"
+ 3077      6C6500
+ 3078              	.LASF60:
+ 3079 039e 675F6469 		.ascii	"g_dist_mm\000"
+ 3079      73745F6D 
+ 3079      6D00
+ 3080              	.LASF70:
+ 3081 03a8 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 3081      52784275 
+ 3081      66666572 
+ 3081      00
+ 3082              	.LASF46:
+ 3083 03b5 74617267 		.ascii	"target_dist\000"
+ 3083      65745F64 
+ 3083      69737400 
+ 3084              	.LASF28:
+ 3085 03c1 64617667 		.ascii	"davg_abs\000"
+ 3085      5F616273 
+ 3085      00
+ 3086              	.LASF49:
+ 3087 03ca 75547572 		.ascii	"uTurn_complete\000"
+ 3087      6E5F636F 
+ 3087      6D706C65 
+ 3087      746500
+ 3088              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

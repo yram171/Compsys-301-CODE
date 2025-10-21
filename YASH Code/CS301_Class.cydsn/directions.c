@@ -13,14 +13,16 @@ static volatile int32_t TICKS_90_RIGHT = 90;
 
 /* Pivot speed (%) — keep modest to avoid overshoot */
 // Side-specific pivot speeds (percent duty)
-#define PIVOT_SPEED_L         23   // left turn speed
-#define PIVOT_SPEED_R         26   // right turn speed
+#define PIVOT_SPEED_L         22   // left turn speed
+#define PIVOT_SPEED_R         23   // right turn speed
+#define PIVOT_SPEED_U         40   // U turn speed
 #define STOP_BEFORE_MS        100
 #define BRAKE_AFTER_MS        500
 
 /* Safety: max number of handler calls allowed while turning.
  * With your ~8 ms loop this is ~3.2 s (400 * 8 ms) which is plenty. */
 #define MAX_TURN_HANDLER_TICKS  28
+//uint16_t MAX_TURN;
 
 /* ===================== Internal state ===================== */
 typedef enum {
@@ -109,6 +111,16 @@ static void pivot_right_speed(void)
     set_motors_with_trim_and_steer(base, steer);
 }
 
+static void pivot_uturn_speed(void)
+{
+    const int pct = PIVOT_SPEED_U;
+    int L = +pct;
+    int R = -pct;
+    int base  = (L + R) / 2;
+    int steer = (R - L) / 2;
+    set_motors_with_trim_and_steer(base, steer);
+}
+
 
 /* Ensure we always exit cleanly and release to straight */
 static void finish_and_release(volatile uint8_t* p_dir)
@@ -153,8 +165,35 @@ void Directions_Handle(volatile uint8_t* p_dir)
     switch (s_state)
     {
     case DIR_IDLE:
-        if (req == 1u || req == 2u) {
+        if (req == 1u) {
             /* Stop, settle, pause encoders, zero counters */
+            set_motors_symmetric(0);
+            motor_enable(0u, 0u);
+            CyDelay(STOP_BEFORE_MS);
+
+            //enc_pause_background();
+            enc_reset_local();
+
+            s_turn_side = req; /* latch side */
+            s_target_ticks = (req == 1u) ? TICKS_90_LEFT : TICKS_90_RIGHT;
+            s_acc_ticks = 0;
+            s_safety_count = 0;
+            s_state = DIR_TURNING;
+        } else if (req == 2u) {
+            /* Stop, settle, pause encoders, zero counters */
+            set_motors_symmetric(0);
+            motor_enable(0u, 0u);
+            CyDelay(STOP_BEFORE_MS);
+
+            //enc_pause_background();
+            enc_reset_local();
+
+            s_turn_side = req; /* latch side */
+            s_target_ticks = (req == 1u) ? TICKS_90_LEFT : TICKS_90_RIGHT;
+            s_acc_ticks = 0;
+            s_safety_count = 0;
+            s_state = DIR_TURNING;
+        } else if (req == 3u){
             set_motors_symmetric(0);
             motor_enable(0u, 0u);
             CyDelay(STOP_BEFORE_MS);
@@ -174,8 +213,10 @@ void Directions_Handle(volatile uint8_t* p_dir)
         /* Drive the pivot */
         if (s_turn_side == 1u) {
             pivot_left_speed();
-        } else {
+        } else if(s_turn_side == 2u) {
             pivot_right_speed();
+        } else if(s_turn_side == 3u) {
+            pivot_uturn_speed();
         }
 
 
