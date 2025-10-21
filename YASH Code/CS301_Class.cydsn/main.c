@@ -47,7 +47,9 @@
 
 
 // Cooldown after turn to ignore intersection sensors V1 & V2
-#define TURN_COOLDOWN_MS (300)
+ #define TURN_COOLDOWN_MS (400)
+//static volatile uint16_t TURN_COOLDOWN_MS;
+
 #define TURN_COOLDOWN_TICKS ((TURN_COOLDOWN_MS + LOOP_DT_MS - 1) / LOOP_DT_MS
 
 
@@ -236,39 +238,63 @@ int main(void)
     
 const uint8_t CMD_STATES[] = {
     // 31 entries, aligned 1:1 with COMMANDS[i]
-    0, // START
-    2, // RIGHT
-    2, // RIGHT
+//    0, // START
+//    2, // RIGHT
+//    0,
+//    2, // RIGHT
+    0,
     1, // LEFT
+    0,
     2, // RIGHT
+    0,
     2, // RIGHT
+    0,
     0,// 5, // REACH
     3, // UTURN
+    0,
     2, // RIGHT
+    0,
     1, // LEFT
+    0,
     2, // RIGHT
+    0,
+    1, // LEFT
+    0,// 5, // REACH
+    2, // RIGHT
+    0,
+    2, // RIGHT
+    0,
+    2, // RIGHT
+    0,
     1, // LEFT
     0,// 5, // REACH
     3, // UTURN
+    0,
     2, // RIGHT
-    2, // RIGHT
+    0,
+    1, // LEFT
+    0,
+    0,
+    1, // LEFT
+    0,
+    0,
+    0,
     1, // LEFT
     0,// 5, // REACH
-    3, // UTURN
+    1, // LEFT
+    0,
     2, // RIGHT
-    1, // LEFT
-    1, // LEFT
-    1, // LEFT
-    0,// 5, // REACH
-    1, // LEFT
+    0,
+    0,
     2, // RIGHT
-    2, // RIGHT
+    0,
     1, // LEFT
+    0,
     2, // RIGHT
-    1, // LEFT
-    0// 6  // END
+    0,
+    6  // END
 }; 
-    int8_t indexMAX = 31;  // Loop index
+    int8_t indexMAX = 50;  // Loop index
     
     // For Testing
     //const uint8_t CMD_STATES[] = {1,2};
@@ -426,6 +452,11 @@ const uint8_t CMD_STATES[] = {
                     }
                 }
                 /* ---------------- end turn handling with delay ---------------- */
+                /* Straight run with PI steering */
+        
+        if(turn_cooldown_ticks > 0) {
+            turn_cooldown_ticks--;
+        }
                 
             
         } else if((CMD_STATES[i] == 2)) {
@@ -466,6 +497,11 @@ const uint8_t CMD_STATES[] = {
                     }
                 }
                 /* ---------------- end turn handling with delay ---------------- */
+                /* Straight run with PI steering */
+        
+        if(turn_cooldown_ticks > 0) {
+            turn_cooldown_ticks--;
+        }
             
         } else if((CMD_STATES[i] == 3)) {
             // Do U-TURN
@@ -505,6 +541,11 @@ const uint8_t CMD_STATES[] = {
                     }
                 }
                 /* ---------------- end turn handling with delay ---------------- */
+                /* Straight run with PI steering */
+        
+        if(turn_cooldown_ticks > 0) {
+            turn_cooldown_ticks--;
+        }
           
             
         } else if((CMD_STATES[i] == 5)) {
@@ -535,28 +576,45 @@ const uint8_t CMD_STATES[] = {
          set_motors_with_trim_and_steer(center_duty_est, steer);
          }
 
+        
+        
+        
         } else if((CMD_STATES[i] == 6)) {
          // FINISH
-
-         // --- Apply the same logic as STATE 5 ---
-         if (target_dist == 0) {
-         target_dist = g_dist_mm + 500; // in mm
-         }
-
-         g_stop_now = (g_dist_mm >= target_dist) ? 1u : 0u;
-
-         if (g_stop_now) {
-         set_motors_symmetric(0);
-         motor_enable(1u, 1u);
-
-        // **** ADDED THIS FLAG ****
-        // This tells the state machine to advance
-         // (assuming 'FINISH' should also set 'fruit_complete')
-        fruit_complete = 1; 
-
-         // 'continue' is removed
-         }
-}
+            motor_enable(1u, 1u);
+        
+        
+        }
+        
+        // food
+        if (i == 13 || i == 23 || i == 31 || i == 44) {
+            CyDelay(2000);
+        } 
+        
+        
+        
+        if (i== 4 ) {
+            //TURN_COOLDOWN_MS = 4000;
+            turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+        } 
+        if ( i== 10) {
+            //TURN_COOLDOWN_MS = 2000;
+            turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+        }
+        if ( i== 35) {
+            //TURN_COOLDOWN_MS = 5000;
+            turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+        }
+        if ( i== 38) {
+            //TURN_COOLDOWN_MS = 500;
+            turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+        }
+        if ( i== 46) {
+            //TURN_COOLDOWN_MS = 1000;
+            turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+        }
+        
+        
         if (straight_complete == 1u || turn_complete == 1u || uTurn_complete == 1u || fruit_complete == 1u) {
             
             // Check if we are at the end of the array
@@ -575,6 +633,7 @@ const uint8_t CMD_STATES[] = {
             
             target_dist = 0;
         }
+        
 
         CyDelay(LOOP_DT_MS);
     }

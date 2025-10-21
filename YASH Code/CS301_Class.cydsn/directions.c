@@ -143,7 +143,7 @@ static void finish_and_release(volatile uint8_t* p_dir)
     set_motors_symmetric(0);
 
     set_motors_with_trim_and_steer(100,-10);
-    CyDelay(70);
+    CyDelay(60);
     set_motors_symmetric(0); 
 }
 
