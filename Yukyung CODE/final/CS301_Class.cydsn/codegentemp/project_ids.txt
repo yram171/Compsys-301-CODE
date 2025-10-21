@@ -1,0 +1,6 @@
+C:\Users\ylee818\Documents\GitHub\Compsys-301-CODE\Yukyung CODE\final\CS301_Class.cydsn\CS301_Class.cyprj|86e82df7-3619-4896-83de-4b5587de64a1
+C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|4f9f0722-5cf6-4431-a1ce-3527808e64a7
+C:\Users\ylee818\Documents\PSoC Creator\4.2\Downloads ( 4.2).cylib\Downloads ( 4.2).cyprj|779cbeee-d46d-486b-9862-2fe63d6f58ee
+C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|c8189b73-0c1d-41cf-a4fb-342659a1447b
+C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|32d69dd4-3437-4a23-b33b-3270c008681c
+C:\Program Files (x86)\Cypress\PSoC Creator\4.2\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|3c650fc8-d063-4d47-8f9b-c5bc5236a3b3
