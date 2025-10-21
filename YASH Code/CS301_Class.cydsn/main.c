@@ -21,7 +21,7 @@
 #define VMAX_CONST_MM_S        1000
 #define SPEED_FRAC_PERCENT      20
 #define V_CRUISE_MM_S  ((int32_t)VMAX_CONST_MM_S * (int32_t)SPEED_FRAC_PERCENT / 100)
-#define TARGET_DIST_MM        999999  // HALF THE DISTANCE   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#define TARGET_DIST_MM        150  // HALF THE DISTANCE   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 /* ===== Encoder → mm conversion (kept) ===== */
 #define QD_SAMPLE_MS             5u
@@ -233,17 +233,34 @@ int main(void)
      * STRAIGHT -> 0, TURN LEFT -> 1, TURN RIGHT -> 2, TURN U_TURN -> 3,
      * REACH -> 5, END -> 6
      */
-    /*const uint8_t CMD_STATES[] = {
-    0, 1, 0, 2, 0, 1, 0, 1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1, 0, 1, 0, 2, 0, 2, 0, 1, 0, 1, 0, 2, 0, 2,
-    0, 1, 0, 1, 0, 2, 0, 5, 3, 0, 2, 0, 2, 0, 1, 0, 1, 0, 1, 0, 2, 0, 1, 0, 1, 0, 2, 0, 2, 0, 2, 0,
-    1, 0, 2, 0, 2, 0, 1, 0, 1, 0, 5, 3, 0, 1, 0, 2, 0, 2, 0, 2, 0, 2, 0, 1, 0, 1, 0, 2, 0, 2, 0, 1,
-    0, 1, 0, 1, 0, 2, 0, 2, 0, 5, 3, 0, 0, 2, 0, 5, 3, 0, 2, 0, 1, 0, 1, 0, 2, 0, 2, 0, 1, 0, 1, 0,
-    1, 0, 2, 0, 2, 0, 1, 0, 1, 0, 1, 0, 6
-    }; */
+    /*
+    const uint8_t CMD_STATES[] = {
+    0,  // TURN_START
+    1,  // TURN_LEFT
+    5,  // REACH
+    3,  // TURN_U_TURN
+    1,  // TURN_LEFT
+    1,  // TURN_LEFT
+    2,  // TURN_RIGHT
+    2,  // TURN_RIGHT
+    5,  // REACH
+    2,  // TURN_RIGHT
+    5,  // REACH
+    3,  // TURN_U_TURN
+    2,  // TURN_RIGHT
+    2,  // TURN_RIGHT
+    1,  // TURN_LEFT
+    2,  // TURN_RIGHT
+    2,  // TURN_RIGHT
+    5,  // REACH
+    5,  // REACH
+    0   // TURN_END
+};*/
     
-    const uint8_t CMD_STATES[] = {1};
+    const uint8_t CMD_STATES[] = {5};
     
     int8_t i = 0;  // Loop index
+    int8_t indexMAX = 0;  // Loop index
     int32_t target_dist = 0;
     
     int8_t straight_complete = 0;
@@ -310,7 +327,7 @@ int main(void)
 //        } */
         
         
-        int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
+//        int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
 //        set_motors_with_trim_and_steer(center_duty_est, steer);
 //        
 //        
@@ -350,7 +367,7 @@ int main(void)
         } else if((CMD_STATES[i] == 1)) {
             // Go LEFT
             
-            //g_direction = 1u;
+            g_direction = 1u;
             /* ---------------- Turn handling with arming delay (Option A) ---------------- */
                 /* Arm once on the first detection (edge 0 -> 1/2) */
                 if ((g_direction == 1u || g_direction == 2u) && dir_latched_side == 0){
@@ -379,14 +396,14 @@ int main(void)
                             
                             
                             turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+                            turn_complete = 1;
                         }
                         CyDelay(LOOP_DT_MS);
                         continue;  /* skip the rest this tick */
                     }
                 }
                 /* ---------------- end turn handling with delay ---------------- */
-                turn_complete = 1;
-                D4_Write(1);
+                
             
         } else if((CMD_STATES[i] == 2)) {
             // Go RIGHT
@@ -419,20 +436,20 @@ int main(void)
                             
                             
                             turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+                            turn_complete = 1;
                         }
                         CyDelay(LOOP_DT_MS);
                         continue;  /* skip the rest this tick */
                     }
                 }
                 /* ---------------- end turn handling with delay ---------------- */
-                turn_complete = 1;
             
         } else if((CMD_STATES[i] == 3)) {
             // Do U-TURN
             g_direction = 3u;
             /* ---------------- Turn handling with arming delay (Option A) ---------------- */
                 /* Arm once on the first detection (edge 0 -> 1/2) */
-                if ((g_direction == 1u || g_direction == 2u) && dir_latched_side == 0){
+                if ((g_direction == 1u || g_direction == 2u || g_direction == 3u) && dir_latched_side == 0){
                     dir_latched_side = g_direction;          /* remember side */
                     dir_delay_ticks  = DIR_CALL_DELAY_TICKS; /* start countdown */
                     //CyDelay(50);
@@ -443,7 +460,7 @@ int main(void)
                     dir_delay_ticks  = 0;
                 }
 
-                if (g_direction == 1u || g_direction == 2u){
+                if (g_direction == 1u || g_direction == 2u || g_direction == 3u){
                     if (dir_delay_ticks > 0){
                         /* Still delaying: keep doing normal straight PI */
                         dir_delay_ticks--;
@@ -458,39 +475,65 @@ int main(void)
                             
                             
                             turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+                            uTurn_complete = 1;
                         }
                         CyDelay(LOOP_DT_MS);
                         continue;  /* skip the rest this tick */
                     }
                 }
                 /* ---------------- end turn handling with delay ---------------- */
-                uTurn_complete = 1;
+          
             
         } else if((CMD_STATES[i] == 5)) {
-            // REACH FOOD
-            int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
-            set_motors_with_trim_and_steer(center_duty_est, steer);
-            target_dist = 500;  // in mm
-            g_stop_now = (g_dist_mm >= target_dist) ? 1u : 0u;
-            if (g_stop_now) {
-                set_motors_symmetric(0);
-                motor_enable(1u, 1u);
-                continue;
-            }
-            fruit_complete = 1;
+        // REACH FOOD
+
+         // --- FIX 1: Set the target distance *only once* ---
+         // We know we just entered this state if target_dist is 0
+        if (target_dist == 0) {
+         // Set target to be 500mm *from our current position*
+         target_dist = g_dist_mm + 500; // in mm
+         }
+
+        // Check if we have *now* reached that target
+         g_stop_now = (g_dist_mm >= TARGET_DIST_MM) ? 1u : 0u;
+
+         // --- FIX 2 & 3: Use if/else and remove 'continue' ---
+         if (g_stop_now) {
+         // Target met: STOP
+         set_motors_symmetric(0);
+         motor_enable(1u, 1u);
+        
+         fruit_complete = 1; // Flag that this state is done
+        D4_Write(1);
+         // DO NOT 'continue' here
+        } else {
+         // Target not met: KEEP DRIVING
+         int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
+         set_motors_with_trim_and_steer(center_duty_est, steer);
+         }
 
         } else if((CMD_STATES[i] == 6)) {
-            // FINISH
-            int steer = pi_step(&pi, V4_pp, V5_pp, V6_pp);
-            set_motors_with_trim_and_steer(center_duty_est, steer);
-            target_dist = 500;  // in mm
-            g_stop_now = (g_dist_mm >= target_dist) ? 1u : 0u;
-            if (g_stop_now) {
-                set_motors_symmetric(0);
-                motor_enable(1u, 1u);
-                continue;
-            }           
-        }
+         // FINISH
+
+         // --- Apply the same logic as STATE 5 ---
+         if (target_dist == 0) {
+         target_dist = g_dist_mm + 500; // in mm
+         }
+
+         g_stop_now = (g_dist_mm >= target_dist) ? 1u : 0u;
+
+         if (g_stop_now) {
+         set_motors_symmetric(0);
+         motor_enable(1u, 1u);
+
+        // **** ADDED THIS FLAG ****
+        // This tells the state machine to advance
+         // (assuming 'FINISH' should also set 'fruit_complete')
+        fruit_complete = 1; 
+
+         // 'continue' is removed
+         }
+}
         if (straight_complete == 1u || turn_complete == 1u || uTurn_complete == 1u || fruit_complete == 1u) {
             
             i += 1;
