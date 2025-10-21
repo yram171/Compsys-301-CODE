@@ -4,7 +4,7 @@
  * 없으면 0(트림 없음)으로 처리.
  */
 #ifndef RIGHT_TRIM_PERCENT
-#define RIGHT_TRIM_PERCENT   (-7)
+#define RIGHT_TRIM_PERCENT   (6)
 #endif
 
 int clamp100(int x){

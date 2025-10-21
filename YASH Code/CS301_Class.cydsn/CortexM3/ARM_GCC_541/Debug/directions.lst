@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 1
 
 
    1              		.syntax unified
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
    4:directions.c  **** 
    5:directions.c  **** #include "directions.h"
    6:directions.c  **** #include "motor_s.h"     // set_motors_symmetric(), set_motors_with_trim_and_steer(), motor_enable
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 2
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 2
 
 
    7:directions.c  **** #include "defines.h"     // your project-wide defines
@@ -70,8 +70,8 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
   13:directions.c  **** 
   14:directions.c  **** /* Pivot speed (%) — keep modest to avoid overshoot */
   15:directions.c  **** // Side-specific pivot speeds (percent duty)
-  16:directions.c  **** #define PIVOT_SPEED_L         24   // left turn speed
-  17:directions.c  **** #define PIVOT_SPEED_R         24   // right turn speed
+  16:directions.c  **** #define PIVOT_SPEED_L         25   // left turn speed
+  17:directions.c  **** #define PIVOT_SPEED_R         26   // right turn speed
   18:directions.c  **** #define PIVOT_SPEED_U         42   // U turn speed
   19:directions.c  **** #define STOP_BEFORE_MS        100
   20:directions.c  **** #define BRAKE_AFTER_MS        500
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
   56              		@ link register save eliminated.
   57 0000 80B4     		push	{r7}
   58              		.cfi_def_cfa_offset 4
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 3
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 3
 
 
   59              		.cfi_offset 7, -4
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
   97 000c BD46     		mov	sp, r7
   98              		.cfi_def_cfa_register 13
   99              		@ sp needed
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 4
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 4
 
 
  100 000e 80BC     		pop	{r7}
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  142 0018 7B60     		str	r3, [r7, #4]
  143              	.L6:
   85:directions.c  ****     if (dR < 0) dR = -dR;
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 5
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 5
 
 
  144              		.loc 1 85 0 is_stmt 1
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  188              		.cfi_startproc
  189              		@ args = 0, pretend = 0, frame = 24
  190              		@ frame_needed = 1, uses_anonymous_args = 0
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 6
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 6
 
 
  191 0000 80B5     		push	{r7, lr}
@@ -311,7 +311,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  198              		.cfi_def_cfa_register 7
   96:directions.c  ****     const int pct = PIVOT_SPEED_L;
  199              		.loc 1 96 0
- 200 0006 1823     		movs	r3, #24
+ 200 0006 1923     		movs	r3, #25
  201 0008 7B61     		str	r3, [r7, #20]
   97:directions.c  ****     int L = -pct;   // reverse
  202              		.loc 1 97 0
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  238              	.LFE66:
  239              		.size	pivot_left_speed, .-pivot_left_speed
  240              		.section	.text.pivot_right_speed,"ax",%progbits
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 7
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 7
 
 
  241              		.align	2
@@ -384,7 +384,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  258              		.cfi_def_cfa_register 7
  106:directions.c  ****     const int pct = PIVOT_SPEED_R;
  259              		.loc 1 106 0
- 260 0006 1823     		movs	r3, #24
+ 260 0006 1A23     		movs	r3, #26
  261 0008 7B61     		str	r3, [r7, #20]
  107:directions.c  ****     int L = +pct;
  262              		.loc 1 107 0
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  286 0030 7968     		ldr	r1, [r7, #4]
  287 0032 B868     		ldr	r0, [r7, #8]
  288 0034 FFF7FEFF 		bl	set_motors_with_trim_and_steer
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 8
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 8
 
 
  112:directions.c  **** }
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  335 001e 5B10     		asrs	r3, r3, #1
  336 0020 BB60     		str	r3, [r7, #8]
  120:directions.c  ****     int steer = (R - L) / 2;
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 9
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 9
 
 
  337              		.loc 1 120 0
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  130:directions.c  ****     enc_reset_local();
  382              		.loc 1 130 0
  383 000c FFF7FEFF 		bl	enc_reset_local
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 10
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 10
 
 
  131:directions.c  **** 
@@ -580,46 +580,47 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  412 0038 1A80     		strh	r2, [r3]	@ movhi
  139:directions.c  ****     
  140:directions.c  ****     /* Stop motion and brief brake/coast window */
- 141:directions.c  ****     set_motors_symmetric(0); 
- 413              		.loc 1 141 0
+ 141:directions.c  ****     
+ 142:directions.c  ****     set_motors_symmetric(0); 
+ 413              		.loc 1 142 0
  414 003a 0020     		movs	r0, #0
  415 003c FFF7FEFF 		bl	set_motors_symmetric
- 142:directions.c  ****     CyDelay(BRAKE_AFTER_MS);
- 416              		.loc 1 142 0
+ 143:directions.c  ****     CyDelay(BRAKE_AFTER_MS);
+ 416              		.loc 1 143 0
  417 0040 4FF4FA70 		mov	r0, #500
  418 0044 FFF7FEFF 		bl	CyDelay
- 143:directions.c  ****     set_motors_symmetric(0);
- 419              		.loc 1 143 0
+ 144:directions.c  ****     set_motors_symmetric(0);
+ 419              		.loc 1 144 0
  420 0048 0020     		movs	r0, #0
  421 004a FFF7FEFF 		bl	set_motors_symmetric
- 144:directions.c  **** 
- 145:directions.c  ****     set_motors_with_trim_and_steer(100,-10);
- 422              		.loc 1 145 0
- 423 004e 6FF00901 		mvn	r1, #9
- 424 0052 6420     		movs	r0, #100
- 425 0054 FFF7FEFF 		bl	set_motors_with_trim_and_steer
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 11
+ 145:directions.c  **** 
+ 146:directions.c  ****     set_motors_with_trim_and_steer(100,8);
+ 422              		.loc 1 146 0
+ 423 004e 0821     		movs	r1, #8
+ 424 0050 6420     		movs	r0, #100
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 11
 
 
- 146:directions.c  ****     CyDelay(60);
- 426              		.loc 1 146 0
- 427 0058 3C20     		movs	r0, #60
- 428 005a FFF7FEFF 		bl	CyDelay
- 147:directions.c  ****     set_motors_symmetric(0); 
- 429              		.loc 1 147 0
- 430 005e 0020     		movs	r0, #0
- 431 0060 FFF7FEFF 		bl	set_motors_symmetric
- 148:directions.c  **** }
- 432              		.loc 1 148 0
- 433 0064 00BF     		nop
- 434 0066 0837     		adds	r7, r7, #8
+ 425 0052 FFF7FEFF 		bl	set_motors_with_trim_and_steer
+ 147:directions.c  ****     CyDelay(40);
+ 426              		.loc 1 147 0
+ 427 0056 2820     		movs	r0, #40
+ 428 0058 FFF7FEFF 		bl	CyDelay
+ 148:directions.c  ****     set_motors_symmetric(0); 
+ 429              		.loc 1 148 0
+ 430 005c 0020     		movs	r0, #0
+ 431 005e FFF7FEFF 		bl	set_motors_symmetric
+ 149:directions.c  **** }
+ 432              		.loc 1 149 0
+ 433 0062 00BF     		nop
+ 434 0064 0837     		adds	r7, r7, #8
  435              		.cfi_def_cfa_offset 8
- 436 0068 BD46     		mov	sp, r7
+ 436 0066 BD46     		mov	sp, r7
  437              		.cfi_def_cfa_register 13
  438              		@ sp needed
- 439 006a 80BD     		pop	{r7, pc}
+ 439 0068 80BD     		pop	{r7, pc}
  440              	.L16:
- 441              		.align	2
+ 441 006a 00BF     		.align	2
  442              	.L15:
  443 006c 00000000 		.word	s_state
  444 0070 01000000 		.word	s_turn_side
@@ -637,12 +638,12 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  456              		.type	Directions_Init, %function
  457              	Directions_Init:
  458              	.LFB70:
- 149:directions.c  **** 
- 150:directions.c  **** /* ======================= Public API ======================= */
- 151:directions.c  **** 
- 152:directions.c  **** void Directions_Init(void)
- 153:directions.c  **** {
- 459              		.loc 1 153 0
+ 150:directions.c  **** 
+ 151:directions.c  **** /* ======================= Public API ======================= */
+ 152:directions.c  **** 
+ 153:directions.c  **** void Directions_Init(void)
+ 154:directions.c  **** {
+ 459              		.loc 1 154 0
  460              		.cfi_startproc
  461              		@ args = 0, pretend = 0, frame = 0
  462              		@ frame_needed = 1, uses_anonymous_args = 0
@@ -652,36 +653,36 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  466              		.cfi_offset 7, -4
  467 0002 00AF     		add	r7, sp, #0
  468              		.cfi_def_cfa_register 7
- 154:directions.c  ****     s_state = DIR_IDLE;
- 469              		.loc 1 154 0
+ 155:directions.c  ****     s_state = DIR_IDLE;
+ 469              		.loc 1 155 0
  470 0004 094B     		ldr	r3, .L18
  471 0006 0022     		movs	r2, #0
  472 0008 1A70     		strb	r2, [r3]
- 155:directions.c  ****     s_turn_side = 0u;
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 12
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 12
 
 
- 473              		.loc 1 155 0
+ 156:directions.c  ****     s_turn_side = 0u;
+ 473              		.loc 1 156 0
  474 000a 094B     		ldr	r3, .L18+4
  475 000c 0022     		movs	r2, #0
  476 000e 1A70     		strb	r2, [r3]
- 156:directions.c  ****     s_target_ticks = 0;
- 477              		.loc 1 156 0
+ 157:directions.c  ****     s_target_ticks = 0;
+ 477              		.loc 1 157 0
  478 0010 084B     		ldr	r3, .L18+8
  479 0012 0022     		movs	r2, #0
  480 0014 1A60     		str	r2, [r3]
- 157:directions.c  ****     s_acc_ticks = 0;
- 481              		.loc 1 157 0
+ 158:directions.c  ****     s_acc_ticks = 0;
+ 481              		.loc 1 158 0
  482 0016 084B     		ldr	r3, .L18+12
  483 0018 0022     		movs	r2, #0
  484 001a 1A60     		str	r2, [r3]
- 158:directions.c  ****     s_safety_count = 0;
- 485              		.loc 1 158 0
+ 159:directions.c  ****     s_safety_count = 0;
+ 485              		.loc 1 159 0
  486 001c 074B     		ldr	r3, .L18+16
  487 001e 0022     		movs	r2, #0
  488 0020 1A80     		strh	r2, [r3]	@ movhi
- 159:directions.c  **** }
- 489              		.loc 1 159 0
+ 160:directions.c  **** }
+ 489              		.loc 1 160 0
  490 0022 00BF     		nop
  491 0024 BD46     		mov	sp, r7
  492              		.cfi_def_cfa_register 13
@@ -709,18 +710,18 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  514              		.type	Directions_Handle, %function
  515              	Directions_Handle:
  516              	.LFB71:
- 160:directions.c  **** 
- 161:directions.c  **** void Directions_Handle(volatile uint8_t* p_dir)
- 162:directions.c  **** {
- 517              		.loc 1 162 0
+ 161:directions.c  **** 
+ 162:directions.c  **** void Directions_Handle(volatile uint8_t* p_dir)
+ 163:directions.c  **** {
+ 517              		.loc 1 163 0
  518              		.cfi_startproc
  519              		@ args = 0, pretend = 0, frame = 16
  520              		@ frame_needed = 1, uses_anonymous_args = 0
  521 0000 80B5     		push	{r7, lr}
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 13
+
+
  522              		.cfi_def_cfa_offset 8
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 13
-
-
  523              		.cfi_offset 7, -8
  524              		.cfi_offset 14, -4
  525 0002 84B0     		sub	sp, sp, #16
@@ -728,25 +729,25 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  527 0004 00AF     		add	r7, sp, #0
  528              		.cfi_def_cfa_register 7
  529 0006 7860     		str	r0, [r7, #4]
- 163:directions.c  ****     const uint8_t req = (p_dir ? *p_dir : 0u);
- 530              		.loc 1 163 0
+ 164:directions.c  ****     const uint8_t req = (p_dir ? *p_dir : 0u);
+ 530              		.loc 1 164 0
  531 0008 7B68     		ldr	r3, [r7, #4]
  532 000a 002B     		cmp	r3, #0
  533 000c 03D0     		beq	.L21
- 534              		.loc 1 163 0 is_stmt 0 discriminator 1
+ 534              		.loc 1 164 0 is_stmt 0 discriminator 1
  535 000e 7B68     		ldr	r3, [r7, #4]
  536 0010 1B78     		ldrb	r3, [r3]
  537 0012 DBB2     		uxtb	r3, r3
  538 0014 00E0     		b	.L22
  539              	.L21:
- 540              		.loc 1 163 0 discriminator 2
+ 540              		.loc 1 164 0 discriminator 2
  541 0016 0023     		movs	r3, #0
  542              	.L22:
- 543              		.loc 1 163 0 discriminator 4
+ 543              		.loc 1 164 0 discriminator 4
  544 0018 FB73     		strb	r3, [r7, #15]
- 164:directions.c  **** 
- 165:directions.c  ****     switch (s_state)
- 545              		.loc 1 165 0 is_stmt 1 discriminator 4
+ 165:directions.c  **** 
+ 166:directions.c  ****     switch (s_state)
+ 545              		.loc 1 166 0 is_stmt 1 discriminator 4
  546 001a 5C4B     		ldr	r3, .L45
  547 001c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
  548 001e 022B     		cmp	r3, #2
@@ -755,289 +756,289 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  551 0024 00F0A380 		beq	.L25
  552 0028 002B     		cmp	r3, #0
  553 002a 40F0A480 		bne	.L42
- 166:directions.c  ****     {
- 167:directions.c  ****     case DIR_IDLE:
- 168:directions.c  ****         if (req == 1u) {
- 554              		.loc 1 168 0
+ 167:directions.c  ****     {
+ 168:directions.c  ****     case DIR_IDLE:
+ 169:directions.c  ****         if (req == 1u) {
+ 554              		.loc 1 169 0
  555 002e FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
  556 0030 012B     		cmp	r3, #1
  557 0032 22D1     		bne	.L27
- 169:directions.c  ****             /* Stop, settle, pause encoders, zero counters */
- 170:directions.c  ****             set_motors_symmetric(0);
- 558              		.loc 1 170 0
+ 170:directions.c  ****             /* Stop, settle, pause encoders, zero counters */
+ 171:directions.c  ****             set_motors_symmetric(0);
+ 558              		.loc 1 171 0
  559 0034 0020     		movs	r0, #0
  560 0036 FFF7FEFF 		bl	set_motors_symmetric
- 171:directions.c  ****             motor_enable(0u, 0u);
- 561              		.loc 1 171 0
+ 172:directions.c  ****             motor_enable(0u, 0u);
+ 561              		.loc 1 172 0
  562 003a 0021     		movs	r1, #0
  563 003c 0020     		movs	r0, #0
  564 003e FFF7FEFF 		bl	motor_enable
- 172:directions.c  ****             CyDelay(STOP_BEFORE_MS);
- 565              		.loc 1 172 0
+ 173:directions.c  ****             CyDelay(STOP_BEFORE_MS);
+ 565              		.loc 1 173 0
  566 0042 6420     		movs	r0, #100
  567 0044 FFF7FEFF 		bl	CyDelay
- 173:directions.c  **** 
- 174:directions.c  ****             //enc_pause_background();
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 14
+ 174:directions.c  **** 
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 14
 
 
- 175:directions.c  ****             enc_reset_local();
- 568              		.loc 1 175 0
+ 175:directions.c  ****             //enc_pause_background();
+ 176:directions.c  ****             enc_reset_local();
+ 568              		.loc 1 176 0
  569 0048 FFF7FEFF 		bl	enc_reset_local
- 176:directions.c  **** 
- 177:directions.c  ****             s_turn_side = req; /* latch side */
- 570              		.loc 1 177 0
+ 177:directions.c  **** 
+ 178:directions.c  ****             s_turn_side = req; /* latch side */
+ 570              		.loc 1 178 0
  571 004c 504A     		ldr	r2, .L45+4
  572 004e FB7B     		ldrb	r3, [r7, #15]
  573 0050 1370     		strb	r3, [r2]
- 178:directions.c  ****             s_target_ticks = (req == 1u) ? TICKS_90_LEFT : TICKS_90_RIGHT;
- 574              		.loc 1 178 0
+ 179:directions.c  ****             s_target_ticks = (req == 1u) ? TICKS_90_LEFT : TICKS_90_RIGHT;
+ 574              		.loc 1 179 0
  575 0052 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
  576 0054 012B     		cmp	r3, #1
  577 0056 02D1     		bne	.L28
- 578              		.loc 1 178 0 is_stmt 0 discriminator 1
+ 578              		.loc 1 179 0 is_stmt 0 discriminator 1
  579 0058 4E4B     		ldr	r3, .L45+8
  580 005a 1B68     		ldr	r3, [r3]
  581 005c 01E0     		b	.L29
  582              	.L28:
- 583              		.loc 1 178 0 discriminator 2
+ 583              		.loc 1 179 0 discriminator 2
  584 005e 4E4B     		ldr	r3, .L45+12
  585 0060 1B68     		ldr	r3, [r3]
  586              	.L29:
- 587              		.loc 1 178 0 discriminator 4
+ 587              		.loc 1 179 0 discriminator 4
  588 0062 4E4A     		ldr	r2, .L45+16
  589 0064 1360     		str	r3, [r2]
- 179:directions.c  ****             s_acc_ticks = 0;
- 590              		.loc 1 179 0 is_stmt 1 discriminator 4
+ 180:directions.c  ****             s_acc_ticks = 0;
+ 590              		.loc 1 180 0 is_stmt 1 discriminator 4
  591 0066 4E4B     		ldr	r3, .L45+20
  592 0068 0022     		movs	r2, #0
  593 006a 1A60     		str	r2, [r3]
- 180:directions.c  ****             s_safety_count = 0;
- 594              		.loc 1 180 0 discriminator 4
+ 181:directions.c  ****             s_safety_count = 0;
+ 594              		.loc 1 181 0 discriminator 4
  595 006c 4D4B     		ldr	r3, .L45+24
  596 006e 0022     		movs	r2, #0
  597 0070 1A80     		strh	r2, [r3]	@ movhi
- 181:directions.c  ****             s_state = DIR_TURNING;
- 598              		.loc 1 181 0 discriminator 4
+ 182:directions.c  ****             s_state = DIR_TURNING;
+ 598              		.loc 1 182 0 discriminator 4
  599 0072 464B     		ldr	r3, .L45
  600 0074 0222     		movs	r2, #2
  601 0076 1A70     		strb	r2, [r3]
- 182:directions.c  ****         } else if (req == 2u) {
- 183:directions.c  ****             /* Stop, settle, pause encoders, zero counters */
- 184:directions.c  ****             set_motors_symmetric(0);
- 185:directions.c  ****             motor_enable(0u, 0u);
- 186:directions.c  ****             CyDelay(STOP_BEFORE_MS);
- 187:directions.c  **** 
- 188:directions.c  ****             //enc_pause_background();
- 189:directions.c  ****             enc_reset_local();
- 190:directions.c  **** 
- 191:directions.c  ****             s_turn_side = req; /* latch side */
- 192:directions.c  ****             s_target_ticks = (req == 1u) ? TICKS_90_LEFT : TICKS_90_RIGHT;
- 193:directions.c  ****             s_acc_ticks = 0;
- 194:directions.c  ****             s_safety_count = 0;
- 195:directions.c  ****             s_state = DIR_TURNING;
- 196:directions.c  ****         } else if (req == 3u){
- 197:directions.c  ****             set_motors_symmetric(0);
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 15
+ 183:directions.c  ****         } else if (req == 2u) {
+ 184:directions.c  ****             /* Stop, settle, pause encoders, zero counters */
+ 185:directions.c  ****             set_motors_symmetric(0);
+ 186:directions.c  ****             motor_enable(0u, 0u);
+ 187:directions.c  ****             CyDelay(STOP_BEFORE_MS);
+ 188:directions.c  **** 
+ 189:directions.c  ****             //enc_pause_background();
+ 190:directions.c  ****             enc_reset_local();
+ 191:directions.c  **** 
+ 192:directions.c  ****             s_turn_side = req; /* latch side */
+ 193:directions.c  ****             s_target_ticks = (req == 1u) ? TICKS_90_LEFT : TICKS_90_RIGHT;
+ 194:directions.c  ****             s_acc_ticks = 0;
+ 195:directions.c  ****             s_safety_count = 0;
+ 196:directions.c  ****             s_state = DIR_TURNING;
+ 197:directions.c  ****         } else if (req == 3u){
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 15
 
 
- 198:directions.c  ****             motor_enable(0u, 0u);
- 199:directions.c  ****             CyDelay(STOP_BEFORE_MS);
- 200:directions.c  **** 
- 201:directions.c  ****             //enc_pause_background();
- 202:directions.c  ****             enc_reset_local();
- 203:directions.c  **** 
- 204:directions.c  ****             s_turn_side = req; /* latch side */
- 205:directions.c  ****             s_target_ticks = (req == 1u) ? TICKS_90_LEFT : TICKS_90_RIGHT;
- 206:directions.c  ****             s_acc_ticks = 0;
- 207:directions.c  ****             s_safety_count = 0;
- 208:directions.c  ****             s_state = DIR_TURNING;
- 209:directions.c  ****         }
- 210:directions.c  ****         break;
- 602              		.loc 1 210 0 discriminator 4
+ 198:directions.c  ****             set_motors_symmetric(0);
+ 199:directions.c  ****             motor_enable(0u, 0u);
+ 200:directions.c  ****             CyDelay(STOP_BEFORE_MS);
+ 201:directions.c  **** 
+ 202:directions.c  ****             //enc_pause_background();
+ 203:directions.c  ****             enc_reset_local();
+ 204:directions.c  **** 
+ 205:directions.c  ****             s_turn_side = req; /* latch side */
+ 206:directions.c  ****             s_target_ticks = (req == 1u) ? TICKS_90_LEFT : TICKS_90_RIGHT;
+ 207:directions.c  ****             s_acc_ticks = 0;
+ 208:directions.c  ****             s_safety_count = 0;
+ 209:directions.c  ****             s_state = DIR_TURNING;
+ 210:directions.c  ****         }
+ 211:directions.c  ****         break;
+ 602              		.loc 1 211 0 discriminator 4
  603 0078 81E0     		b	.L43
  604              	.L27:
- 182:directions.c  ****         } else if (req == 2u) {
- 605              		.loc 1 182 0
+ 183:directions.c  ****         } else if (req == 2u) {
+ 605              		.loc 1 183 0
  606 007a FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
  607 007c 022B     		cmp	r3, #2
  608 007e 22D1     		bne	.L31
- 184:directions.c  ****             motor_enable(0u, 0u);
- 609              		.loc 1 184 0
+ 185:directions.c  ****             motor_enable(0u, 0u);
+ 609              		.loc 1 185 0
  610 0080 0020     		movs	r0, #0
  611 0082 FFF7FEFF 		bl	set_motors_symmetric
- 185:directions.c  ****             CyDelay(STOP_BEFORE_MS);
- 612              		.loc 1 185 0
+ 186:directions.c  ****             CyDelay(STOP_BEFORE_MS);
+ 612              		.loc 1 186 0
  613 0086 0021     		movs	r1, #0
  614 0088 0020     		movs	r0, #0
  615 008a FFF7FEFF 		bl	motor_enable
- 186:directions.c  **** 
- 616              		.loc 1 186 0
+ 187:directions.c  **** 
+ 616              		.loc 1 187 0
  617 008e 6420     		movs	r0, #100
  618 0090 FFF7FEFF 		bl	CyDelay
- 189:directions.c  **** 
- 619              		.loc 1 189 0
+ 190:directions.c  **** 
+ 619              		.loc 1 190 0
  620 0094 FFF7FEFF 		bl	enc_reset_local
- 191:directions.c  ****             s_target_ticks = (req == 1u) ? TICKS_90_LEFT : TICKS_90_RIGHT;
- 621              		.loc 1 191 0
+ 192:directions.c  ****             s_target_ticks = (req == 1u) ? TICKS_90_LEFT : TICKS_90_RIGHT;
+ 621              		.loc 1 192 0
  622 0098 3D4A     		ldr	r2, .L45+4
  623 009a FB7B     		ldrb	r3, [r7, #15]
  624 009c 1370     		strb	r3, [r2]
- 192:directions.c  ****             s_acc_ticks = 0;
- 625              		.loc 1 192 0
+ 193:directions.c  ****             s_acc_ticks = 0;
+ 625              		.loc 1 193 0
  626 009e FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
  627 00a0 012B     		cmp	r3, #1
  628 00a2 02D1     		bne	.L32
- 192:directions.c  ****             s_acc_ticks = 0;
- 629              		.loc 1 192 0 is_stmt 0 discriminator 1
+ 193:directions.c  ****             s_acc_ticks = 0;
+ 629              		.loc 1 193 0 is_stmt 0 discriminator 1
  630 00a4 3B4B     		ldr	r3, .L45+8
  631 00a6 1B68     		ldr	r3, [r3]
  632 00a8 01E0     		b	.L33
  633              	.L32:
- 192:directions.c  ****             s_acc_ticks = 0;
- 634              		.loc 1 192 0 discriminator 2
+ 193:directions.c  ****             s_acc_ticks = 0;
+ 634              		.loc 1 193 0 discriminator 2
  635 00aa 3B4B     		ldr	r3, .L45+12
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 16
+
+
  636 00ac 1B68     		ldr	r3, [r3]
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 16
-
-
  637              	.L33:
- 192:directions.c  ****             s_acc_ticks = 0;
- 638              		.loc 1 192 0 discriminator 4
+ 193:directions.c  ****             s_acc_ticks = 0;
+ 638              		.loc 1 193 0 discriminator 4
  639 00ae 3B4A     		ldr	r2, .L45+16
  640 00b0 1360     		str	r3, [r2]
- 193:directions.c  ****             s_safety_count = 0;
- 641              		.loc 1 193 0 is_stmt 1 discriminator 4
+ 194:directions.c  ****             s_safety_count = 0;
+ 641              		.loc 1 194 0 is_stmt 1 discriminator 4
  642 00b2 3B4B     		ldr	r3, .L45+20
  643 00b4 0022     		movs	r2, #0
  644 00b6 1A60     		str	r2, [r3]
- 194:directions.c  ****             s_state = DIR_TURNING;
- 645              		.loc 1 194 0 discriminator 4
+ 195:directions.c  ****             s_state = DIR_TURNING;
+ 645              		.loc 1 195 0 discriminator 4
  646 00b8 3A4B     		ldr	r3, .L45+24
  647 00ba 0022     		movs	r2, #0
  648 00bc 1A80     		strh	r2, [r3]	@ movhi
- 195:directions.c  ****         } else if (req == 3u){
- 649              		.loc 1 195 0 discriminator 4
+ 196:directions.c  ****         } else if (req == 3u){
+ 649              		.loc 1 196 0 discriminator 4
  650 00be 334B     		ldr	r3, .L45
  651 00c0 0222     		movs	r2, #2
  652 00c2 1A70     		strb	r2, [r3]
- 653              		.loc 1 210 0 discriminator 4
+ 653              		.loc 1 211 0 discriminator 4
  654 00c4 5BE0     		b	.L43
  655              	.L31:
- 196:directions.c  ****             set_motors_symmetric(0);
- 656              		.loc 1 196 0
+ 197:directions.c  ****             set_motors_symmetric(0);
+ 656              		.loc 1 197 0
  657 00c6 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
  658 00c8 032B     		cmp	r3, #3
  659 00ca 58D1     		bne	.L43
- 197:directions.c  ****             motor_enable(0u, 0u);
- 660              		.loc 1 197 0
+ 198:directions.c  ****             motor_enable(0u, 0u);
+ 660              		.loc 1 198 0
  661 00cc 0020     		movs	r0, #0
  662 00ce FFF7FEFF 		bl	set_motors_symmetric
- 198:directions.c  ****             CyDelay(STOP_BEFORE_MS);
- 663              		.loc 1 198 0
+ 199:directions.c  ****             CyDelay(STOP_BEFORE_MS);
+ 663              		.loc 1 199 0
  664 00d2 0021     		movs	r1, #0
  665 00d4 0020     		movs	r0, #0
  666 00d6 FFF7FEFF 		bl	motor_enable
- 199:directions.c  **** 
- 667              		.loc 1 199 0
+ 200:directions.c  **** 
+ 667              		.loc 1 200 0
  668 00da 6420     		movs	r0, #100
  669 00dc FFF7FEFF 		bl	CyDelay
- 202:directions.c  **** 
- 670              		.loc 1 202 0
+ 203:directions.c  **** 
+ 670              		.loc 1 203 0
  671 00e0 FFF7FEFF 		bl	enc_reset_local
- 204:directions.c  ****             s_target_ticks = (req == 1u) ? TICKS_90_LEFT : TICKS_90_RIGHT;
- 672              		.loc 1 204 0
+ 205:directions.c  ****             s_target_ticks = (req == 1u) ? TICKS_90_LEFT : TICKS_90_RIGHT;
+ 672              		.loc 1 205 0
  673 00e4 2A4A     		ldr	r2, .L45+4
  674 00e6 FB7B     		ldrb	r3, [r7, #15]
  675 00e8 1370     		strb	r3, [r2]
- 205:directions.c  ****             s_acc_ticks = 0;
- 676              		.loc 1 205 0
+ 206:directions.c  ****             s_acc_ticks = 0;
+ 676              		.loc 1 206 0
  677 00ea FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
  678 00ec 012B     		cmp	r3, #1
  679 00ee 02D1     		bne	.L34
- 205:directions.c  ****             s_acc_ticks = 0;
- 680              		.loc 1 205 0 is_stmt 0 discriminator 1
+ 206:directions.c  ****             s_acc_ticks = 0;
+ 680              		.loc 1 206 0 is_stmt 0 discriminator 1
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 17
+
+
  681 00f0 284B     		ldr	r3, .L45+8
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 17
-
-
  682 00f2 1B68     		ldr	r3, [r3]
  683 00f4 01E0     		b	.L35
  684              	.L34:
- 205:directions.c  ****             s_acc_ticks = 0;
- 685              		.loc 1 205 0 discriminator 2
+ 206:directions.c  ****             s_acc_ticks = 0;
+ 685              		.loc 1 206 0 discriminator 2
  686 00f6 284B     		ldr	r3, .L45+12
  687 00f8 1B68     		ldr	r3, [r3]
  688              	.L35:
- 205:directions.c  ****             s_acc_ticks = 0;
- 689              		.loc 1 205 0 discriminator 4
+ 206:directions.c  ****             s_acc_ticks = 0;
+ 689              		.loc 1 206 0 discriminator 4
  690 00fa 284A     		ldr	r2, .L45+16
  691 00fc 1360     		str	r3, [r2]
- 206:directions.c  ****             s_safety_count = 0;
- 692              		.loc 1 206 0 is_stmt 1 discriminator 4
+ 207:directions.c  ****             s_safety_count = 0;
+ 692              		.loc 1 207 0 is_stmt 1 discriminator 4
  693 00fe 284B     		ldr	r3, .L45+20
  694 0100 0022     		movs	r2, #0
  695 0102 1A60     		str	r2, [r3]
- 207:directions.c  ****             s_state = DIR_TURNING;
- 696              		.loc 1 207 0 discriminator 4
+ 208:directions.c  ****             s_state = DIR_TURNING;
+ 696              		.loc 1 208 0 discriminator 4
  697 0104 274B     		ldr	r3, .L45+24
  698 0106 0022     		movs	r2, #0
  699 0108 1A80     		strh	r2, [r3]	@ movhi
- 208:directions.c  ****         }
- 700              		.loc 1 208 0 discriminator 4
+ 209:directions.c  ****         }
+ 700              		.loc 1 209 0 discriminator 4
  701 010a 204B     		ldr	r3, .L45
  702 010c 0222     		movs	r2, #2
  703 010e 1A70     		strb	r2, [r3]
- 704              		.loc 1 210 0 discriminator 4
+ 704              		.loc 1 211 0 discriminator 4
  705 0110 35E0     		b	.L43
  706              	.L24:
- 211:directions.c  **** 
- 212:directions.c  ****     case DIR_TURNING:
- 213:directions.c  ****         /* Drive the pivot */
- 214:directions.c  ****         if (s_turn_side == 1u) {
- 707              		.loc 1 214 0
+ 212:directions.c  **** 
+ 213:directions.c  ****     case DIR_TURNING:
+ 214:directions.c  ****         /* Drive the pivot */
+ 215:directions.c  ****         if (s_turn_side == 1u) {
+ 707              		.loc 1 215 0
  708 0112 1F4B     		ldr	r3, .L45+4
  709 0114 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
  710 0116 012B     		cmp	r3, #1
  711 0118 02D1     		bne	.L37
- 215:directions.c  ****             pivot_left_speed();
- 712              		.loc 1 215 0
+ 216:directions.c  ****             pivot_left_speed();
+ 712              		.loc 1 216 0
  713 011a FFF7FEFF 		bl	pivot_left_speed
  714 011e 0CE0     		b	.L38
  715              	.L37:
- 216:directions.c  ****         } else if(s_turn_side == 2u) {
- 716              		.loc 1 216 0
+ 217:directions.c  ****         } else if(s_turn_side == 2u) {
+ 716              		.loc 1 217 0
  717 0120 1B4B     		ldr	r3, .L45+4
  718 0122 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
  719 0124 022B     		cmp	r3, #2
  720 0126 02D1     		bne	.L39
- 217:directions.c  ****             pivot_right_speed();
- 721              		.loc 1 217 0
+ 218:directions.c  ****             pivot_right_speed();
+ 721              		.loc 1 218 0
  722 0128 FFF7FEFF 		bl	pivot_right_speed
  723 012c 05E0     		b	.L38
  724              	.L39:
- 218:directions.c  ****         } else if(s_turn_side == 3u) {
- 725              		.loc 1 218 0
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 18
+ 219:directions.c  ****         } else if(s_turn_side == 3u) {
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 18
 
 
+ 725              		.loc 1 219 0
  726 012e 184B     		ldr	r3, .L45+4
  727 0130 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
  728 0132 032B     		cmp	r3, #3
  729 0134 01D1     		bne	.L38
- 219:directions.c  ****             pivot_uturn_speed();
- 730              		.loc 1 219 0
+ 220:directions.c  ****             pivot_uturn_speed();
+ 730              		.loc 1 220 0
  731 0136 FFF7FEFF 		bl	pivot_uturn_speed
  732              	.L38:
- 220:directions.c  ****         }
- 221:directions.c  **** 
+ 221:directions.c  ****         }
  222:directions.c  **** 
- 223:directions.c  ****         /* Progress + safety */
- 224:directions.c  ****         enc_accumulate_now();
- 733              		.loc 1 224 0
+ 223:directions.c  **** 
+ 224:directions.c  ****         /* Progress + safety */
+ 225:directions.c  ****         enc_accumulate_now();
+ 733              		.loc 1 225 0
  734 013a FFF7FEFF 		bl	enc_accumulate_now
- 225:directions.c  ****         if (++s_safety_count > MAX_TURN_HANDLER_TICKS) {
- 735              		.loc 1 225 0
+ 226:directions.c  ****         if (++s_safety_count > MAX_TURN_HANDLER_TICKS) {
+ 735              		.loc 1 226 0
  736 013e 194B     		ldr	r3, .L45+24
  737 0140 1B88     		ldrh	r3, [r3]
  738 0142 0133     		adds	r3, r3, #1
@@ -1048,73 +1049,73 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  743 014c 1B88     		ldrh	r3, [r3]
  744 014e 1C2B     		cmp	r3, #28
  745 0150 03D9     		bls	.L40
- 226:directions.c  ****             /* Fail-safe: bail out even if encoders misbehave */
- 227:directions.c  ****             finish_and_release(p_dir);
- 746              		.loc 1 227 0
+ 227:directions.c  ****             /* Fail-safe: bail out even if encoders misbehave */
+ 228:directions.c  ****             finish_and_release(p_dir);
+ 746              		.loc 1 228 0
  747 0152 7868     		ldr	r0, [r7, #4]
  748 0154 FFF7FEFF 		bl	finish_and_release
- 228:directions.c  ****             break;
- 749              		.loc 1 228 0
+ 229:directions.c  ****             break;
+ 749              		.loc 1 229 0
  750 0158 14E0     		b	.L36
  751              	.L40:
- 229:directions.c  ****         }
- 230:directions.c  **** 
- 231:directions.c  ****         /* Done? */
- 232:directions.c  ****         if (s_acc_ticks >= s_target_ticks) {
- 752              		.loc 1 232 0
+ 230:directions.c  ****         }
+ 231:directions.c  **** 
+ 232:directions.c  ****         /* Done? */
+ 233:directions.c  ****         if (s_acc_ticks >= s_target_ticks) {
+ 752              		.loc 1 233 0
  753 015a 114B     		ldr	r3, .L45+20
  754 015c 1A68     		ldr	r2, [r3]
  755 015e 0F4B     		ldr	r3, .L45+16
  756 0160 1B68     		ldr	r3, [r3]
  757 0162 9A42     		cmp	r2, r3
  758 0164 0DDB     		blt	.L44
- 233:directions.c  ****             s_state = DIR_FINISH;
- 759              		.loc 1 233 0
+ 234:directions.c  ****             s_state = DIR_FINISH;
+ 759              		.loc 1 234 0
  760 0166 094B     		ldr	r3, .L45
  761 0168 0322     		movs	r2, #3
  762 016a 1A70     		strb	r2, [r3]
- 234:directions.c  ****         }
- 235:directions.c  ****         break;
- 763              		.loc 1 235 0
+ 235:directions.c  ****         }
+ 236:directions.c  ****         break;
+ 763              		.loc 1 236 0
  764 016c 09E0     		b	.L44
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 19
+
+
  765              	.L25:
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 19
-
-
- 236:directions.c  **** 
- 237:directions.c  ****     case DIR_FINISH:
- 238:directions.c  ****         /* One last stop; then release to straight */
- 239:directions.c  ****         finish_and_release(p_dir);
- 766              		.loc 1 239 0
+ 237:directions.c  **** 
+ 238:directions.c  ****     case DIR_FINISH:
+ 239:directions.c  ****         /* One last stop; then release to straight */
+ 240:directions.c  ****         finish_and_release(p_dir);
+ 766              		.loc 1 240 0
  767 016e 7868     		ldr	r0, [r7, #4]
  768 0170 FFF7FEFF 		bl	finish_and_release
- 240:directions.c  ****         break;
- 769              		.loc 1 240 0
+ 241:directions.c  ****         break;
+ 769              		.loc 1 241 0
  770 0174 06E0     		b	.L36
  771              	.L42:
- 241:directions.c  **** 
- 242:directions.c  ****     default:
- 243:directions.c  ****         /* Shouldn’t happen, but recover gracefully */
- 244:directions.c  ****         finish_and_release(p_dir);
- 772              		.loc 1 244 0
+ 242:directions.c  **** 
+ 243:directions.c  ****     default:
+ 244:directions.c  ****         /* Shouldn’t happen, but recover gracefully */
+ 245:directions.c  ****         finish_and_release(p_dir);
+ 772              		.loc 1 245 0
  773 0176 7868     		ldr	r0, [r7, #4]
  774 0178 FFF7FEFF 		bl	finish_and_release
- 245:directions.c  ****         break;
- 775              		.loc 1 245 0
+ 246:directions.c  ****         break;
+ 775              		.loc 1 246 0
  776 017c 02E0     		b	.L36
  777              	.L43:
- 210:directions.c  **** 
- 778              		.loc 1 210 0
+ 211:directions.c  **** 
+ 778              		.loc 1 211 0
  779 017e 00BF     		nop
  780 0180 00E0     		b	.L36
  781              	.L44:
- 235:directions.c  **** 
- 782              		.loc 1 235 0
+ 236:directions.c  **** 
+ 782              		.loc 1 236 0
  783 0182 00BF     		nop
  784              	.L36:
- 246:directions.c  ****     }
- 247:directions.c  **** }...
- 785              		.loc 1 247 0
+ 247:directions.c  ****     }
+ 248:directions.c  **** }...
+ 785              		.loc 1 248 0
  786 0184 00BF     		nop
  787 0186 1037     		adds	r7, r7, #16
  788              		.cfi_def_cfa_offset 8
@@ -1137,10 +1138,10 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  805              		.size	Directions_Handle, .-Directions_Handle
  806              		.text
  807              	.Letext0:
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 20
+
+
  808              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 20
-
-
  809              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
  810              		.file 4 "Generated_Source\\PSoC5/core_cm3.h"
  811              		.section	.debug_info,"",%progbits
@@ -1197,10 +1198,10 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  862 006b 07       		.byte	0x7
  863 006c E1010000 		.4byte	.LASF8
  864 0070 02       		.uleb128 0x2
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 21
+
+
  865 0071 08       		.byte	0x8
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 21
-
-
  866 0072 05       		.byte	0x5
  867 0073 86020000 		.4byte	.LASF9
  868 0077 02       		.uleb128 0x2
@@ -1257,10 +1258,10 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  919 00d7 37000000 		.4byte	0x37
  920 00db 01       		.byte	0x1
  921 00dc 1C       		.byte	0x1c
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 22
+
+
  922 00dd FA000000 		.4byte	0xfa
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 22
-
-
  923 00e1 07       		.uleb128 0x7
  924 00e2 F2020000 		.4byte	.LASF20
  925 00e6 00       		.byte	0
@@ -1317,10 +1318,10 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  976 014d 01       		.byte	0x1
  977 014e 4D       		.byte	0x4d
  978 014f A2000000 		.4byte	0xa2
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 23
+
+
  979 0153 02       		.uleb128 0x2
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 23
-
-
  980 0154 91       		.byte	0x91
  981 0155 70       		.sleb128 -16
  982 0156 00       		.byte	0
@@ -1377,10 +1378,10 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  1033 01af 0D       		.uleb128 0xd
  1034 01b0 7E000000 		.4byte	0x7e
  1035 01b4 0B       		.uleb128 0xb
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 24
+
+
  1036 01b5 C4010000 		.4byte	.LASF31
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 24
-
-
  1037 01b9 01       		.byte	0x1
  1038 01ba 68       		.byte	0x68
  1039 01bb 00000000 		.4byte	.LFB67
@@ -1437,10 +1438,10 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  1090 0217 40000000 		.4byte	.LFE68-.LFB68
  1091 021b 01       		.uleb128 0x1
  1092 021c 9C       		.byte	0x9c
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 25
+
+
  1093 021d 64020000 		.4byte	0x264
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 25
-
-
  1094 0221 0A       		.uleb128 0xa
  1095 0222 70637400 		.ascii	"pct\000"
  1096 0226 01       		.byte	0x1
@@ -1497,10 +1498,10 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  1147 027f 7E       		.byte	0x7e
  1148 0280 88020000 		.4byte	0x288
  1149 0284 02       		.uleb128 0x2
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 26
+
+
  1150 0285 91       		.byte	0x91
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 26
-
-
  1151 0286 74       		.sleb128 -12
  1152 0287 00       		.byte	0
  1153 0288 0F       		.uleb128 0xf
@@ -1509,7 +1510,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  1156 028e 10       		.uleb128 0x10
  1157 028f 8A010000 		.4byte	.LASF45
  1158 0293 01       		.byte	0x1
- 1159 0294 98       		.byte	0x98
+ 1159 0294 99       		.byte	0x99
  1160 0295 00000000 		.4byte	.LFB70
  1161 0299 40000000 		.4byte	.LFE70-.LFB70
  1162 029d 01       		.uleb128 0x1
@@ -1517,7 +1518,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  1164 029f 11       		.uleb128 0x11
  1165 02a0 DA000000 		.4byte	.LASF46
  1166 02a4 01       		.byte	0x1
- 1167 02a5 A1       		.byte	0xa1
+ 1167 02a5 A2       		.byte	0xa2
  1168 02a6 00000000 		.4byte	.LFB71
  1169 02aa A8010000 		.4byte	.LFE71-.LFB71
  1170 02ae 01       		.uleb128 0x1
@@ -1526,7 +1527,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  1173 02b4 0E       		.uleb128 0xe
  1174 02b5 6C010000 		.4byte	.LASF34
  1175 02b9 01       		.byte	0x1
- 1176 02ba A1       		.byte	0xa1
+ 1176 02ba A2       		.byte	0xa2
  1177 02bb 88020000 		.4byte	0x288
  1178 02bf 02       		.uleb128 0x2
  1179 02c0 91       		.byte	0x91
@@ -1534,7 +1535,7 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  1181 02c2 0A       		.uleb128 0xa
  1182 02c3 72657100 		.ascii	"req\000"
  1183 02c7 01       		.byte	0x1
- 1184 02c8 A3       		.byte	0xa3
+ 1184 02c8 A4       		.byte	0xa4
  1185 02c9 D1020000 		.4byte	0x2d1
  1186 02cd 02       		.uleb128 0x2
  1187 02ce 91       		.byte	0x91
@@ -1557,10 +1558,10 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  1204 02f1 01       		.byte	0x1
  1205 02f2 0C       		.byte	0xc
  1206 02f3 E7020000 		.4byte	0x2e7
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 27
+
+
  1207 02f7 05       		.uleb128 0x5
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 27
-
-
  1208 02f8 03       		.byte	0x3
  1209 02f9 04000000 		.4byte	TICKS_90_RIGHT
  1210 02fd 0C       		.uleb128 0xc
@@ -1617,10 +1618,10 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  1261 0003 25       		.uleb128 0x25
  1262 0004 0E       		.uleb128 0xe
  1263 0005 13       		.uleb128 0x13
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 28
+
+
  1264 0006 0B       		.uleb128 0xb
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 28
-
-
  1265 0007 03       		.uleb128 0x3
  1266 0008 0E       		.uleb128 0xe
  1267 0009 1B       		.uleb128 0x1b
@@ -1677,10 +1678,10 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  1318 003c 00       		.byte	0
  1319 003d 06       		.uleb128 0x6
  1320 003e 04       		.uleb128 0x4
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 29
+
+
  1321 003f 01       		.byte	0x1
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 29
-
-
  1322 0040 0B       		.uleb128 0xb
  1323 0041 0B       		.uleb128 0xb
  1324 0042 49       		.uleb128 0x49
@@ -1737,10 +1738,10 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  1375 0076 11       		.uleb128 0x11
  1376 0077 01       		.uleb128 0x1
  1377 0078 12       		.uleb128 0x12
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 30
+
+
  1378 0079 06       		.uleb128 0x6
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 30
-
-
  1379 007a 40       		.uleb128 0x40
  1380 007b 18       		.uleb128 0x18
  1381 007c 9742     		.uleb128 0x2117
@@ -1797,10 +1798,10 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  1432 00b1 3B       		.uleb128 0x3b
  1433 00b2 0B       		.uleb128 0xb
  1434 00b3 49       		.uleb128 0x49
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 31
+
+
  1435 00b4 13       		.uleb128 0x13
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 31
-
-
  1436 00b5 02       		.uleb128 0x2
  1437 00b6 18       		.uleb128 0x18
  1438 00b7 00       		.byte	0
@@ -1857,10 +1858,10 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  1489 00ea 18       		.uleb128 0x18
  1490 00eb 9742     		.uleb128 0x2117
  1491 00ed 19       		.uleb128 0x19
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 32
+
+
  1492 00ee 00       		.byte	0
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 32
-
-
  1493 00ef 00       		.byte	0
  1494 00f0 11       		.uleb128 0x11
  1495 00f1 2E       		.uleb128 0x2e
@@ -1917,10 +1918,10 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  1546 0014 0C000000 		.4byte	.LFE63-.LFB63
  1547 0018 00000000 		.4byte	.LFB64
  1548 001c 18000000 		.4byte	.LFE64-.LFB64
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 33
+
+
  1549 0020 00000000 		.4byte	.LFB65
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 33
-
-
  1550 0024 44000000 		.4byte	.LFE65-.LFB65
  1551 0028 00000000 		.4byte	.LFB66
  1552 002c 40000000 		.4byte	.LFE66-.LFB66
@@ -1977,10 +1978,10 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  1593      31363036 
  1594 003d 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
  1594      20726576 
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 34
+
+
  1594      6973696F 
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 34
-
-
  1594      6E203233 
  1594      37373135 
  1595 0070 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
@@ -2037,10 +2038,10 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  1616      61636375 
  1616      6D756C61 
  1616      74655F6E 
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 35
+
+
  1616      6F7700
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 35
-
-
  1617              	.LASF1:
  1618 014d 756E7369 		.ascii	"unsigned char\000"
  1618      676E6564 
@@ -2097,10 +2098,10 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  1639              	.LASF8:
  1640 01e1 6C6F6E67 		.ascii	"long unsigned int\000"
  1640      20756E73 
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 36
+
+
  1640      69676E65 
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 36
-
-
  1640      6420696E 
  1640      7400
  1641              	.LASF47:
@@ -2157,10 +2158,10 @@ ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 1
  1664      00
  1665              	.LASF9:
  1666 0286 6C6F6E67 		.ascii	"long long int\000"
+ARM GAS  C:\Users\yram171\AppData\Local\Temp\ccWSiEJd.s 			page 37
+
+
  1666      206C6F6E 
-ARM GAS  C:\Users\yram171\AppData\Local\Temp\cclS8ujy.s 			page 37
-
-
  1666      6720696E 
  1666      7400
  1667              	.LASF39:

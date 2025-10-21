@@ -141,8 +141,8 @@ static void light_sensors_update_and_maybe_request_turn(uint16_t* V4_pp, uint16_
 
 /* ================= PI Controller (same as your current file) ================= */
 #define STEER_MAX        15
-#define KP               18.0f
-#define KI               2.0f
+#define KP               16.0f
+#define KI               3.0f
 #define INT_LIM          30.0f
 #define LOSS_TIMEOUT_T   0.25f
 
@@ -225,7 +225,7 @@ int main(void)
     pi_t pi = { .i = 0.0f, .u = 0.0f, .t_loss = 0.0f };
     
     CyDelay(1000);  // So the motors don't jump
-    set_motors_with_trim_and_steer(100,-10);
+    set_motors_with_trim_and_steer(100,10);
     CyDelay(40);
     set_motors_symmetric(0); 
     
@@ -237,11 +237,12 @@ int main(void)
      */
     
 const uint8_t CMD_STATES[] = {
-    // 31 entries, aligned 1:1 with COMMANDS[i]
-//    0, // START
-//    2, // RIGHT
-//    0,
-//    2, // RIGHT
+
+    0, // START
+    2, // RIGHT
+    0,
+    2, // RIGHT
+    0,
     0,
     1, // LEFT
     0,
@@ -294,12 +295,13 @@ const uint8_t CMD_STATES[] = {
     0,
     6  // END
 }; 
-    int8_t indexMAX = 50;  // Loop index
+    //int8_t indexMAX = 50;  // Loop index
     
     // For Testing
-    //const uint8_t CMD_STATES[] = {1,2};
-    //int8_t indexMAX = 1;  // Loop index
+    //const uint8_t CMD_STATES[] = {0,2};
+    //int8_t indexMAX = 2;  // Loop index
     
+    const uint16_t CMD_STATES_LEN = sizeof(CMD_STATES) / sizeof(CMD_STATES[0]);
     
     int8_t i = 0;  // Loop index
     int32_t target_dist = 0;
@@ -313,51 +315,17 @@ const uint8_t CMD_STATES[] = {
         
         // This check will make the robot stay stopped
         // once the path is complete.
-        if (g_stop_now) {
+        /*if (g_stop_now) {
             set_motors_symmetric(0);
             motor_enable(1u, 1u);
             continue;
-        }
+        } */
 
         /* Read sensors + maybe request turn */
         uint16_t V4_pp=0, V5_pp=0, V6_pp=0;
         light_sensors_update_and_maybe_request_turn(&V4_pp, &V5_pp, &V6_pp);
         
 
-//        /* ---------------- Turn handling with arming delay (Option A) ---------------- */
-//        /* Arm once on the first detection (edge 0 -> 1/2) */
-//        if ((g_direction == 1u || g_direction == 2u) && dir_latched_side == 0){
-//            dir_latched_side = g_direction;          /* remember side */
-//            dir_delay_ticks  = DIR_CALL_DELAY_TICKS; /* start countdown */
-//            //CyDelay(50);
-//        }
-//        /* If request cleared during delay, cancel gracefully */
-//        if (g_direction == 0u && dir_latched_side != 0){
-//            dir_latched_side = 0;
-//            dir_delay_ticks  = 0;
-//        }
-//
-//        if (g_direction == 1u || g_direction == 2u){
-//            if (dir_delay_ticks > 0){
-//                /* Still delaying: keep doing normal straight PI */
-//                dir_delay_ticks--;
-//            } else {
-//                /* Delay elapsed: perform the maneuver */
-//                Directions_Handle(&g_direction);
-//
-//                /* When turn completes, Directions sets g_direction back to 0 */
-//                if (g_direction == 0u){
-//                    pi.i = 0.0f; pi.u = 0.0f; pi.t_loss = 0.0f;  /* clear bias */
-//                    dir_latched_side = 0;                        /* ready next time */
-//                    
-//                    
-//                    turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
-//                }
-//                CyDelay(LOOP_DT_MS);
-//                continue;  /* skip the rest this tick */
-//            }
-//        }
-//        /* ---------------- end turn handling with delay ---------------- */
 //
 //        /* Straight run with PI steering */
 //        
@@ -411,7 +379,10 @@ const uint8_t CMD_STATES[] = {
             sen2_on_line = (V2 > 10 && V2 < 100) ? 1u : 0u;
             if (sen1_on_line == 1u || sen2_on_line == 1u) {
                 straight_complete = 1;
-                motor_enable(1u, 1u); // Disable the motors
+                CyDelay(250);
+                set_motors_symmetric(0); 
+                
+                
             }
             
         } else if((CMD_STATES[i] == 1)) {
@@ -445,7 +416,6 @@ const uint8_t CMD_STATES[] = {
                             dir_latched_side = 0;                        /* ready next time */
                             
                             
-                            turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
                             turn_complete = 1;
                         }
                         CyDelay(LOOP_DT_MS);
@@ -489,8 +459,7 @@ const uint8_t CMD_STATES[] = {
                             pi.i = 0.0f; pi.u = 0.0f; pi.t_loss = 0.0f;  /* clear bias */
                             dir_latched_side = 0;                        /* ready next time */
                             
-                            
-                            turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+                           
                             turn_complete = 1;
                         }
                         CyDelay(LOOP_DT_MS);
@@ -533,8 +502,7 @@ const uint8_t CMD_STATES[] = {
                             pi.i = 0.0f; pi.u = 0.0f; pi.t_loss = 0.0f;  /* clear bias */
                             dir_latched_side = 0;                        /* ready next time */
                             
-                            
-                            turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+
                             uTurn_complete = 1;
                         }
                         CyDelay(LOOP_DT_MS);
@@ -582,57 +550,61 @@ const uint8_t CMD_STATES[] = {
         
         } else if((CMD_STATES[i] == 6)) {
          // FINISH
+            set_motors_symmetric(0);
             motor_enable(1u, 1u);
-        
         
         }
         
         // food
-        if (i == 13 || i == 23 || i == 31 || i == 44) {
+        if (i == 12 || i == 22 || i == 30 || i == 43) {
             CyDelay(2000);
         } 
         
         
         
-        if (i== 4 ) {
-            //TURN_COOLDOWN_MS = 4000;
-            turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+        /* This logic checks the state that just FINISHED (e.g., i == 4)
+         * and overwrites the default cooldown period for the 
+         * 'straight' segment that is about to begin.
+         */
+        if (i == 4) {
+            // Set 4000ms cooldown (4000ms / 8ms_per_loop)
+            turn_cooldown_ticks = (uint16_t)(4000 / LOOP_DT_MS);
         } 
-        if ( i== 10) {
-            //TURN_COOLDOWN_MS = 2000;
-            turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+        else if (i == 10) {
+            // Set 2000ms cooldown
+            turn_cooldown_ticks = (uint16_t)(2000 / LOOP_DT_MS);
         }
-        if ( i== 35) {
-            //TURN_COOLDOWN_MS = 5000;
-            turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+        else if (i == 35) {
+            // Set 5000ms cooldown
+            turn_cooldown_ticks = (uint16_t)(5000 / LOOP_DT_MS);
         }
-        if ( i== 38) {
-            //TURN_COOLDOWN_MS = 500;
-            turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+        else if (i == 38) {
+            // Set 500ms cooldown
+            turn_cooldown_ticks = (uint16_t)(500 / LOOP_DT_MS);
         }
-        if ( i== 46) {
-            //TURN_COOLDOWN_MS = 1000;
-            turn_cooldown_ticks = TURN_COOLDOWN_TICKS);
+        else if (i == 46) {
+            // Set 1000ms cooldown
+            turn_cooldown_ticks = (uint16_t)(1000 / LOOP_DT_MS);
         }
         
         
         if (straight_complete == 1u || turn_complete == 1u || uTurn_complete == 1u || fruit_complete == 1u) {
             
-            // Check if we are at the end of the array
-        if (i >= indexMAX) {
-         // We are done. Set permanent stop flag.
-         g_stop_now = 1;
-         } else {
-         // Not done. Advance to the next state.
-         i += 1;
-        }
+                // Check if we are at the end of the array
+            if (i < CMD_STATES_LEN) {
+
+             i += 1;
             
-            straight_complete = 0;
-            turn_complete = 0;
-            uTurn_complete = 0;
-            fruit_complete = 0;
-            
-            target_dist = 0;
+                
+                straight_complete = 0;
+                turn_complete = 0;
+                uTurn_complete = 0;
+                fruit_complete = 0;
+                
+                target_dist = 0;
+            } else {
+                Motors_SetPercent(0,0);
+            }
         }
         
 
